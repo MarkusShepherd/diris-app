@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <!--
+    Copyright (c) 2012-2014 Adobe Systems Incorporated. All rights reserved.
+
     Licensed to the Apache Software Foundation (ASF) under one
     or more contributor license agreements.  See the NOTICE file
     distributed with this work for additional information
@@ -25,7 +27,7 @@
         <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
         <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
         <link rel="stylesheet" type="text/css" href="css/index.css" />
-        <title>Dixit</title>
+        <title>Hello World</title>
         <script src=”https://cdn.flurry.com/js/flurry.js”></script>
         <script>FlurryAgent.startSession("8XWN22P4C7ZBG6W833PP");</script>
     </head>
@@ -36,8 +38,29 @@
                 <p class="event listening">Connecting to Device</p>
                 <p class="event received">Device is Ready</p>
             </div>
+            <div onclick="cheese()">Click</div>
+            <img id="myImage"/>
         </div>
+        <script>
+            function cheese() {
+                navigator.camera.getPicture(onSuccess, onFail, { quality: 50,
+                    sourceType : Camera.PictureSourceType.PHOTOLIBRARY,
+                    destinationType: Camera.DestinationType.FILE_URI});
+            }
+
+            function onSuccess(imageData) {
+                var image = document.getElementById('myImage');
+                image.src = imageData;
+            }
+
+            function onFail(message) {
+                alert('Failed because: ' + message);
+            }
+        </script>
         <script type="text/javascript" src="cordova.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
+        <script type="text/javascript">
+            app.initialize();
+        </script>
     </body>
 </html>
