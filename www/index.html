@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="">
+<html lang="en" ng-app="myApp">
 <head>
 <title>Dixit</title>
 <meta charset="utf-8" />
@@ -9,15 +9,20 @@
 	content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
 <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
 <link rel="stylesheet" type="text/css" href="css/index.css" />
+<script type="text/javascript" src="cordova.js"></script>
+<script type="text/javascript" src="lib/jquery-1.11.2.js"></script>
+<script type="text/javascript" src="lib/angular.js"></script>
+<script type="text/javascript" src="lib/bootstrap.js"></script>
+<script type="text/javascript" src="js/controllers.js"></script>
 </head>
 <body>
-	<div class="app container" ng-controller="playerController">
+	<div class="container" ng-controller="playerController">
 		<h1>Dixit</h1>
-		<div id="deviceready" class="blink">
-			<p class="event listening">Connecting to Device</p>
-			<p class="event received">Device is Ready</p>
-		</div>
-		<h3>Users</h3>
+		<h2>Users</h2>
+
+		<button class="btn" ng-click="loadPlayers()">
+			<span class="glyphicon glyphicon-user"></span>&nbsp;Load players
+		</button>
 
 		<table class="table table-striped table-hover">
 			<thead>
@@ -30,10 +35,7 @@
 			<tbody>
 				<tr ng-repeat="player in players">
 					<td>
-						<button class="btn">
-							<span class="glyphicon glyphicon-pencil"></span>&nbsp;&nbsp;Edit
-							{{ player.id }}
-						</button>
+						<button class="btn">{{ player.id }}</button>
 					</td>
 					<td>{{ player.name }}</td>
 					<td>{{ player.email }}</td>
@@ -41,17 +43,8 @@
 			</tbody>
 		</table>
 	</div>
-	<script type="text/javascript" src="cordova.js"></script>
-	<script type="text/javascript" src="js/index.js"></script>
-	<script type="text/javascript" src="js/jquery-1.11.2.js"></script>
-	<script type="text/javascript" src="js/angular.js"></script>
-	<script type="text/javascript" src="js/bootstrap.js"></script>
-	<script type="text/javascript" src="js/xhr.js"></script>
 	<script type="text/javascript"
 		src=”https://cdn.flurry.com/js/flurry.js”></script>
-	<script type="text/javascript">
-		app.initialize();
-	</script>
 	<script type="text/javascript">
 		FlurryAgent.startSession("8XWN22P4C7ZBG6W833PP");
 	</script>
