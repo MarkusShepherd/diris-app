@@ -1,19 +1,30 @@
 var baseUrl = "http://localhost:8080/";
+var playerController = angular.module('playerController', [ 'ngAnimate' ]);
 
-var myApp = angular.module('myApp', []);
+playerController.controller('PlayerListController', [ '$scope', '$http',
+		function($scope, $http) {
 
-myApp.controller('playerController', function playerController($scope, $http) {
+			$scope.players = [];
 
-	$scope.edit = true;
-	$scope.error = false;
-	$scope.incomplete = false;
+			$scope.loadPlayers = function() {
+				$http.get(baseUrl + "player").success(function(response) {
+					$scope.players = response;
+				});
+			};
 
-	$scope.players = [];
+			$scope.loadPlayers();
 
-	$scope.loadPlayers = function() {
-		$http.get(baseUrl + "player").success(function(response) {
-			$scope.players = response;
-		});
-	};
+		} ]);
 
-});
+playerController.controller('PlayerDetailController', [
+		'$scope',
+		'$http',
+		'$routeParams',
+		function($scope, $http, $routeParams) {
+
+			$http.get(baseUrl + "player/" + $routeParams.playerId).success(
+					function(response) {
+						$scope.player = response;
+					});
+
+		} ]);
