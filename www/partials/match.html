@@ -1,0 +1,12 @@
+<section class="match">
+	<h1>Dixit</h1>
+	<h2>Match {{ match.id }}</h2>
+	<h3>Players</h3>
+	<ul>
+		<li ng-repeat="id in match.playerIds">{{id}}</li>
+	</ul>
+	<h3>Rounds</h3>
+	<ul>
+		<li ng-repeat="round in match.rounds">{{round.status}}</li>
+	</ul>
+</section>

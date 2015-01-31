@@ -7,6 +7,9 @@ myApp.config([ '$routeProvider', function($routeProvider) {
 	}).when('/player/:playerId', {
 		templateUrl : 'partials/player-detail.html',
 		controller : 'PlayerDetailController'
+	}).when('/player/:playerId/:matchId', {
+		templateUrl : 'partials/match.html',
+		controller : 'MatchController'
 	}).otherwise({
 		redirectTo : '/player'
 	});

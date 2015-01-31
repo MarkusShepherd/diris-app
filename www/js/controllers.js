@@ -28,3 +28,17 @@ playerController.controller('PlayerDetailController', [
 					});
 
 		} ]);
+
+playerController.controller('MatchController', [
+		'$scope',
+		'$http',
+		'$routeParams',
+		function($scope, $http, $routeParams) {
+
+			$http.get(baseUrl + "match/" + $routeParams.matchId).success(
+					function(response) {
+						$scope.match = response;
+						$scope.playerId = $routeParams.playerId;
+					});
+
+		} ]);
