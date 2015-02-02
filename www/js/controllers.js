@@ -42,3 +42,19 @@ playerController.controller('MatchController', [
 					});
 
 		} ]);
+
+playerController.controller('RoundController', [
+		'$scope',
+		'$http',
+		'$routeParams',
+		function($scope, $http, $routeParams) {
+
+			$http.get(baseUrl + "match/" + $routeParams.matchId).success(
+					function(response) {
+						$scope.playerId = $routeParams.playerId;
+						$scope.match = response;
+						$scope.roundNo = $routeParams.roundNo;
+						$scope.round = $scope.match.rounds[$routeParams.roundNo];
+					});
+
+		} ]);

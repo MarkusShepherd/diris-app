@@ -10,6 +10,9 @@ myApp.config([ '$routeProvider', function($routeProvider) {
 	}).when('/player/:playerId/:matchId', {
 		templateUrl : 'partials/match.html',
 		controller : 'MatchController'
+	}).when('/player/:playerId/:matchId/:roundNo', {
+		templateUrl : 'partials/round.html',
+		controller : 'RoundController'
 	}).otherwise({
 		redirectTo : '/player'
 	});
