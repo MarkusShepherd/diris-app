@@ -1,19 +1,35 @@
-var myApp = angular.module('myApp', [ 'ngRoute', 'playerController' ]);
+var dixitApp = angular.module('dixitApp', [ 'ngRoute', 'firebase' ]).constant(
+		'FIREBASE_URL', 'https://dixitapp.firebaseio.com/');
 
-myApp.config([ '$routeProvider', function($routeProvider) {
-	$routeProvider.when('/player', {
-		templateUrl : 'partials/player-list.html',
-		controller : 'PlayerListController'
-	}).when('/player/:playerId', {
-		templateUrl : 'partials/player-detail.html',
-		controller : 'PlayerDetailController'
-	}).when('/player/:playerId/:matchId', {
+dixitApp.config([ '$routeProvider', function($routeProvider) {
+	$routeProvider.when('/login', {
+		templateUrl : 'partials/login.html',
+		controller : 'LoginController'
+	}).when('/register', {
+		templateUrl : 'partials/register.html',
+		controller : 'RegistrationController'
+	}).when('/overview/:pId', {
+		templateUrl : 'partials/overview.html',
+		controller : 'PlayerController'
+	}).when('/newmatch/:pId', {
+		templateUrl : 'partials/new-match.html',
+		controller : 'PlayerController'
+	}).when('/accept/:pId/:mId', {
+		templateUrl : 'partials/accept-invitation.html',
+		controller : 'PlayerController'
+	}).when('/match/:pId/:mId', {
 		templateUrl : 'partials/match.html',
 		controller : 'MatchController'
-	}).when('/player/:playerId/:matchId/:roundNo', {
-		templateUrl : 'partials/round.html',
-		controller : 'RoundController'
+	}).when('/image/:pId/:mId/:rNo', {
+		templateUrl : 'partials/submit-image.html',
+		controller : 'MatchController'
+	}).when('/vote/:pId/:mId/:rNo', {
+		templateUrl : 'partials/vote-image.html',
+		controller : 'MatchController'
+	}).when('/review/:pId/:mId', {
+		templateUrl : 'partials/review-round.html',
+		controller : 'MatchController'
 	}).otherwise({
-		redirectTo : '/player'
+		redirectTo : '/login'
 	});
 } ]);
