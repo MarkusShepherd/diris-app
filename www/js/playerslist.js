@@ -10,11 +10,35 @@ dixitApp.controller('PlayersListController', function($scope, $rootScope,
 		$scope.players = playersObj;
 	}); // meetings Object Loaded
 
-	$scope.selected = [];
-	
+	$scope.selected = {};
+	$scope.numPlayers = 0;
+
 	$scope.addPlayer = function(pId) {
-		$scope.selected.push(pId);
 		$scope.players[pId].selected = true;
+		$scope.selected[pId] = $scope.players[pId];
+		$scope.numPlayers++;
 	};
-	
+
+	$scope.removePlayer = function(pId) {
+		$scope.players[pId].selected = false;
+		delete $scope.selected[pId];
+		$scope.numPlayers--;
+	};
+
+	$scope.sendInvite = function() {
+		var match = {
+			playerIds : []
+		};
+		for ( var pId in $scope.selected) {
+			match.playerIds.push(pId);
+		}
+
+		var matchesRef = new Firebase(FIREBASE_URL + 'matches');
+		var matchesInfo = $firebase(matchesRef);
+
+		matchesInfo.$push(match).then(function(newChildRef) {
+			console.log("added record with id " + newChildRef.key());
+			console.log(newChildRef);
+		});
+	}
 }); // PlayersListController
