@@ -1,9 +1,9 @@
 <section xmlns="http://www.w3.org/1999/xhtml" class="overview">
-	<a class="newmatch" ng-href="#/newmatch/{{ playerId }}">+ New Match</a>
+	<a class="newmatch" ng-href="#/newmatch/{{ currentPlayer.$id }}">+ New Match</a>
 	<section class="invitations">
 		<h2>Invitations</h2>
 		<ul class="invitations-list">
-			<li><a ng-href="#/accept/{{ playerId }}/{{ matchId }}">by {{
+			<li><a ng-href="#/accept/{{ currentPlayer.$id }}/{{ matchId }}">by {{
 					player }} <span class="time">{{ time }}</span>
 			</a></li>
 		</ul>
@@ -11,7 +11,7 @@
 	<section class="active-matches">
 		<h2>Active Matches</h2>
 		<ul class="active-matches-list">
-			<li><a ng-href="#/match/{{ playerId }}/{{ matchId }}"><span
+			<li><a ng-href="#/match/{{ currentPlayer.$id }}/{{ matchId }}"><span
 					class="round-counter">Round {{round.number}}</span> <span
 					class="position">{{ position }}</span><br /> {{ round.status }} <span
 					class="time">{{ time }}</span></a></li>
@@ -20,7 +20,7 @@
 	<section class="previous-matches">
 		<h2>Previous Matches</h2>
 		<ul class="previous-matches-list">
-			<li><a ng-href="#/match/{{ playerId }}/{{ matchId }}"><span
+			<li><a ng-href="#/match/{{ currentPlayer.$id }}/{{ matchId }}"><span
 					class="time">{{ time }}</span> <span class="rank">{{ rank }}</span><br />
 					<ul class="players-result-list">
 						<li>{{ position }} {{ name }}</li>

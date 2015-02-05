@@ -1,0 +1,13 @@
+<section xmlns="http://www.w3.org/1999/xhtml" class="newmatch">
+	<h2>New Match</h2>
+	<ul class="friends-list">
+		<li
+			ng-repeat="(key, player) in players | filter : { uid : !currentPlayer.$id } : true | orderBy : name"><a
+			ng-click="addPlayer(key)">{{
+				player.name }} {{ player.uid }}</a></li>
+	</ul>
+	<h2>Selected</h2>
+	<ul>
+	   <li ng-repeat="pId in selected">{{ pId }}</li>
+	</ul>
+</section>

@@ -35,7 +35,7 @@ dixitApp.factory('Authentication', function($firebase, FIREBASE_URL,
 
 				var userInfo = {
 					date : Firebase.ServerValue.TIMESTAMP,
-					regUser : regUser.uid,
+					uid : regUser.uid,
 					name : player.name,
 					email : player.email
 				};
