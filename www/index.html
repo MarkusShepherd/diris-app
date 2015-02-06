@@ -25,12 +25,13 @@
 <script type="text/javascript" src="lib/bootstrap.js"></script>
 
 <script type="text/javascript" src="js/app.js"></script>
+<script type="text/javascript" src="js/util.js"></script>
 <script type="text/javascript" src="js/authentication.js"></script>
 <script type="text/javascript" src="js/login.js"></script>
 <script type="text/javascript" src="js/registration.js"></script>
 <script type="text/javascript" src="js/status.js"></script>
 <script type="text/javascript" src="js/players.js"></script>
-<script type="text/javascript" src="js/playerslist.js"></script>
+<script type="text/javascript" src="js/newmatch.js"></script>
 <!-- script type="text/javascript" src="js/controllers.js"></script -->
 
 </head>
@@ -60,7 +61,7 @@
 
 		ga('create', 'UA-56725382-3', 'auto');
 		ga('send', 'pageview');
-		ga('set', '&uid', '');
+		ga('set', '&uid', currentPlayer.$id);
 		//]]>
 	</script>
 </body>

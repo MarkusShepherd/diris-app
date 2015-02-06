@@ -10,6 +10,6 @@
 		<li ng-repeat="(key, player) in selected | orderBy : name"><a
 			ng-click="removePlayer(key)">{{ player.name }} {{ player.uid }}</a></li>
 	</ul>
-	<button ng-click="sendInvite()" class="btn button"
+	<button ng-click="createMatch()" class="btn button"
 		ng-disable="numPlayers < 2">Send invites</button>
 </section>

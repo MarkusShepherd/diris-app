@@ -13,7 +13,7 @@ dixitApp.config([ '$routeProvider', function($routeProvider) {
 		controller : 'PlayerController'
 	}).when('/newmatch/:pId', {
 		templateUrl : 'partials/new-match.html',
-		controller : 'PlayersListController'
+		controller : 'NewMatchController'
 	}).when('/accept/:pId/:mId', {
 		templateUrl : 'partials/accept-invitation.html',
 		controller : 'PlayerController'
