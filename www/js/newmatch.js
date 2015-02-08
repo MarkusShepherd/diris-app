@@ -3,8 +3,8 @@ dixitApp.controller('NewMatchController', function($scope, $rootScope,
 
 	var ref = new Firebase(FIREBASE_URL + 'players');
 	var playersInfo = $firebase(ref);
-	var playersObj = $firebase(ref).$asObject();
-	var playersArray = $firebase(ref).$asArray();
+	var playersObj = playersInfo.$asObject();
+	var playersArray = playersInfo.$asArray();
 
 	playersObj.$loaded().then(function(data) {
 		$scope.players = playersObj;
@@ -12,7 +12,7 @@ dixitApp.controller('NewMatchController', function($scope, $rootScope,
 
 	$scope.selected = {};
 	$scope.numPlayers = 0;
-	$scope.roundsPerPlayer = 1;
+	$scope.roundsPerPlayer = 2;
 
 	$scope.addPlayer = function(pId) {
 		$scope.players[pId].selected = true;
@@ -30,12 +30,12 @@ dixitApp.controller('NewMatchController', function($scope, $rootScope,
 
 	$scope.createMatch = function() {
 		var match = {
+			rounds : [],
 			playerIds : [],
-			roundIds : [],
 			standings : [],
 			currentRound : 0,
-			timeout : 86400,
-			status : "WAITING"
+			timeout : 24 * 60 * 60,
+			status : "STARTED"
 		};
 
 		for ( var pId in $scope.selected) {
@@ -48,9 +48,6 @@ dixitApp.controller('NewMatchController', function($scope, $rootScope,
 		match.numPlayers = match.playerIds.length;
 		match.totalRounds = match.numPlayers * $scope.roundsPerPlayer;
 
-		var roundsRef = new Firebase(FIREBASE_URL + 'rounds');
-		var roundsInfo = $firebase(roundsRef);
-
 		for (var i = 0; i < match.totalRounds; i++) {
 			round = {
 				roundNo : i,
@@ -59,11 +56,7 @@ dixitApp.controller('NewMatchController', function($scope, $rootScope,
 				status : i == 0 ? "SUBMIT_STORY" : "WAITING",
 			};
 
-			roundsInfo.$push(round).then(function(newChildRef) {
-				console.log("added round with id " + newChildRef.key());
-				console.log(newChildRef);
-				match.roundIds.push(newChildRef.key());
-			});
+			match.rounds.push(round);
 		}
 
 		var matchesRef = new Firebase(FIREBASE_URL + 'matches');
@@ -72,8 +65,23 @@ dixitApp.controller('NewMatchController', function($scope, $rootScope,
 		matchesInfo.$push(match).then(function(newChildRef) {
 			console.log("added match with id " + newChildRef.key());
 			console.log(newChildRef);
+
+			var mId = newChildRef.key();
+			console.log(match.playerIds);
+			for (var i = 0; i < match.playerIds.length; i++) {
+				var pId = match.playerIds[i];
+				console.log(pId);
+				var c = ref.child(pId + "/matchIds");
+				c.transaction(function(currentValue) {
+					var matches = currentValue ? currentValue : [];
+					matches.push(mId);
+					console.log(matches);
+					return matches;
+				});
+			}
+
 			$location.path('/overview/' + $rootScope.currentPlayer.$id);
 		});
-	}
+	} // createMatch
 
 }); // NewMatchController

@@ -1,0 +1,19 @@
+<section xmlns="http://www.w3.org/1999/xhtml" class="submit-image">
+	<h2>Match {{ match.$id }}</h2>
+	<section class="story" id="story" ng-show="round.story">
+		<blockquote>
+			<p>{{ round.story }}</p>
+		</blockquote>
+		<p>by {{ round.storyTellerId }}</p>
+	</section>
+	<section class="story-image" id="story-image">
+		<div class="buttons" ng-hide="round.image">
+			<button>Take photo</button>
+			<button>Upload existing</button>
+			<button>Choose from gallery</button>
+		</div>
+		<img id="image" alt="Image" width="100%" />
+		<textarea ng-model="round.story"></textarea>
+		<button ng-disable="!round.image || !round.story">Submit</button>
+	</section>
+</section>

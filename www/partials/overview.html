@@ -1,23 +1,25 @@
 <section xmlns="http://www.w3.org/1999/xhtml" class="overview">
-	<a class="newmatch" ng-href="#/newmatch/{{ currentPlayer.$id }}">+ New Match</a>
-	<section class="invitations">
+	<a class="newmatch" ng-href="#/newmatch/{{ currentPlayer.$id }}">+
+		New Match</a>
+	<section class="invitations" ng-hide="true">
 		<h2>Invitations</h2>
 		<ul class="invitations-list">
-			<li><a ng-href="#/accept/{{ currentPlayer.$id }}/{{ matchId }}">by {{
-					player }} <span class="time">{{ time }}</span>
+			<li><a ng-href="#/accept/{{ currentPlayer.$id }}/{{ matchId }}">by
+					{{ player }} <span class="time">{{ time }}</span>
 			</a></li>
 		</ul>
 	</section>
 	<section class="active-matches">
 		<h2>Active Matches</h2>
 		<ul class="active-matches-list">
-			<li><a ng-href="#/match/{{ currentPlayer.$id }}/{{ matchId }}"><span
+			<li ng-repeat="mId in player.matchIds"><a
+				ng-href="#/match/{{ player.$id }}/{{ mId }}">{{ mId }} <span
 					class="round-counter">Round {{round.number}}</span> <span
 					class="position">{{ position }}</span><br /> {{ round.status }} <span
 					class="time">{{ time }}</span></a></li>
 		</ul>
 	</section>
-	<section class="previous-matches">
+	<section class="previous-matches" ng-hide="true">
 		<h2>Previous Matches</h2>
 		<ul class="previous-matches-list">
 			<li><a ng-href="#/match/{{ currentPlayer.$id }}/{{ matchId }}"><span
