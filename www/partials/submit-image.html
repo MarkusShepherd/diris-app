@@ -7,13 +7,17 @@
 		<p>by {{ round.storyTellerId }}</p>
 	</section>
 	<section class="story-image" id="story-image">
+		<p class="error formerror" ng-show="message">{{ message }}</p>
 		<div class="buttons" ng-hide="round.image">
-			<button>Take photo</button>
-			<button>Upload existing</button>
-			<button>Choose from gallery</button>
+			<button class="button btn" ng-click="getImageFromCamera()">Take
+				photo</button>
+			<button class="button btn" ng-click="getImageFromLibrary()">Upload
+				existing</button>
+			<button class="button btn">Choose from gallery</button>
 		</div>
-		<img id="image" alt="Image" width="100%" />
+		<img id="image" alt="Image" width="100%"
+			ng-src="data:image/jpeg;base64,{{ imageData }}" />
 		<textarea ng-model="round.story"></textarea>
-		<button ng-disable="!round.image || !round.story">Submit</button>
+		<button class="button btn" ng-disable="!imageData || !round.story">Submit</button>
 	</section>
 </section>

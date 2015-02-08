@@ -34,4 +34,25 @@ dixitApp.controller('MatchController', function($routeParams, $scope,
 			$scope.round = roundObj;
 		});
 	}
+
+	function getImage(srcType) {
+		navigator.camera.getPicture(function(imageData) {
+			$scope.imageData = imageData;
+		}, function(message) {
+			$scope.message = message;
+		}, {
+			quality : 50,
+			destinationType : Camera.DestinationType.DATA_URL,
+			sourceType : srcType
+		});
+	}
+
+	$scope.getImageFromCamera = function() {
+		getImage(Camera.PictureSourceType.CAMERA);
+	}
+
+	$scope.getImageFromLibrary = function() {
+		getImage(Camera.PictureSourceType.PHOTOLIBRARY);
+	}
+
 }); // MatchController
