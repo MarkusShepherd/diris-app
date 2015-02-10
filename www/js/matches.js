@@ -1,5 +1,5 @@
 dixitApp.controller('MatchController', function($routeParams, $scope,
-		FIREBASE_URL, $firebase) {
+		FIREBASE_URL, $firebase, $location) {
 
 	var pId = $routeParams.pId;
 	var mId = $routeParams.mId;
@@ -22,6 +22,9 @@ dixitApp.controller('MatchController', function($routeParams, $scope,
 		$scope.match = matchObj;
 	});
 
+	$scope.readyForStoryImage = false;
+	$scope.readyForOtherImage = false;
+
 	if ($routeParams.rNo) {
 		var rNo = $routeParams.rNo;
 		$scope.rNo = rNo;
@@ -30,14 +33,26 @@ dixitApp.controller('MatchController', function($routeParams, $scope,
 				.child("matches/" + mId + "/rounds/" + rNo));
 		var roundObj = roundInfo.$asObject();
 
-		roundObj.$loaded().then(function(data) {
-			$scope.round = roundObj;
-		});
+		roundObj.$loaded().then(
+				function(data) {
+					$scope.round = roundObj;
+
+					if (roundObj.status == "SUBMIT_STORY"
+							&& roundObj.storyTellerId == pId) {
+						console.log("Storyteller!");
+						$scope.readyForStoryImage = true;
+					} else if (roundObj.status == "SUBMIT_OTHERS"
+							&& roundObj.storyTellerId != pId) {
+						console.log("Other player!");
+						$scope.readyForOtherImage = true;
+					}
+				});
 	}
 
 	function getImage(srcType) {
 		navigator.camera.getPicture(function(imageData) {
 			$scope.imageData = imageData;
+			$("#image").attr('src', 'data:image/jpeg;base64,' + imageData);
 		}, function(message) {
 			$scope.message = message;
 		}, {
@@ -53,6 +68,38 @@ dixitApp.controller('MatchController', function($routeParams, $scope,
 
 	$scope.getImageFromLibrary = function() {
 		getImage(Camera.PictureSourceType.PHOTOLIBRARY);
+	}
+
+	$scope.submitImage = function() {
+		console.log("submitImage()");
+		console.log($scope.round.story);
+		console.log($scope.imageData);
+
+		if ($scope.readyForStoryImage) {
+			roundObj.story = $scope.round.story;
+			roundObj.images = {};
+			roundObj.images[pId] = $scope.imageData;
+			roundObj.status = "SUBMIT_OTHERS";
+			roundObj.$save().then(function(ref) {
+				console.log("saved");
+				console.log(ref);
+				$location.path('/match/' + pId + '/' + mId);
+			}, function(error) {
+				$scope.message = error;
+			});
+		} else if ($scope.readyForOtherImage) {
+			roundObj.images[pId] = $scope.imageData;
+			if (roundObj.images.length == $scope.match.numPlayers) {
+				roundObj.status = "SUBMIT_VOTES";
+			}
+			roundObj.$save().then(function(ref) {
+				console.log("saved");
+				console.log(ref);
+				$location.path('/match/' + pId + '/' + mId);
+			}, function(error) {
+				$scope.message = error;
+			});
+		}
 	}
 
 }); // MatchController
