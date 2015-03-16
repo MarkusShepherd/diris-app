@@ -1,5 +1,9 @@
+var testUrl = 'http://localhost:8181';
+var liveUrl = 'http://dixit-app.appspot.com';
+
 var dixitApp = angular.module('dixitApp', [ 'ngRoute', 'firebase' ]).constant(
-		'FIREBASE_URL', 'https://dixitapp.firebaseio.com/');
+		'FIREBASE_URL', 'https://dixitapp.firebaseio.com/').constant(
+		'BACKEND_URL', testUrl);
 
 dixitApp.config([ '$routeProvider', function($routeProvider) {
 	$routeProvider.when('/login', {
