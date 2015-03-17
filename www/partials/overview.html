@@ -1,5 +1,5 @@
 <section xmlns="http://www.w3.org/1999/xhtml" class="overview">
-	<a class="newmatch" ng-href="#/newmatch/{{ currentPlayer.key.id }}">+
+	<a class="newmatch" ng-href="#/newmatch">+
 		New Match</a>
 	<section class="invitations" ng-show="waiting.length > 0">
 		<h2>Invitations</h2>
@@ -14,9 +14,7 @@
 		<h2>Active Matches</h2>
 		<ul class="active-matches-list">
 			<li ng-repeat="match in inprogress"><a
-				ng-href="#/match/{{ currentPlayer.key.id }}/{{ match.key.id }}">{{
-					match.key.id }} <span class="round-counter">Round {{
-						match.currentRound + 1 }} of {{ match.totalRounds }}</span> <span
+				ng-href="#/match/{{ match.key.id }}"><span class="round-counter">Round {{ match.currentRound + 1 }} of {{ match.totalRounds }}</span> <span
 					class="position">{{ position }}</span><br /> {{
 					match.rounds[match.currentRound].status }} <span class="time">{{
 						time }}</span>
@@ -27,7 +25,7 @@
 		<h2>Previous Matches</h2>
 		<ul class="previous-matches-list">
 			<li ng-repeat="match in finished"><a
-				ng-href="#/match/{{ currentPlayer.key.id }}/{{ match.key.id }}"><span
+				ng-href="#/review/{{ match.key.id }}"><span
 					class="time">{{ time }}</span> <span class="rank">{{ rank }}</span><br />
 					<ul class="players-result-list">
 						<li>{{ position }} {{ name }}</li>

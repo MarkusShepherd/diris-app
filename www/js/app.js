@@ -1,8 +1,7 @@
 var testUrl = 'http://localhost:8181';
 var liveUrl = 'http://dixit-app.appspot.com';
 
-var dixitApp = angular.module('dixitApp', [ 'ngRoute', 'firebase' ]).constant(
-		'FIREBASE_URL', 'https://dixitapp.firebaseio.com/').constant(
+var dixitApp = angular.module('dixitApp', [ 'ngRoute' ]).constant(
 		'BACKEND_URL', testUrl);
 
 dixitApp.config([ '$routeProvider', function($routeProvider) {
@@ -12,25 +11,25 @@ dixitApp.config([ '$routeProvider', function($routeProvider) {
 	}).when('/register', {
 		templateUrl : 'partials/register.html',
 		controller : 'RegistrationController'
-	}).when('/overview/:pId', {
+	}).when('/overview', {
 		templateUrl : 'partials/overview.html',
 		controller : 'PlayerController'
-	}).when('/newmatch/:pId', {
+	}).when('/newmatch', {
 		templateUrl : 'partials/new-match.html',
 		controller : 'NewMatchController'
-	}).when('/accept/:pId/:mId', {
+	}).when('/accept/:mId', {
 		templateUrl : 'partials/accept-invitation.html',
 		controller : 'PlayerController'
-	}).when('/match/:pId/:mId', {
+	}).when('/match/:mId', {
 		templateUrl : 'partials/match.html',
 		controller : 'MatchController'
-	}).when('/image/:pId/:mId/:rNo', {
+	}).when('/image/:mId/:rNo', {
 		templateUrl : 'partials/submit-image.html',
 		controller : 'MatchController'
-	}).when('/vote/:pId/:mId/:rNo', {
+	}).when('/vote/:mId/:rNo', {
 		templateUrl : 'partials/vote-image.html',
 		controller : 'MatchController'
-	}).when('/review/:pId/:mId', {
+	}).when('/review/:mId/:rNo', {
 		templateUrl : 'partials/review-round.html',
 		controller : 'MatchController'
 	}).otherwise({

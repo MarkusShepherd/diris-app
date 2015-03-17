@@ -1,16 +1,20 @@
 <section xmlns="http://www.w3.org/1999/xhtml" class="match">
-	<h2>Match {{ match.$id }}</h2>
-	<h3>Players</h3>
-	<ul>
-		<li ng-repeat="id in match.playerIds"
-			class="player {{ pId == id ? 'player-active' : '' }}">{{ id }}</li>
-	</ul>
-	<h3>Rounds</h3>
-	<ul>
-		<li ng-repeat="round in match.rounds"
-			class="round-{{ round.status | lowercase }}"><a
-			ng-href="#/image/{{ pId }}/{{ mId }}/{{ round.roundNo }}"
-			class="btn btn-primary" ng-diabled="round.status == 'FINISHED'">{{
-				round.status }}</a></li>
-	</ul>
+	<h2>Match {{ match.key.id }}</h2>
+	<section ng-show="players">
+		<h3>Players</h3>
+		<ul>
+			<li ng-repeat="player in players"
+				class="player {{ currentPlayer.key.id == player.key.id ? 'player-active' : '' }}">{{
+				player.name }}</li>
+		</ul>
+	</section>
+	<section ng-show="match">
+		<h3>Rounds</h3>
+		<ul>
+			<li ng-repeat="round in match.rounds"
+				class="round-{{ round.status | lowercase }}"><a
+				ng-href="#/{{ round.status == 'FINISHED' ? 'review' : (round.status == 'SUBMIT_VOTES' ? 'vote' : 'image') }}/{{ mId }}/{{ $index }}"
+				class="btn btn-primary">{{ $index + 1 }}. {{ round.status }}</a></li>
+		</ul>
+	</section>
 </section>

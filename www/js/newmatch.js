@@ -1,86 +1,83 @@
 dixitApp.controller('NewMatchController', function($scope, $rootScope,
-		$location, $firebase, FIREBASE_URL) {
+		$location, $http, BACKEND_URL) {
 
-	var ref = new Firebase(FIREBASE_URL + 'players');
-	var playersInfo = $firebase(ref);
-	var playersObj = playersInfo.$asObject();
-	var playersArray = playersInfo.$asArray();
+	if (!("currentPlayer" in $rootScope)) {
+		$location.path('/login');
+		return;
+	}
 
-	playersObj.$loaded().then(function(data) {
-		$scope.players = playersObj;
-	}); // meetings Object Loaded
+	var player = $rootScope.currentPlayer;
+
+	$http.get(BACKEND_URL + '/player').success(
+			function(data, status, headers, config) {
+				console.log('sucess');
+				console.log(data);
+				console.log(status);
+				console.log(headers);
+				console.log(config);
+				$scope.players = data;
+			}).error(function(data, status, headers, config) {
+		console.log('error');
+		console.log(data);
+		console.log(status);
+		console.log(headers);
+		console.log(config);
+	});
 
 	$scope.selected = {};
 	$scope.numPlayers = 0;
 	$scope.roundsPerPlayer = 2;
 
-	$scope.addPlayer = function(pId) {
-		$scope.players[pId].selected = true;
-		$scope.selected[pId] = $scope.players[pId];
+	$scope.addPlayer = function(p) {
+		p.selected = true;
+		$scope.selected["" + p.key.id] = p;
 		$scope.numPlayers++;
-		console.log("Added player " + pId + "; total: " + $scope.numPlayers);
+		console.log("Added player " + p.name + " (" + p.key.id + "); total: "
+				+ $scope.numPlayers);
 	};
 
-	$scope.removePlayer = function(pId) {
-		$scope.players[pId].selected = false;
-		delete $scope.selected[pId];
+	$scope.removePlayer = function(p) {
+		p.selected = false;
+		delete $scope.selected["" + p.key.id];
 		$scope.numPlayers--;
-		console.log("Removed player " + pId + "; total: " + $scope.numPlayers);
+		console.log("Removed player " + p.name + " (" + p.key.id + "); total: "
+				+ $scope.numPlayers);
 	};
 
 	$scope.createMatch = function() {
-		var match = {
-			rounds : [],
-			playerIds : [],
-			standings : [],
-			currentRound : 0,
-			timeout : 24 * 60 * 60,
-			status : "STARTED"
-		};
+		var playerIds = [];
 
-		for ( var pId in $scope.selected) {
-			match.playerIds.push(pId);
-			match.standings[pId] = 0;
+		var includeCurrent = false;
+
+		for (pId in $scope.selected) {
+			var id = parseInt(pId, 10);
+			playerIds.push(id);
+			if (id == player.key.id)
+				includeCurrent = true;
 		}
 
-		shuffle(match.playerIds);
+		if (!includeCurrent)
+			playerIds.push(player.key.id);
 
-		match.numPlayers = match.playerIds.length;
-		match.totalRounds = match.numPlayers * $scope.roundsPerPlayer;
+		console.log(playerIds);
 
-		for (var i = 0; i < match.totalRounds; i++) {
-			round = {
-				roundNo : i,
-				storyTellerId : match.playerIds[i % match.numPlayers],
-				story : "",
-				status : i == 0 ? "SUBMIT_STORY" : "WAITING",
-			};
+		$http.post(BACKEND_URL + '/match', playerIds).success(
+				function(data, status, headers, config) {
+					console.log('sucess');
+					console.log(data);
+					console.log(status);
+					console.log(headers);
+					console.log(config);
 
-			match.rounds.push(round);
-		}
+					$location.path('/overview');
+				}).error(function(data, status, headers, config) {
+			console.log('error');
+			console.log(data);
+			console.log(status);
+			console.log(headers);
+			console.log(config);
 
-		var matchesRef = new Firebase(FIREBASE_URL + 'matches');
-		var matchesInfo = $firebase(matchesRef);
-
-		matchesInfo.$push(match).then(function(newChildRef) {
-			console.log("added match with id " + newChildRef.key());
-			console.log(newChildRef);
-
-			var mId = newChildRef.key();
-			console.log(match.playerIds);
-			for (var i = 0; i < match.playerIds.length; i++) {
-				var pId = match.playerIds[i];
-				console.log(pId);
-				var c = ref.child(pId + "/matchIds");
-				c.transaction(function(currentValue) {
-					var matches = currentValue ? currentValue : [];
-					matches.push(mId);
-					console.log(matches);
-					return matches;
-				});
-			}
-
-			$location.path('/overview/' + $rootScope.currentPlayer.$id);
+			$scope.message = "There was an error";
 		});
 	} // createMatch
 

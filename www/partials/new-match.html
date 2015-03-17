@@ -1,14 +1,14 @@
 <section xmlns="http://www.w3.org/1999/xhtml" class="newmatch">
 	<h2>New Match</h2>
 	<ul class="friends-list">
-		<li ng-repeat="(key, player) in players | orderBy : name"
-			ng-hide="player.selected"><a ng-click="addPlayer(key)">{{
-				player.name }} {{ player.uid }}</a></li>
+		<li ng-repeat="player in players | orderBy : name"
+			ng-hide="player.selected"><a ng-click="addPlayer(player)">{{
+				player.name }} {{ player.email }} {{ player.key.id }}</a></li>
 	</ul>
 	<h2>Selected</h2>
 	<ul>
-		<li ng-repeat="(key, player) in selected | orderBy : name"><a
-			ng-click="removePlayer(key)">{{ player.name }} {{ player.uid }}</a></li>
+		<li ng-repeat="(id, player) in selected | orderBy : name"><a
+			ng-click="removePlayer(player)">{{ player.name }} {{ player.email }} {{ player.key.id }}</a></li>
 	</ul>
 	<button ng-click="createMatch()" class="btn button"
 		ng-disable="numPlayers < 2">Send invites</button>

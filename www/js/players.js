@@ -1,7 +1,11 @@
-dixitApp.controller('PlayerController', function($routeParams, $scope, $http,
-		BACKEND_URL, $rootScope) {
+dixitApp.controller('PlayerController', function($scope, $http, BACKEND_URL,
+		$rootScope, $location) {
 
-	var pId = $routeParams.pId;
+	if (!("currentPlayer" in $rootScope)) {
+		$location.path('/login');
+		return;
+	}
+
 	var player = $rootScope.currentPlayer;
 
 	$http.get(BACKEND_URL + '/player/id/' + player.key.id + '/matches/waiting')
@@ -57,12 +61,4 @@ dixitApp.controller('PlayerController', function($routeParams, $scope, $http,
 				console.log(headers);
 				console.log(config);
 			});
-
-	/*
-	 * var ref = new Firebase(FIREBASE_URL); var playerInfo =
-	 * $firebase(ref.child("players/" + pId)); var playerObj =
-	 * playerInfo.$asObject();
-	 * 
-	 * playerObj.$loaded().then(function(data) { $scope.player = playerObj; });
-	 */// meetings Object Loaded
 }); // PlayerController

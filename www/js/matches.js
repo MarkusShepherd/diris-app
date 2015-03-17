@@ -1,53 +1,72 @@
 dixitApp.controller('MatchController', function($routeParams, $scope,
-		FIREBASE_URL, $firebase, $location) {
+		$location, $http, BACKEND_URL, $rootScope) {
 
-	var pId = $routeParams.pId;
+	if (!("currentPlayer" in $rootScope)) {
+		$location.path('/login');
+		return;
+	}
+
 	var mId = $routeParams.mId;
+	var player = $rootScope.currentPlayer;
 
-	$scope.pId = pId;
 	$scope.mId = mId;
 
-	var ref = new Firebase(FIREBASE_URL);
-	var playerInfo = $firebase(ref.child("players/" + pId));
-	var playerObj = playerInfo.$asObject();
+	$http.get(BACKEND_URL + '/match/' + mId).success(
+			function(data, status, headers, config) {
+				console.log('sucess');
+				console.log(data);
+				console.log(status);
+				console.log(headers);
+				console.log(config);
 
-	playerObj.$loaded().then(function(data) {
-		$scope.player = playerObj;
-	});
+				$scope.match = data;
 
-	var matchInfo = $firebase(ref.child("matches/" + mId));
-	var matchObj = matchInfo.$asObject();
+				$scope.readyForStoryImage = false;
+				$scope.readyForOtherImage = false;
 
-	matchObj.$loaded().then(function(data) {
-		$scope.match = matchObj;
-	});
+				if ($routeParams.rNo) {
+					var rNo = $routeParams.rNo;
+					$scope.rNo = rNo;
 
-	$scope.readyForStoryImage = false;
-	$scope.readyForOtherImage = false;
+					var roundObj = $scope.match.rounds[rNo];
 
-	if ($routeParams.rNo) {
-		var rNo = $routeParams.rNo;
-		$scope.rNo = rNo;
-
-		var roundInfo = $firebase(ref
-				.child("matches/" + mId + "/rounds/" + rNo));
-		var roundObj = roundInfo.$asObject();
-
-		roundObj.$loaded().then(
-				function(data) {
 					$scope.round = roundObj;
 
 					if (roundObj.status == "SUBMIT_STORY"
-							&& roundObj.storyTellerId == pId) {
+							&& roundObj.storyTellerKey.id == player.key.id) {
 						console.log("Storyteller!");
 						$scope.readyForStoryImage = true;
 					} else if (roundObj.status == "SUBMIT_OTHERS"
-							&& roundObj.storyTellerId != pId) {
+							&& roundObj.storyTellerKey.id != player.key.id) {
 						console.log("Other player!");
 						$scope.readyForOtherImage = true;
 					}
-				});
-	}
+				}
+
+			}).error(function(data, status, headers, config) {
+		console.log('error');
+		console.log(data);
+		console.log(status);
+		console.log(headers);
+		console.log(config);
+	});
+
+	$http.get(BACKEND_URL + '/match/' + mId + '/players').success(
+			function(data, status, headers, config) {
+				console.log('sucess');
+				console.log(data);
+				console.log(status);
+				console.log(headers);
+				console.log(config);
+
+				$scope.players = data;
+			}).error(function(data, status, headers, config) {
+		console.log('error');
+		console.log(data);
+		console.log(status);
+		console.log(headers);
+		console.log(config);
+	});
 
 	function getImage(srcType) {
 		navigator.camera.getPicture(function(imageData) {
@@ -76,6 +95,7 @@ dixitApp.controller('MatchController', function($routeParams, $scope,
 		console.log($scope.imageData);
 
 		if ($scope.readyForStoryImage) {
+			var roundObj = $scope.match.rounds[$scope.rNo];
 			roundObj.story = $scope.round.story;
 			roundObj.images = {};
 			roundObj.images[pId] = $scope.imageData;
