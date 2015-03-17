@@ -3,7 +3,7 @@
 	<section ng-show="players">
 		<h3>Players</h3>
 		<ul>
-			<li ng-repeat="player in players"
+			<li ng-repeat="(pId, player) in players"
 				class="player {{ currentPlayer.key.id == player.key.id ? 'player-active' : '' }}">{{
 				player.name }}</li>
 		</ul>
@@ -13,8 +13,9 @@
 		<ul>
 			<li ng-repeat="round in match.rounds"
 				class="round-{{ round.status | lowercase }}"><a
-				ng-href="#/{{ round.status == 'FINISHED' ? 'review' : (round.status == 'SUBMIT_VOTES' ? 'vote' : 'image') }}/{{ mId }}/{{ $index }}"
-				class="btn btn-primary">{{ $index + 1 }}. {{ round.status }}</a></li>
+				ng-href="#/{{ round.status == 'FINISHED' ? 'review' : (round.status == 'SUBMIT_VOTES' ? 'vote' : 'image') }}/{{ mId }}/{{ $index }}" ng-disabled="round.status == 'WAITING'"
+				class="btn btn-primary">{{ $index + 1 }}. Story by {{ players['' + round.storyTellerKey.id].name }} 
+				({{ round.status }})</a></li>
 		</ul>
 	</section>
 </section>

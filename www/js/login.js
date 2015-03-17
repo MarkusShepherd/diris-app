@@ -9,12 +9,6 @@ dixitApp.controller('LoginController', function($scope, $location, $rootScope,
 	$scope.login = function() {
 		$http.get(BACKEND_URL + '/player/name/' + $scope.player.name).success(
 				function(data, status, headers, config) {
-					console.log('sucess');
-					console.log(data);
-					console.log(status);
-					console.log(headers);
-					console.log(config);
-
 					var player = data[0];
 
 					if (!player) {

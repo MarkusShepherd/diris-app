@@ -10,11 +10,6 @@ dixitApp.controller('PlayerController', function($scope, $http, BACKEND_URL,
 
 	$http.get(BACKEND_URL + '/player/id/' + player.key.id + '/matches/waiting')
 			.success(function(data, status, headers, config) {
-				console.log('sucess');
-				console.log(data);
-				console.log(status);
-				console.log(headers);
-				console.log(config);
 				$scope.waiting = data;
 			}).error(function(data, status, headers, config) {
 				console.log('error');
@@ -29,11 +24,6 @@ dixitApp.controller('PlayerController', function($scope, $http, BACKEND_URL,
 					BACKEND_URL + '/player/id/' + player.key.id
 							+ '/matches/inprogress').success(
 					function(data, status, headers, config) {
-						console.log('sucess');
-						console.log(data);
-						console.log(status);
-						console.log(headers);
-						console.log(config);
 						$scope.inprogress = data;
 					}).error(function(data, status, headers, config) {
 				console.log('error');
@@ -48,11 +38,6 @@ dixitApp.controller('PlayerController', function($scope, $http, BACKEND_URL,
 					BACKEND_URL + '/player/id/' + player.key.id
 							+ '/matches/finished').success(
 					function(data, status, headers, config) {
-						console.log('sucess');
-						console.log(data);
-						console.log(status);
-						console.log(headers);
-						console.log(config);
 						$scope.finished = data;
 					}).error(function(data, status, headers, config) {
 				console.log('error');

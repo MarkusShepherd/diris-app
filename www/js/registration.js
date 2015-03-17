@@ -4,12 +4,6 @@ dixitApp.controller('RegistrationController', function($scope, $location,
 	$scope.register = function() {
 		$http.post(BACKEND_URL + '/player', $scope.player).success(
 				function(data, status, headers, config) {
-					console.log('sucess');
-					console.log(data);
-					console.log(status);
-					console.log(headers);
-					console.log(config);
-
 					var player = data;
 
 					if (!player) {

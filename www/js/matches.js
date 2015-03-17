@@ -13,12 +13,6 @@ dixitApp.controller('MatchController', function($routeParams, $scope,
 
 	$http.get(BACKEND_URL + '/match/' + mId).success(
 			function(data, status, headers, config) {
-				console.log('sucess');
-				console.log(data);
-				console.log(status);
-				console.log(headers);
-				console.log(config);
-
 				$scope.match = data;
 
 				$scope.readyForStoryImage = false;
@@ -53,13 +47,13 @@ dixitApp.controller('MatchController', function($routeParams, $scope,
 
 	$http.get(BACKEND_URL + '/match/' + mId + '/players').success(
 			function(data, status, headers, config) {
-				console.log('sucess');
-				console.log(data);
-				console.log(status);
-				console.log(headers);
-				console.log(config);
+				$scope.players = {};
 
-				$scope.players = data;
+				for (var i = 0; i < data.length; i++) {
+					var p = data[i];
+					console.log(p);
+					$scope.players['' + p.key.id] = p;
+				}
 			}).error(function(data, status, headers, config) {
 		console.log('error');
 		console.log(data);

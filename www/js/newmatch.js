@@ -10,11 +10,6 @@ dixitApp.controller('NewMatchController', function($scope, $rootScope,
 
 	$http.get(BACKEND_URL + '/player').success(
 			function(data, status, headers, config) {
-				console.log('sucess');
-				console.log(data);
-				console.log(status);
-				console.log(headers);
-				console.log(config);
 				$scope.players = data;
 			}).error(function(data, status, headers, config) {
 		console.log('error');
@@ -63,12 +58,6 @@ dixitApp.controller('NewMatchController', function($scope, $rootScope,
 
 		$http.post(BACKEND_URL + '/match', playerIds).success(
 				function(data, status, headers, config) {
-					console.log('sucess');
-					console.log(data);
-					console.log(status);
-					console.log(headers);
-					console.log(config);
-
 					$location.path('/overview');
 				}).error(function(data, status, headers, config) {
 			console.log('error');
