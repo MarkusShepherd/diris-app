@@ -25,7 +25,7 @@
 
 <script type="text/javascript" src="js/app.js"></script>
 <script type="text/javascript" src="js/util.js"></script>
-<script type="text/javascript" src="js/authentication.js"></script>
+<script type="text/javascript" src="js/header.js"></script>
 <script type="text/javascript" src="js/login.js"></script>
 <script type="text/javascript" src="js/registration.js"></script>
 <script type="text/javascript" src="js/status.js"></script>
@@ -36,7 +36,7 @@
 
 </head>
 <body>
-	<header class="container" ng-include="'partials/header.html'"></header>
+	<header class="container" ng-controller="HeaderController" ng-include="'partials/header.html'"></header>
 	<div class="container" ng-view=""></div>
 	<script type="text/javascript"
 		src="https://cdn.flurry.com/js/flurry.js"></script>

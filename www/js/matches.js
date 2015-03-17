@@ -65,7 +65,7 @@ dixitApp.controller('MatchController', function($routeParams, $scope,
 	function getImage(srcType) {
 		navigator.camera.getPicture(function(imageData) {
 			$scope.imageData = imageData;
-			$("#image").attr('src', 'data:image/jpeg;base64,' + imageData);
+			$("#image").attr('src', "data:image/jpeg;base64," + imageData);
 		}, function(message) {
 			$scope.message = message;
 		}, {
@@ -86,34 +86,34 @@ dixitApp.controller('MatchController', function($routeParams, $scope,
 	$scope.submitImage = function() {
 		console.log("submitImage()");
 		console.log($scope.round.story);
-		console.log($scope.imageData);
 
-		if ($scope.readyForStoryImage) {
-			var roundObj = $scope.match.rounds[$scope.rNo];
-			roundObj.story = $scope.round.story;
-			roundObj.images = {};
-			roundObj.images[pId] = $scope.imageData;
-			roundObj.status = "SUBMIT_OTHERS";
-			roundObj.$save().then(function(ref) {
-				console.log("saved");
-				console.log(ref);
-				$location.path('/match/' + pId + '/' + mId);
-			}, function(error) {
-				$scope.message = error;
-			});
-		} else if ($scope.readyForOtherImage) {
-			roundObj.images[pId] = $scope.imageData;
-			if (roundObj.images.length == $scope.match.numPlayers) {
-				roundObj.status = "SUBMIT_VOTES";
-			}
-			roundObj.$save().then(function(ref) {
-				console.log("saved");
-				console.log(ref);
-				$location.path('/match/' + pId + '/' + mId);
-			}, function(error) {
-				$scope.message = error;
-			});
-		}
+		var fd = new FormData();
+
+		fd.append("image", $scope.imageData);
+		fd.append("player", player.key.id);
+		fd.append("match", mId);
+		fd.append("round", $scope.rNo);
+		if ($scope.round.story)
+			fd.append("story", $scope.round.story);
+
+		console.log(fd.toString());
+
+		$http.post(BACKEND_URL + '/image', fd, {
+        	withCredentials: true,
+        	headers: { 'Content-Type': undefined },
+        	transformRequest: angular.identity
+    	}).success(function(data, status, headers, config) {
+			console.log(data);
+			$location.path('/match/' + mId);
+		}).error(function(data, status, headers, config) {
+			console.log('error');
+			console.log(data);
+			console.log(status);
+			console.log(headers);
+			console.log(config);
+
+			$scope.message = "There was an error";
+		});
 	}
 
 }); // MatchController
