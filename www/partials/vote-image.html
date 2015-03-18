@@ -1,0 +1,19 @@
+<section xmlns="http://www.w3.org/1999/xhtml" class="vote-image">
+	<h2>Match {{ match.key.id }}</h2>
+	<section class="story" id="story">
+		<blockquote>
+			<p>{{ round.story }}</p>
+		</blockquote>
+		<p>by {{ players['' + round.storyTellerKey.id].name }}</p>
+	</section>
+	<section class="story-images" id="story-images">
+		<p>Select the right image!</p>
+		<p class="error formerror" ng-show="message">{{ message }}</p>
+		<div class="image-container" ng-repeat="image in images">
+			<a ng-click="selectImage(image)"><img ng-src="{{ image.url }}" /></a>
+			<p ng-show="image.key.id == selectedImage.key.id">Selected</p>
+		</div>
+		<button class="button btn" ng-click="submitVote()"
+			ng-disable="!selectedImage">Submit</button>
+	</section>
+</section>

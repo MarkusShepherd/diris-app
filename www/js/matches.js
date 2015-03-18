@@ -62,6 +62,19 @@ dixitApp.controller('MatchController', function($routeParams, $scope,
 		console.log(config);
 	});
 
+	if ($routeParams.rNo) {
+		$http.get(BACKEND_URL + '/match/' + mId + '/images/' + $routeParams.rNo)
+		.success(function(data, status, headers, config) {
+			$scope.images = data;
+		}).error(function(data, status, headers, config) {
+			console.log('error');
+			console.log(data);
+			console.log(status);
+			console.log(headers);
+			console.log(config);
+		});
+	}
+
 	function getImage(srcType) {
 		navigator.camera.getPicture(function(imageData) {
 			$scope.imageData = imageData;
@@ -73,15 +86,15 @@ dixitApp.controller('MatchController', function($routeParams, $scope,
 			destinationType : Camera.DestinationType.DATA_URL,
 			sourceType : srcType
 		});
-	}
+	};
 
 	$scope.getImageFromCamera = function() {
 		getImage(Camera.PictureSourceType.CAMERA);
-	}
+	};
 
 	$scope.getImageFromLibrary = function() {
 		getImage(Camera.PictureSourceType.PHOTOLIBRARY);
-	}
+	};
 
 	$scope.submitImage = function() {
 		console.log("submitImage()");
@@ -99,12 +112,39 @@ dixitApp.controller('MatchController', function($routeParams, $scope,
 		console.log(fd.toString());
 
 		$http.post(BACKEND_URL + '/image', fd, {
-        	withCredentials: true,
         	headers: { 'Content-Type': undefined },
         	transformRequest: angular.identity
     	}).success(function(data, status, headers, config) {
 			console.log(data);
 			$location.path('/match/' + mId);
+		}).error(function(data, status, headers, config) {
+			console.log('error');
+			console.log(data);
+			console.log(status);
+			console.log(headers);
+			console.log(config);
+
+			$scope.message = "There was an error";
+		});
+	};
+
+	$scope.selectImage = function(image) {
+		console.log("selectImage()");
+		console.log(image);
+
+		$scope.selectedImage = image;
+	};
+
+	$scope.submitVote = function() {
+		console.log("submitVote()");
+		console.log($scope.selectedImage);
+
+		$http.get(BACKEND_URL + '/vote?player=' + 
+			player.key.id + '&match=' + mId + '&round=' + $scope.rNo + '&image=' + $scope.selectedImage.key.id)
+		.success(function(data, status, headers, config) {
+			console.log(data);
+			if (data)
+				$location.path('/match/' + mId);
 		}).error(function(data, status, headers, config) {
 			console.log('error');
 			console.log(data);

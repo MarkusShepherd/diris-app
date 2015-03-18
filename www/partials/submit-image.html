@@ -1,11 +1,10 @@
 <section xmlns="http://www.w3.org/1999/xhtml" class="submit-image">
 	<h2>Match {{ match.key.id }}</h2>
-	<section class="story" id="story"
-		ng-show="!readyForStoryImage &amp;&amp; round.story">
+	<section class="story" id="story" ng-show="!readyForStoryImage &amp;&amp; round.story">
 		<blockquote>
 			<p>{{ round.story }}</p>
 		</blockquote>
-		<p>by {{ round.storyTellerKey.id }}</p>
+		<p>by {{ players['' + round.storyTellerKey.id].name }}</p>
 	</section>
 	<section class="story-image" id="story-image">
 		<p class="error formerror" ng-show="message">{{ message }}</p>
