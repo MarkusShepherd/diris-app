@@ -1,27 +1,23 @@
-<section xmlns="http://www.w3.org/1999/xhtml" class="submit-image">
-	<h2>Match {{ match.key.id }}</h2>
-	<section class="story" id="story" ng-show="!readyForStoryImage &amp;&amp; round.story">
+<section xmlns="http://www.w3.org/1999/xhtml">
+	<h2>Match</h2>
+	<ul>
+		<li><a ng-href="#/overview">Overview</a></li>
+		<li><a ng-href="#/match/{{ mId }}">Match</a></li>
+	</ul>
+	<section ng-show="!readyForStoryImage &amp;&amp; round.story">
 		<blockquote>
 			<p>{{ round.story }}</p>
 		</blockquote>
 		<p>by {{ players['' + round.storyTellerKey.id].name }}</p>
 	</section>
-	<section class="story-image" id="story-image">
-		<p class="error formerror" ng-show="message">{{ message }}</p>
-		<div class="buttons"
-			ng-show="readyForStoryImage || readyForOtherImage">
-			<button class="button btn" ng-click="getImageFromCamera()">Take
-				photo</button>
-			<button class="button btn" ng-click="getImageFromLibrary()">Upload
-				existing</button>
-			<!-- button class="button btn">Choose from gallery</button -->
+	<section>
+		<p ng-show="message">{{ message }}</p>
+		<div ng-show="readyForStoryImage || readyForOtherImage">
+			<button ng-click="getImageFromCamera()">Take photo</button>
+			<button ng-click="getImageFromLibrary()">Upload existing</button>
 		</div>
-		<img id="image" alt="Image" width="100%"
-			style="width: 100%; height: auto;" />
-		<textarea ng-show="readyForStoryImage" ng-model="round.story"
-			placeholder="Story" class="story-text"></textarea>
-		<button class="button btn" ng-click="submitImage()"
-			ng-show="readyForStoryImage || readyForOtherImage"
-			ng-disable="!imageData || !round.story">Submit</button>
+		<img id="image" alt="Image" width="100%" style="width: 100%; height: auto;" />
+		<textarea ng-show="readyForStoryImage" ng-model="round.story" placeholder="Story"></textarea>
+		<button ng-click="submitImage()" ng-show="readyForStoryImage || readyForOtherImage" ng-disable="!imageData || !round.story">Submit</button>
 	</section>
 </section>

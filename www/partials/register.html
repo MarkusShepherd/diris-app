@@ -1,11 +1,10 @@
-<section xmlns="http://www.w3.org/1999/xhtml" class="register">
+<section xmlns="http://www.w3.org/1999/xhtml">
 	<h2>Register</h2>
 	<p>
 		Already registered? <a href="#/login">Login</a>!
 	</p>
-	<p class="error formerror" ng-show="message">{{ message }}</p>
-	<form id="register" name="myform" novalidate="novalidate"
-		ng-submit="register()">
+	<p ng-show="message">{{ message }}</p>
+	<form id="register" name="myform" novalidate="novalidate" ng-submit="register()">
 		<input type="text" name="name" placeholder="Name"
 			ng-model="player.name" ng-required="true" /><br />
 		<p class="error validationerror"

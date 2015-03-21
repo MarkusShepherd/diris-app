@@ -1,8 +1,7 @@
-<section xmlns="http://www.w3.org/1999/xhtml" class="login">
+<section xmlns="http://www.w3.org/1999/xhtml">
 	<h2>Login</h2>
-	<p class="error formerror" ng-show="message">{{ message }}</p>
-	<form id="login" name="myform" novalidate="novalidate"
-		ng-submit="login()">
+	<p ng-show="message">{{ message }}</p>
+	<form id="login" name="myform" novalidate="novalidate" ng-submit="login()">
 		<!-- <input type="email" name="email" placeholder="Email"
 			ng-model="player.email" ng-required="true" /><br />
 		<p class="error validationerror"

@@ -1,0 +1,46 @@
+<section xmlns="http://www.w3.org/1999/xhtml">
+	<h2>Match</h2>
+	<ul>
+		<li><a ng-href="#/overview">Overview</a></li>
+		<li><a ng-href="#/match/{{ mId }}">Match</a></li>
+	</ul>
+	<section>
+		<blockquote>
+			<p>{{ round.story }}</p>
+		</blockquote>
+		<p>by {{ players['' + round.storyTellerKey.id].name }}</p>
+	</section>
+	<section>
+		<h3>Correct image</h3>
+		<img ng-src="{{ images['' + round.storyTellerKey.id].url }}" />
+		<p>Guessed by:
+			<ul>
+				<li ng-repeat="pId in filterValues(round.votes, round.images['' + round.storyTellerKey.id])">
+					{{ players['' + pId].name }}
+				</li>
+			</ul>
+		</p>
+	</section>
+	<section>
+		<h3>Other images</h3>
+		<div ng-repeat="player in filterOutKey(players, round.storyTellerKey.id)">
+			<p>{{ player.name }}</p>
+			<img ng-src="{{ images['' + player.key.id].url }}" />
+			<p>Voted by:
+				<ul>
+					<li ng-repeat="pId in filterValues(round.votes, round.images['' + player.key.id])">
+						{{ players['' + pId].name }}
+					</li>
+				</ul>
+			</p>
+		</div>
+	</section>
+	<section>
+		<h3>Scores</h3>
+		<ul>
+			<li ng-repeat="(key, player) in players">
+				{{ player.name }}: {{ round.scores['' + key] }}
+			</li>
+		</ul>
+	</section>
+</section>

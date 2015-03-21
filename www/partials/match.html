@@ -1,21 +1,26 @@
-<section xmlns="http://www.w3.org/1999/xhtml" class="match">
-	<h2>Match {{ match.key.id }}</h2>
+<section xmlns="http://www.w3.org/1999/xhtml">
+	<h2>Match</h2>
+	<ul>
+		<li><a ng-href="#/overview">Overview</a></li>
+	</ul>
 	<section ng-show="players">
-		<h3>Players</h3>
+		<h3>Standings</h3>
 		<ul>
-			<li ng-repeat="(pId, player) in players"
-				class="player {{ currentPlayer.key.id == player.key.id ? 'player-active' : '' }}">{{
-				player.name }}</li>
+			<li ng-repeat="(key, score) in match.standings">
+				{{ players['' + key].name }}: {{ score }}
+			</li>
 		</ul>
 	</section>
-	<section ng-show="match">
-		<h3>Rounds</h3>
-		<ul>
-			<li ng-repeat="round in match.rounds"
-				class="round-{{ round.status | lowercase }}"><a
-				ng-href="#/{{ round.status == 'FINISHED' ? 'review' : (round.status == 'SUBMIT_VOTES' ? 'vote' : 'image') }}/{{ mId }}/{{ $index }}" ng-disabled="round.status == 'WAITING'"
-				class="btn btn-primary">{{ $index + 1 }}. Story by {{ players['' + round.storyTellerKey.id].name }} 
-				({{ round.status }})</a></li>
-		</ul>
+	<section ng-repeat="round in match.rounds">
+		<a ng-href="#/{{ round.status == 'FINISHED' ? 'review' : (round.status == 'SUBMIT_VOTES' ? 'vote' : 'image') }}/{{ mId }}/{{ $index }}" ng-disabled="round.status == 'WAITING'" ng-disabled="round.status == 'WAITING'">
+			<h3>Round {{ $index + 1 }}</h3>
+			<p>{{ players['' + round.storyTellerKey.id].name }}<span ng-show="round.story">: "{{ round.story }}"</span></p>
+			<img ng-show="round.status == 'FINISHED'" ng-src="{{ images[round.images['' + round.storyTellerKey.id]].url }}" />
+			<p ng-show="round.status == 'FINISHED'">You scored {{ round.scores['' + currentPlayer.key.id] }} points.</p>
+			<p ng-show="round.status == 'SUBMIT_STORY'">Tell your story!</p>
+			<p ng-show="round.status == 'SUBMIT_OTHERS'">Submit your image!</p>
+			<img ng-show="round.status == 'SUBMIT_VOTES'" ng-repeat="(pId, iId) in round.images" ng-src="{{ images['' + iId].url }}" />
+			<p ng-show="round.status == 'SUBMIT_VOTES'">Vote!</p>
+		</a>
 	</section>
 </section>
