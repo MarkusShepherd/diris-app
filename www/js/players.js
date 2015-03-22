@@ -46,4 +46,9 @@ dixitApp.controller('PlayerController', function($scope, $http, BACKEND_URL,
 				console.log(headers);
 				console.log(config);
 			});
+
+	$scope.newMatch = function() {
+		$location.path('/newmatch');
+	}
+
 }); // PlayerController

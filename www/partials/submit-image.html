@@ -4,7 +4,7 @@
 		<li><a ng-href="#/overview">Overview</a></li>
 		<li><a ng-href="#/match/{{ mId }}">Match</a></li>
 	</ul>
-	<section ng-show="!readyForStoryImage &amp;&amp; round.story">
+	<section ng-show="!round.readyForStoryImage &amp;&amp; round.story">
 		<blockquote>
 			<p>{{ round.story }}</p>
 		</blockquote>
@@ -12,12 +12,12 @@
 	</section>
 	<section>
 		<p ng-show="message">{{ message }}</p>
-		<div ng-show="readyForStoryImage || readyForOtherImage">
+		<div ng-show="round.readyForStoryImage || round.readyForOtherImage">
 			<button ng-click="getImageFromCamera()">Take photo</button>
 			<button ng-click="getImageFromLibrary()">Upload existing</button>
 		</div>
 		<img id="image" alt="Image" width="100%" style="width: 100%; height: auto;" />
-		<textarea ng-show="readyForStoryImage" ng-model="round.story" placeholder="Story"></textarea>
-		<button ng-click="submitImage()" ng-show="readyForStoryImage || readyForOtherImage" ng-disable="!imageData || !round.story">Submit</button>
+		<textarea ng-show="round.readyForStoryImage" ng-model="round.story" placeholder="Story"></textarea>
+		<button ng-click="submitImage()" ng-show="round.readyForStoryImage || round.readyForOtherImage" ng-disable="!imageData || !round.story">Submit</button>
 	</section>
 </section>

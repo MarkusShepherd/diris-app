@@ -27,16 +27,12 @@ dixitApp.controller('NewMatchController', function($scope, $rootScope,
 		p.selected = true;
 		$scope.selected["" + p.key.id] = p;
 		$scope.numPlayers++;
-		console.log("Added player " + p.name + " (" + p.key.id + "); total: "
-				+ $scope.numPlayers);
 	};
 
 	$scope.removePlayer = function(p) {
 		p.selected = false;
 		delete $scope.selected["" + p.key.id];
 		$scope.numPlayers--;
-		console.log("Removed player " + p.name + " (" + p.key.id + "); total: "
-				+ $scope.numPlayers);
 	};
 
 	$scope.createMatch = function() {
@@ -53,8 +49,6 @@ dixitApp.controller('NewMatchController', function($scope, $rootScope,
 
 		if (!includeCurrent)
 			playerIds.push(player.key.id);
-
-		console.log(playerIds);
 
 		$http.post(BACKEND_URL + '/match', playerIds).success(
 				function(data, status, headers, config) {

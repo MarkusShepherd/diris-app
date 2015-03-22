@@ -11,7 +11,7 @@
 		<p>by {{ players['' + round.storyTellerKey.id].name }}</p>
 	</section>
 	<section>
-		<p>Select the right image!</p>
+		<p ng-show="round.readyForVote">Select the right image!</p>
 		<p ng-show="message">{{ message }}</p>
 		<div ng-repeat="(key, image) in images">
 			<a ng-click="selectImage(image)">
@@ -19,6 +19,6 @@
 			</a>
 			<p ng-show="image.key.id == selectedImage.key.id">Selected</p>
 		</div>
-		<button ng-click="submitVote()" ng-disable="!selectedImage">Submit</button>
+		<button ng-show="round.readyForVote" ng-click="submitVote()" ng-disable="!round.readyForVote || !selectedImage">Submit</button>
 	</section>
 </section>

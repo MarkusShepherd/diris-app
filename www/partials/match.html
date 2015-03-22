@@ -17,10 +17,10 @@
 			<p>{{ players['' + round.storyTellerKey.id].name }}<span ng-show="round.story">: "{{ round.story }}"</span></p>
 			<img ng-show="round.status == 'FINISHED'" ng-src="{{ images[round.images['' + round.storyTellerKey.id]].url }}" />
 			<p ng-show="round.status == 'FINISHED'">You scored {{ round.scores['' + currentPlayer.key.id] }} points.</p>
-			<p ng-show="round.status == 'SUBMIT_STORY'">Tell your story!</p>
-			<p ng-show="round.status == 'SUBMIT_OTHERS'">Submit your image!</p>
-			<img ng-show="round.status == 'SUBMIT_VOTES'" ng-repeat="(pId, iId) in round.images" ng-src="{{ images['' + iId].url }}" />
-			<p ng-show="round.status == 'SUBMIT_VOTES'">Vote!</p>
+			<p ng-show="round.readyForStoryImage">Tell your story!</p>
+			<p ng-show="round.readyForOtherImage">Submit your image!</p>
+			<img ng-show="round.readyForVote" ng-repeat="(pId, iId) in round.images" ng-src="{{ images['' + iId].url }}" />
+			<p ng-show="round.readyForVote">Vote!</p>
 		</a>
 	</section>
 </section>

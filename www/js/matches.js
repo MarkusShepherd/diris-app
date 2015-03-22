@@ -1,5 +1,5 @@
 dixitApp.controller('MatchController', function($routeParams, $scope,
-		$location, $http, BACKEND_URL, $rootScope) {
+		$location, $http, BACKEND_URL, $rootScope, $q) {
 
 	if (!("currentPlayer" in $rootScope)) {
 		$location.path('/login');
@@ -11,12 +11,30 @@ dixitApp.controller('MatchController', function($routeParams, $scope,
 
 	$scope.mId = mId;
 
-	$http.get(BACKEND_URL + '/match/' + mId).success(
+	var matchPromise = $http.get(BACKEND_URL + '/match/' + mId);
+
+	matchPromise.success(
 		function(data, status, headers, config) {
 			$scope.match = data;
 
-			$scope.readyForStoryImage = false;
-			$scope.readyForOtherImage = false;
+			for (var i = 0; i < $scope.match.rounds.length; i++) {
+				var roundObj = $scope.match.rounds[i];
+				roundObj.readyForStoryImage = false;
+				roundObj.readyForOtherImage = false;
+				roundObj.readyForVote = false;
+
+				if (roundObj.status == "SUBMIT_STORY"
+						&& roundObj.storyTellerKey.id == player.key.id)
+					roundObj.readyForStoryImage = true;
+				else if (roundObj.status == "SUBMIT_OTHERS"
+						&& roundObj.storyTellerKey.id != player.key.id
+						&& !(('' + player.key.id) in roundObj.images))
+					roundObj.readyForOtherImage = true;
+				else if (roundObj.status == "SUBMIT_VOTES"
+						&& roundObj.storyTellerKey.id != player.key.id
+						&& !(('' + player.key.id) in roundObj.votes))
+					roundObj.readyForVote = true;
+			}
 
 			if ($routeParams.rNo) {
 				var rNo = $routeParams.rNo;
@@ -25,14 +43,6 @@ dixitApp.controller('MatchController', function($routeParams, $scope,
 				var roundObj = $scope.match.rounds[rNo];
 
 				$scope.round = roundObj;
-
-				if (roundObj.status == "SUBMIT_STORY"
-						&& roundObj.storyTellerKey.id == player.key.id) {
-					$scope.readyForStoryImage = true;
-				} else if (roundObj.status == "SUBMIT_OTHERS"
-						&& roundObj.storyTellerKey.id != player.key.id) {
-					$scope.readyForOtherImage = true;
-				}
 			}
 	}).error(function(data, status, headers, config) {
 		console.log('error');
@@ -42,7 +52,9 @@ dixitApp.controller('MatchController', function($routeParams, $scope,
 		console.log(config);
 	});
 
-	$http.get(BACKEND_URL + '/match/' + mId + '/players').success(
+	var playersPromise = $http.get(BACKEND_URL + '/match/' + mId + '/players');
+
+	playersPromise.success(
 		function(data, status, headers, config) {
 			$scope.players = {};
 
@@ -59,8 +71,9 @@ dixitApp.controller('MatchController', function($routeParams, $scope,
 	});
 
 	if ($routeParams.rNo) {
-		$http.get(BACKEND_URL + '/match/' + mId + '/images/' + $routeParams.rNo)
-		.success(function(data, status, headers, config) {
+		var imagesPromise = $http.get(BACKEND_URL + '/match/' + mId + '/images/' + $routeParams.rNo);
+
+		imagesPromise.success(function(data, status, headers, config) {
 			$scope.images = {};
 
 			for (var i = 0; i < data.length; i++) {
@@ -75,6 +88,11 @@ dixitApp.controller('MatchController', function($routeParams, $scope,
 			console.log(config);
 		});
 	}
+
+	/* $q.all([matchPromise, playersPromise]).then(function (ret) {
+		console.log("$q.all");
+		console.log(ret);
+	}); */
 
 	function getImage(srcType) {
 		navigator.camera.getPicture(function(imageData) {
