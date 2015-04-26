@@ -87,6 +87,23 @@ dixitApp.controller('MatchController', function($routeParams, $scope,
 			console.log(headers);
 			console.log(config);
 		});
+	} else  {
+		var imagesPromise = $http.get(BACKEND_URL + '/match/' + mId + '/images');
+
+		imagesPromise.success(function(data, status, headers, config) {
+			$scope.images = {};
+
+			for (var i = 0; i < data.length; i++) {
+				var img = data[i];
+				$scope.images['' + img.key.id] = img;
+			}
+		}).error(function(data, status, headers, config) {
+			console.log('error');
+			console.log(data);
+			console.log(status);
+			console.log(headers);
+			console.log(config);
+		});
 	}
 
 	/* $q.all([matchPromise, playersPromise]).then(function (ret) {

@@ -2,7 +2,7 @@ var testUrl = 'http://localhost:8181';
 var liveUrl = 'http://dixit-app.appspot.com';
 
 var dixitApp = angular.module('dixitApp', [ 'ngRoute' ]).constant(
-		'BACKEND_URL', testUrl);
+		'BACKEND_URL', liveUrl);
 
 dixitApp.config([ '$routeProvider', function($routeProvider) {
 	$routeProvider.when('/login', {

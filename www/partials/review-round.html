@@ -12,8 +12,8 @@
 	</section>
 	<section>
 		<h3>Correct image</h3>
-		<img ng-src="{{ images['' + round.storyTellerKey.id].url }}" />
-		<p>Guessed by:
+		<img ng-src="{{ images[round.images['' + round.storyTellerKey.id]].url }}" class="img-responsive" />
+		<p ng-show="filterValues(round.votes, round.images['' + round.storyTellerKey.id]).length > 0">Guessed by:
 			<ul>
 				<li ng-repeat="pId in filterValues(round.votes, round.images['' + round.storyTellerKey.id])">
 					{{ players['' + pId].name }}
@@ -25,8 +25,8 @@
 		<h3>Other images</h3>
 		<div ng-repeat="player in filterOutKey(players, round.storyTellerKey.id)">
 			<p>{{ player.name }}</p>
-			<img ng-src="{{ images['' + player.key.id].url }}" />
-			<p>Voted by:
+			<img ng-src="{{ images[round.images['' + player.key.id]].url }}" class="img-responsive" />
+			<p ng-show="filterValues(round.votes, round.images['' + player.key.id]).length > 0">Voted by:
 				<ul>
 					<li ng-repeat="pId in filterValues(round.votes, round.images['' + player.key.id])">
 						{{ players['' + pId].name }}

@@ -15,9 +15,8 @@
 		<p ng-show="message">{{ message }}</p>
 		<div ng-repeat="(key, image) in images">
 			<a ng-click="selectImage(image)">
-				<img ng-src="{{ image.url }}" />
+				<img ng-src="{{ image.url }}" class="img-responsive image-{{ image.key.id == selectedImage.key.id ? 'selected' : 'normal' }}" />
 			</a>
-			<p ng-show="image.key.id == selectedImage.key.id">Selected</p>
 		</div>
 		<button ng-show="round.readyForVote" ng-click="submitVote()" ng-disable="!round.readyForVote || !selectedImage">Submit</button>
 	</section>

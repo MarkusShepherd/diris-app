@@ -15,11 +15,13 @@
 		<a ng-href="#/{{ round.status == 'FINISHED' ? 'review' : (round.status == 'SUBMIT_VOTES' ? 'vote' : 'image') }}/{{ mId }}/{{ $index }}" ng-disabled="round.status == 'WAITING'" ng-disabled="round.status == 'WAITING'">
 			<h3>Round {{ $index + 1 }}</h3>
 			<p>{{ players['' + round.storyTellerKey.id].name }}<span ng-show="round.story">: "{{ round.story }}"</span></p>
-			<img ng-show="round.status == 'FINISHED'" ng-src="{{ images[round.images['' + round.storyTellerKey.id]].url }}" />
+			<img ng-show="round.status == 'FINISHED'" ng-src="{{ images[round.images['' + round.storyTellerKey.id]].url }}" class="img-responsive" />
 			<p ng-show="round.status == 'FINISHED'">You scored {{ round.scores['' + currentPlayer.key.id] }} points.</p>
 			<p ng-show="round.readyForStoryImage">Tell your story!</p>
 			<p ng-show="round.readyForOtherImage">Submit your image!</p>
-			<img ng-show="round.readyForVote" ng-repeat="(pId, iId) in round.images" ng-src="{{ images['' + iId].url }}" />
+			<span ng-show="round.readyForVote" ng-repeat="(pId, iId) in round.images">
+				<img ng-src="{{ images['' + iId].url }}" class="img-responsive img-circle" style="max-width:100px;" />
+			</span>
 			<p ng-show="round.readyForVote">Vote!</p>
 		</a>
 	</section>

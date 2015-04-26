@@ -16,7 +16,7 @@
 			<button ng-click="getImageFromCamera()">Take photo</button>
 			<button ng-click="getImageFromLibrary()">Upload existing</button>
 		</div>
-		<img id="image" alt="Image" width="100%" style="width: 100%; height: auto;" />
+		<img id="image" alt="Image" class="img-responsive" />
 		<textarea ng-show="round.readyForStoryImage" ng-model="round.story" placeholder="Story"></textarea>
 		<button ng-click="submitImage()" ng-show="round.readyForStoryImage || round.readyForOtherImage" ng-disable="!imageData || !round.story">Submit</button>
 	</section>
