@@ -1,19 +1,19 @@
 <section xmlns="http://www.w3.org/1999/xhtml">
 	<h2>Register</h2>
 	<p>
-		Already registered? <a href="#/login">Login</a>!
+		Already registered? <a href="#/login" class="btn btn-default">Login!</a>
 	</p>
 	<p ng-show="message">{{ message }}</p>
 	<form id="register" name="myform" novalidate="novalidate" ng-submit="register()">
-		<input type="text" name="name" placeholder="Name" ng-model="player.name" ng-required="true" /><br />
+		<input type="text" name="name" placeholder="Name" ng-model="player.name" ng-required="true" class="form-control" /><br />
 		<p ng-show="myform.name.$invalid &amp;&amp; myform.name.$touched">Name is required</p>
 
-		<input type="email" name="email" placeholder="Email" ng-model="player.email" ng-required="true" /><br />
+		<input type="email" name="email" placeholder="Email" ng-model="player.email" ng-required="true" class="form-control" /><br />
 		<p ng-show="myform.email.$invalid &amp;&amp; myform.email.$touched">Must be a valid email</p>
 
 		<!-- <input type="password" name="password" placeholder="Password" ng-model="player.password" ng-required="true" /><br />
 		<p ng-show="myform.password.$invalid &amp;&amp; myform.password.$touched">Password is required</p> -->
 
-		<button type="submit" ng-disabled="myform.$invalid">Register</button>
+		<button type="submit" ng-disabled="myform.$invalid" class="btn btn-primary">Register</button>
 	</form>
 </section>

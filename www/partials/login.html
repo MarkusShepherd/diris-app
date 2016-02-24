@@ -5,15 +5,15 @@
 		<!-- <input type="email" name="email" placeholder="Email" ng-model="player.email" ng-required="true" /><br />
 		<p ng-show="myform.email.$invalid &amp;&amp; myform.email.$touched">Must be a valid email</p> -->
 
-		<input type="text" name="name" placeholder="Name" ng-model="player.name" ng-required="true" /><br />
+		<input type="text" name="name" placeholder="Name" ng-model="player.name" ng-required="true" class="form-control" /><br />
 		<p ng-show="myform.name.$invalid &amp;&amp; myform.name.$touched">Name is required</p>
 
 		<!-- <input type="password" name="password" placeholder="Password" ng-model="player.password" ng-required="true" /><br />
 		<p ng-show="myform.password.$invalid &amp;&amp; myform.password.$touched">Password is required</p> -->
 
-		<button type="submit" ng-disabled="myform.$invalid">Login</button>
+		<button type="submit" ng-disabled="myform.$invalid" class="btn btn-primary">Login</button>
 	</form>
 	<p>
-		No account? <a href="#/register">Register</a>!
+		No account? <a href="#/register" class="btn btn-default">Register!</a>
 	</p>
 </section>

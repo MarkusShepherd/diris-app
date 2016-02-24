@@ -1,34 +1,37 @@
-<section xmlns="http://www.w3.org/1999/xhtml">
-	<button ng-click="newMatch()">+ New Match</button>
-	<section ng-show="waiting.length > 0">
-		<h2>Invitations</h2>
-		<ul>
-			<li ng-repeat="match in inprogress">
-				<a ng-href="#/accept/{{ currentPlayer.key.id }}/{{ match.key.id }}">
+<section xmlns="http://www.w3.org/1999/xhtml" class="row">
+	<div class="col-lg-12">
+		<button ng-click="newMatch()" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> New Match</button>
+	</div>
+	
+	<div class="col-sm-12 col-md-6 col-lg-4">
+		<ul ng-show="waiting.length > 0" class="list-group">
+			<li class="list-group-item active">Invitations</li>
+			<li ng-repeat="match in inprogress" class="list-group-item">
+				<a ng-href="#/accept/{{ currentPlayer.key.id }}/{{ match.key.id }}" class="btn btn-link">
 					by {{ player }}
 				</a>
 			</li>
 		</ul>
-	</section>
-	<section ng-show="inprogress.length > 0">
-		<h2>Active Matches</h2>
-		<ul>
-			<li ng-repeat="match in inprogress">
-				<a ng-href="#/match/{{ match.key.id }}">
-					Round {{ match.currentRound + 1 }} of {{ match.totalRounds }}<br />
-					{{ match.rounds[match.currentRound].status }}
+	</div>
+	<div class="col-sm-12 col-md-6 col-lg-4">
+		<ul ng-show="inprogress.length > 0" class="list-group">
+			<li class="list-group-item active">Active Matches</li>
+			<li ng-repeat="match in inprogress" class="list-group-item">
+				<a ng-href="#/match/{{ match.key.id }}" class="btn btn-link">
+					Round {{ match.currentRound + 1 }} of {{ match.totalRounds }}
+					<span class="badge">{{ match.rounds[match.currentRound].status }}</span>
 				</a>
 			</li>
 		</ul>
-	</section>
-	<section ng-show="finished.length > 0">
-		<h2>Previous Matches</h2>
-		<ul>
-			<li ng-repeat="match in finished">
-				<a ng-href="#/match/{{ match.key.id }}">
+	</div>
+	<div class="col-sm-12 col-md-6 col-lg-4">
+		<ul ng-show="finished.length > 0" class="list-group">
+			<li class="list-group-item active">Previous Matches</li>
+			<li ng-repeat="match in finished" class="list-group-item">
+				<a ng-href="#/match/{{ match.key.id }}" class="btn btn-link">
 					{{ match.key.id }}
 				</a>
 			</li>
 		</ul>
-	</section>
+	</div>
 </section>

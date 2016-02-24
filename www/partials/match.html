@@ -1,26 +1,28 @@
 <section xmlns="http://www.w3.org/1999/xhtml">
 	<h2>Match</h2>
-	<ul>
+	<ul class="nav navbar-nav">
 		<li><a ng-href="#/overview">Overview</a></li>
 	</ul>
 	<section ng-show="players">
-		<h3>Standings</h3>
-		<ul>
-			<li ng-repeat="(key, score) in match.standings">
+		<ul class="list-group">
+			<li class="list-group-item active">Standings</li>
+			<li ng-repeat="(key, score) in match.standings | orderBy: -score" class="list-group-item">
 				{{ players['' + key].name }}: {{ score }}
 			</li>
 		</ul>
 	</section>
-	<section ng-repeat="round in match.rounds">
-		<a ng-href="#/{{ round.status == 'FINISHED' ? 'review' : (round.status == 'SUBMIT_VOTES' ? 'vote' : 'image') }}/{{ mId }}/{{ $index }}" ng-disabled="round.status == 'WAITING'" ng-disabled="round.status == 'WAITING'">
-			<h3>Round {{ $index + 1 }}</h3>
-			<p>{{ players['' + round.storyTellerKey.id].name }}<span ng-show="round.story">: "{{ round.story }}"</span></p>
-			<img ng-show="round.status == 'FINISHED'" ng-src="{{ images[round.images['' + round.storyTellerKey.id]].url }}" class="img-responsive" />
-			<p ng-show="round.status == 'FINISHED'">You scored {{ round.scores['' + currentPlayer.key.id] }} points.</p>
+	<section class="list-group">
+		<a ng-repeat="round in match.rounds" ng-href="#/{{ round.status == 'FINISHED' ? 'review' : round.status == 'SUBMIT_VOTES' ? 'vote' : 'image' }}/{{ mId }}/{{ $index }}" ng-disabled="round.status == 'WAITING'" class="list-group-item">
+			<h3 class="list-group-item-heading">Round {{ $index + 1 }}</h3>
+			<p>
+				<span ng-show="round.status == 'FINISHED'" class="badge">{{ round.scores['' + currentPlayer.key.id] }}</span>
+				{{ players['' + round.storyTellerKey.id].name }}<span ng-show="round.story">: "{{ round.story }}"</span>
+			</p>
+			<img ng-show="round.status == 'FINISHED'" ng-src="{{ images[round.images['' + round.storyTellerKey.id]].url }}" class="img-thumbnail" />
 			<p ng-show="round.readyForStoryImage">Tell your story!</p>
 			<p ng-show="round.readyForOtherImage">Submit your image!</p>
 			<span ng-show="round.readyForVote" ng-repeat="(pId, iId) in round.images">
-				<img ng-src="{{ images['' + iId].url }}" class="img-responsive img-circle" style="max-width:100px;" />
+				<img ng-src="{{ images['' + iId].url }}" class="img-thumbnail" />
 			</span>
 			<p ng-show="round.readyForVote">Vote!</p>
 		</a>
