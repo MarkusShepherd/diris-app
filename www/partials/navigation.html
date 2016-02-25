@@ -1,0 +1,20 @@
+<div class="container-fluid" xmlns="http://www.w3.org/1999/xhtml">
+	<div class="navbar-header">
+		<button ng-show="menu-items.length || currentPlayer" type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+		</button>
+		<a class="navbar-brand" href="#/overview">Dixit</a>
+	</div>
+	<div ng-show="menu-items.length || currentPlayer" class="collapse navbar-collapse" id="myNavbar">
+		<ul ng-show="menu-items.length" class="nav navbar-nav">
+			<li ng-repeat="item in menu-items"><a href="{{ item.link }}">{{ item.label }}</a></li>
+		</ul>
+		<ul ng-show="currentPlayer" class="nav navbar-nav navbar-right">
+			<li>
+				<a ng-click="logout()"><span class="glyphicon glyphicon-log-out"></span> Logout</a>
+			</li>
+		</ul>
+	</div>
+</div>

@@ -6,7 +6,7 @@
 	<section ng-show="players">
 		<ul class="list-group">
 			<li class="list-group-item active">Standings</li>
-			<li ng-repeat="(key, score) in match.standings | orderBy: -score" class="list-group-item">
+			<li ng-repeat="(key, score) in match.standings | orderBy: -'score'" class="list-group-item">
 				{{ players['' + key].name }}: {{ score }}
 			</li>
 		</ul>

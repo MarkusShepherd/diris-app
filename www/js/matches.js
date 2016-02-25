@@ -6,7 +6,9 @@ dixitApp.controller('MatchController', function($routeParams, $scope,
 		return;
 	}
 
-	blockUI.start();
+	var myBlockUI = blockUI.instances.get('myBlockUI');
+
+	myBlockUI.start();
 
 	var mId = $routeParams.mId;
 	var player = $rootScope.currentPlayer;
@@ -47,14 +49,14 @@ dixitApp.controller('MatchController', function($routeParams, $scope,
 				$scope.round = roundObj;
 			}
 
-			blockUI.stop();
+			myBlockUI.stop();
 	}).error(function(data, status, headers, config) {
 		console.log('error');
 		console.log(data);
 		console.log(status);
 		console.log(headers);
 		console.log(config);
-		blockUI.stop();
+		myBlockUI.stop();
 	});
 
 	var playersPromise = $http.get(BACKEND_URL + '/match/' + mId + '/players');
@@ -68,14 +70,14 @@ dixitApp.controller('MatchController', function($routeParams, $scope,
 				$scope.players['' + p.key.id] = p;
 			}
 
-			blockUI.stop();
+			myBlockUI.stop();
 	}).error(function(data, status, headers, config) {
 		console.log('error');
 		console.log(data);
 		console.log(status);
 		console.log(headers);
 		console.log(config);
-		blockUI.stop();
+		myBlockUI.stop();
 	});
 
 	if ($routeParams.rNo) {
@@ -89,14 +91,14 @@ dixitApp.controller('MatchController', function($routeParams, $scope,
 				$scope.images['' + img.key.id] = img;
 			}
 
-			blockUI.stop();
+			myBlockUI.stop();
 		}).error(function(data, status, headers, config) {
 			console.log('error');
 			console.log(data);
 			console.log(status);
 			console.log(headers);
 			console.log(config);
-			blockUI.stop();
+			myBlockUI.stop();
 		});
 	} else  {
 		var imagesPromise = $http.get(BACKEND_URL + '/match/' + mId + '/images');
@@ -109,14 +111,14 @@ dixitApp.controller('MatchController', function($routeParams, $scope,
 				$scope.images['' + img.key.id] = img;
 			}
 			
-			blockUI.stop();
+			myBlockUI.stop();
 		}).error(function(data, status, headers, config) {
 			console.log('error');
 			console.log(data);
 			console.log(status);
 			console.log(headers);
 			console.log(config);
-			blockUI.stop();
+			myBlockUI.stop();
 		});
 	}
 

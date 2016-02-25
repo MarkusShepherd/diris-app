@@ -1,4 +1,4 @@
-dixitApp.controller('HeaderController', function($scope, $rootScope, $location) {
+dixitApp.controller('NavigationController', function($scope, $rootScope, $location) {
 
 	$scope.logout = function() {
 			delete $rootScope.currentPlayer;

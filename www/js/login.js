@@ -6,8 +6,10 @@ function($scope, $location, $rootScope, $http, BACKEND_URL, blockUI) {
 		return;
 	}
 
+	var myBlockUI = blockUI.instances.get('myBlockUI');
+
 	$scope.login = function() {
-		blockUI.start();
+		myBlockUI.start();
 
 		$http.get(BACKEND_URL + '/player/name/' + $scope.player.name)
 			.success(function(data, status, headers, config) {
@@ -28,7 +30,7 @@ function($scope, $location, $rootScope, $http, BACKEND_URL, blockUI) {
 				console.log(headers);
 				console.log(config);
 				$scope.message = "There was an error";
-				blockUI.stop();
+				myBlockUI.stop();
 			});
 	} // login
 
