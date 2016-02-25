@@ -14,9 +14,11 @@ dixitApp.controller('PlayerController', function($scope, $http, BACKEND_URL,
 
 	$http.get(BACKEND_URL + '/player/id/' + player.key.id + '/matches/waiting')
 		.success(function(data, status, headers, config) {
-			$scope.waiting = data;
+			$scope.waiting = $.map(data, function(match) {
+				return processMatch(match, player);
+			});
 			myBlockUI.stop();
-			console.log('Waiting: ', data);
+			console.log('Waiting: ', $scope.waiting);
 		}).error(function(data, status, headers, config) {
 			console.log('error');
 			console.log(data);
@@ -27,9 +29,11 @@ dixitApp.controller('PlayerController', function($scope, $http, BACKEND_URL,
 
 	$http.get(BACKEND_URL + '/player/id/' + player.key.id + '/matches/inprogress')
 		.success(function(data, status, headers, config) {
-			$scope.inprogress = data;
+			$scope.inprogress = $.map(data, function(match) {
+				return processMatch(match, player);
+			});
 			myBlockUI.stop();
-			console.log('Progress: ', data);
+			console.log('Progress: ', $scope.inprogress);
 		}).error(function(data, status, headers, config) {
 			console.log('error');
 			console.log(data);
@@ -40,9 +44,11 @@ dixitApp.controller('PlayerController', function($scope, $http, BACKEND_URL,
 
 	$http.get(BACKEND_URL + '/player/id/' + player.key.id + '/matches/finished')
 		.success(function(data, status, headers, config) {
-			$scope.finished = data;
+			$scope.finished = $.map(data, function(match) {
+				return processMatch(match, player);
+			});
 			myBlockUI.stop();
-			console.log('Finished: ', data);
+			console.log('Finished: ', $scope.finished);
 		}).error(function(data, status, headers, config) {
 			console.log('error');
 			console.log(data);

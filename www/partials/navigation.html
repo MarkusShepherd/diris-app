@@ -8,10 +8,18 @@
 		<a class="navbar-brand" href="#/overview">Dixit</a>
 	</div>
 	<div ng-show="menu-items.length || currentPlayer" class="collapse navbar-collapse" id="myNavbar">
-		<ul ng-show="menu-items.length" class="nav navbar-nav">
-			<li ng-repeat="item in menu-items"><a href="{{ item.link }}">{{ item.label }}</a></li>
+		<ul class="nav navbar-nav"><!-- ng-show="menu-items.length" -->
+			<li>
+				<a href="#/overview"><span class="glyphicon glyphicon-home"></span> Overview</a>
+			</li>
+			<li ng-repeat="item in menu-items">
+				<a href="{{ item.link }}">{{ item.label }}</a>
+			</li>
 		</ul>
 		<ul ng-show="currentPlayer" class="nav navbar-nav navbar-right">
+			<li>
+				<a href="#/profile"><span class="glyphicon glyphicon-user"></span> {{ currentPlayer.name }}</a>
+			</li>
 			<li>
 				<a ng-click="logout()"><span class="glyphicon glyphicon-log-out"></span> Logout</a>
 			</li>
