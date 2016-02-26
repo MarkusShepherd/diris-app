@@ -1,18 +1,23 @@
 <section xmlns="http://www.w3.org/1999/xhtml">
-	<ul>
-		<li><a ng-href="#/overview">Overview</a></li>
-	</ul>
 	<h2>New Match</h2>
-	<ul>
-		<li ng-repeat="player in players" ng-hide="player.selected">
-			<a ng-click="addPlayer(player)">{{ player.name }}</a>
-		</li>
-	</ul>
+	<div class="list-group">
+		<a ng-repeat="player in players | orderBy:'name'" 
+			ng-hide="player.selected" 
+			ng-click="addPlayer(player)"
+			class="list-group-item">
+			{{ player.name }}
+		</a>
+	</div>
 	<h2>Selected</h2>
-	<ul>
-		<li ng-repeat="(id, player) in selected">
-			<a ng-click="removePlayer(player)">{{ player.name }}</a>
-		</li>
-	</ul>
-	<button ng-click="createMatch()" ng-disable="numPlayers < 2">Send invites</button>
+	<div class="list-group">
+		<a ng-repeat="(id, player) in selected" 
+			ng-click="removePlayer(player)"
+			class="list-group-item">
+			{{ player.name }}
+		</a>
+	</div>
+	<button ng-click="createMatch()" ng-disable="numPlayers < 3" class="btn btn-primary btn-block btn-lg">
+		<span class="glyphicon glyphicon-ok"></span>
+		Send invites
+	</button>
 </section>

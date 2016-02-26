@@ -3,7 +3,12 @@
 }
 
 body {
-	padding-bottom: 1em;
+	/*padding-bottom: 1em;*/
+	background-color: #f0f0f0;
+}
+
+h2 {
+	margin-top: 0;
 }
 
 .image-normal, .image-selected {
@@ -14,4 +19,16 @@ body {
 
 .image-selected {
 	border-color: #F00;
+}
+
+.form {
+	margin-bottom: 1em;
+}
+
+.text-right {
+	text-align: right;
+}
+
+.quote-story {
+	margin-bottom: 0;
 }

@@ -5,6 +5,8 @@ dixitApp.controller('PlayerController', function($scope, $http, BACKEND_URL,
 		$location.path('/login');
 		return;
 	}
+
+	$rootScope.menuItems = [];
 	
 	var myBlockUI = blockUI.instances.get('myBlockUI');
 

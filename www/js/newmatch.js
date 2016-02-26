@@ -6,6 +6,12 @@ dixitApp.controller('NewMatchController', function($scope, $rootScope,
 		return;
 	}
 
+	$rootScope.menuItems = [{
+		link: '#/overview',
+		label: 'Overview',
+		glyphicon: 'home'
+	}];
+
 	var player = $rootScope.currentPlayer;
 
 	$http.get(BACKEND_URL + '/player').success(

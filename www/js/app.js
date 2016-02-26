@@ -36,3 +36,21 @@ dixitApp.config([ '$routeProvider', function($routeProvider) {
 		redirectTo : '/login'
 	});
 } ]);
+
+dixitApp.filter('orderObjectBy', function() {
+  return function(items, field, reverse) {
+    var filtered = [];
+	angular.forEach(items, function(value, key) {
+		filtered.push({
+			key: key,
+			value: value
+		});
+	});
+    filtered.sort(function (a, b) {
+		return (a[field] > b[field] ? 1 : -1);
+    });
+    if (reverse) 
+    	filtered.reverse();
+    return filtered;
+  };
+});

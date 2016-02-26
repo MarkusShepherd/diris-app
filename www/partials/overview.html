@@ -1,53 +1,56 @@
 <section xmlns="http://www.w3.org/1999/xhtml" class="row">
-	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 center">
-		&nbsp;<br />
-		<button ng-click="newMatch()" class="btn btn-success btn-lg btn-block"><span class="glyphicon glyphicon-plus"></span> New Match</button>
-		<br />&nbsp;
+	<div class="col-lg-12">
+		<button ng-click="newMatch()" class="btn btn-success btn-lg btn-block">
+			<span class="glyphicon glyphicon-plus"></span> New Match
+		</button>
 	</div>
 	
 	<div ng-show="waiting.length > 0" class="col-sm-12 col-md-6 col-lg-4">
-		<ul class="list-group">
-			<li class="list-group-item active">Invitations</li>
-			<li ng-repeat="match in inprogress" class="list-group-item">
-				<a ng-href="#/accept/{{ currentPlayer.key.id }}/{{ match.key.id }}" class="btn btn-link">
-					by {{ player }}
-				</a>
-			</li>
-		</ul>
+		<div class="list-group">
+			<div class="list-group-item active">
+				<h4>Invitations</h4>
+			</div>
+			<a ng-repeat="match in inprogress" ng-href="#/accept/{{ currentPlayer.key.id }}/{{ match.key.id }}" class="list-group-item">
+				by {{ player }}
+			</a>
+		</div>
 	</div>
 	<div ng-show="inprogress.length > 0" class="col-sm-12 col-md-6 col-lg-4">
-		<ul class="list-group">
-			<li class="list-group-item active">Active Matches</li>
-			<li ng-repeat="match in inprogress | orderBy:'-lastModifiedDate'" class="list-group-item">
-				<a ng-href="#/match/{{ match.key.id }}">
-					<h4 class="list-group-item-heading">Round {{ match.currentRound + 1 }} of {{ match.totalRounds }} <span class="badge">{{ match.playerPositionOrd }}</span></h4>
-					<p ng-show="match.currentRoundObj.status === 'SUBMIT_STORY'" class="list-group-item-text">
-						{{ match.currentRoundObj.isStoryteller 
-							? 'Tell your story!' 
-							: 'Wait for the story...' }}
-					</p>
-					<p ng-show="match.currentRoundObj.status === 'SUBMIT_OTHERS'" class="list-group-item-text">
-						{{ !match.currentRoundObj.hasSubmittedImage 
-							? 'Submit your image!' 
-							: "Wait for the other players' images..." }}
-					</p>
-					<p ng-show="match.currentRoundObj.status === 'SUBMIT_VOTES'" class="list-group-item-text">
-						{{ !match.currentRoundObj.isStoryteller &amp;&amp; !match.currentRoundObj.hasVoted 
-							? 'Submit your vote!' 
-							: "Wait for the other players' votes..." }}
-					</p>
-				</a>
-			</li>
-		</ul>
+		<div class="list-group">
+			<div class="list-group-item active">
+				<h4>Active Matches</h4>
+			</div>
+			<!-- TODO indicate with background matches with action by player -->
+			<a ng-repeat="match in inprogress | orderBy:'-lastModifiedDate'" 
+				ng-href="#/match/{{ match.key.id }}" 
+				class="list-group-item {{ match.currentRoundObj.hasAction ? 'list-group-item-info' : '' }}">
+				<h4 class="list-group-item-heading">Round {{ match.currentRound + 1 }} of {{ match.totalRounds }} <span class="badge">{{ match.playerPositionOrd }}</span></h4>
+				<p ng-show="match.currentRoundObj.status === 'SUBMIT_STORY'" class="list-group-item-text">
+					{{ match.currentRoundObj.isStoryteller 
+						? 'Tell your story!' 
+						: 'Wait for the story...' }}
+				</p>
+				<p ng-show="match.currentRoundObj.status === 'SUBMIT_OTHERS'" class="list-group-item-text">
+					{{ !match.currentRoundObj.hasSubmittedImage 
+						? 'Submit your image!' 
+						: "Wait for the other players' images..." }}
+				</p>
+				<p ng-show="match.currentRoundObj.status === 'SUBMIT_VOTES'" class="list-group-item-text">
+					{{ !match.currentRoundObj.isStoryteller &amp;&amp; !match.currentRoundObj.hasVoted 
+						? 'Submit your vote!' 
+						: "Wait for the other players' votes..." }}
+				</p>
+			</a>
+		</div>
 	</div>
 	<div ng-show="finished.length > 0" class="col-sm-12 col-md-6 col-lg-4">
-		<ul class="list-group">
-			<li class="list-group-item active">Previous Matches</li>
-			<li ng-repeat="match in finished | orderBy:'-lastModifiedDate'" class="list-group-item">
-				<a ng-href="#/match/{{ match.key.id }}" class="btn btn-link">
-					You finished {{ match.playerPositionOrd }}!
-				</a>
-			</li>
-		</ul>
+		<div class="list-group">
+			<div class="list-group-item active">
+				<h4>Previous Matches</h4>
+			</div>
+			<a ng-repeat="match in finished | orderBy:'-lastModifiedDate'" ng-href="#/match/{{ match.key.id }}" class="list-group-item">
+				You finished {{ match.playerPositionOrd }}!
+			</a>
+		</div>
 	</div>
 </section>

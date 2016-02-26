@@ -10,6 +10,12 @@ dixitApp.controller('MatchController', function($routeParams, $scope,
 
 	myBlockUI.start();
 
+	$rootScope.menuItems = [{
+		link: '#/overview',
+		label: 'Overview',
+		glyphicon: 'home'
+	}];
+
 	var mId = $routeParams.mId;
 	var player = $rootScope.currentPlayer;
 
@@ -19,34 +25,12 @@ dixitApp.controller('MatchController', function($routeParams, $scope,
 
 	matchPromise.success(
 		function(data, status, headers, config) {
-			$scope.match = data;
-
-			for (var i = 0; i < $scope.match.rounds.length; i++) {
-				var roundObj = $scope.match.rounds[i];
-				roundObj.readyForStoryImage = false;
-				roundObj.readyForOtherImage = false;
-				roundObj.readyForVote = false;
-
-				if (roundObj.status == "SUBMIT_STORY"
-						&& roundObj.storyTellerKey.id == player.key.id)
-					roundObj.readyForStoryImage = true;
-				else if (roundObj.status == "SUBMIT_OTHERS"
-						&& roundObj.storyTellerKey.id != player.key.id
-						&& !(('' + player.key.id) in roundObj.images))
-					roundObj.readyForOtherImage = true;
-				else if (roundObj.status == "SUBMIT_VOTES"
-						&& roundObj.storyTellerKey.id != player.key.id
-						&& !(('' + player.key.id) in roundObj.votes))
-					roundObj.readyForVote = true;
-			}
+			$scope.match = processMatch(data, player);
 
 			if ($routeParams.rNo) {
 				var rNo = $routeParams.rNo;
 				$scope.rNo = rNo;
-
-				var roundObj = $scope.match.rounds[rNo];
-
-				$scope.round = roundObj;
+				$scope.round = $scope.match.rounds[rNo];
 			}
 
 			myBlockUI.stop();
@@ -54,8 +38,6 @@ dixitApp.controller('MatchController', function($routeParams, $scope,
 		console.log('error');
 		console.log(data);
 		console.log(status);
-		console.log(headers);
-		console.log(config);
 		myBlockUI.stop();
 	});
 
@@ -75,8 +57,6 @@ dixitApp.controller('MatchController', function($routeParams, $scope,
 		console.log('error');
 		console.log(data);
 		console.log(status);
-		console.log(headers);
-		console.log(config);
 		myBlockUI.stop();
 	});
 
@@ -96,8 +76,6 @@ dixitApp.controller('MatchController', function($routeParams, $scope,
 			console.log('error');
 			console.log(data);
 			console.log(status);
-			console.log(headers);
-			console.log(config);
 			myBlockUI.stop();
 		});
 	} else  {
@@ -116,8 +94,6 @@ dixitApp.controller('MatchController', function($routeParams, $scope,
 			console.log('error');
 			console.log(data);
 			console.log(status);
-			console.log(headers);
-			console.log(config);
 			myBlockUI.stop();
 		});
 	}
@@ -167,8 +143,6 @@ dixitApp.controller('MatchController', function($routeParams, $scope,
 			console.log('error');
 			console.log(data);
 			console.log(status);
-			console.log(headers);
-			console.log(config);
 
 			$scope.message = "There was an error";
 		});
@@ -188,8 +162,6 @@ dixitApp.controller('MatchController', function($routeParams, $scope,
 			console.log('error');
 			console.log(data);
 			console.log(status);
-			console.log(headers);
-			console.log(config);
 
 			$scope.message = "There was an error";
 		});

@@ -1,23 +1,31 @@
 <section xmlns="http://www.w3.org/1999/xhtml">
-	<h2>Match</h2>
-	<ul>
-		<li><a ng-href="#/overview">Overview</a></li>
-		<li><a ng-href="#/match/{{ mId }}">Match</a></li>
-	</ul>
-	<section>
-		<blockquote>
-			<p>{{ round.story }}</p>
-		</blockquote>
-		<p>by {{ players['' + round.storyTellerKey.id].name }}</p>
+	<section class="panel panel-primary">
+		<div class="panel-body">
+			<blockquote class="quote-story">
+				<p>{{ round.story }}</p>
+			</blockquote>
+		</div>
+		<div class="panel-footer text-right">by <em>{{ players['' + round.storyTellerKey.id].name }}</em></div>
 	</section>
-	<section>
-		<p ng-show="round.readyForVote">Select the right image!</p>
-		<p ng-show="message">{{ message }}</p>
-		<div ng-repeat="(key, image) in images">
+	<div class="row">
+		<div ng-show="round.readyForVote" class="alert alert-info fade in col-lg-12">
+			Select the right image!
+		</div>
+		<div ng-show="message" class="alert alert-warning fade in col-lg-12">
+			<a class="close" data-dismiss="alert" aria-label="close">&times;</a>
+			{{ message }}
+		</div>
+		<div ng-repeat="(key, image) in images" class="col-lg-4 col-md-6 col-sm-12">
 			<a ng-click="selectImage(image)">
-				<img ng-src="{{ image.url }}" class="img-responsive image-{{ image.key.id == selectedImage.key.id ? 'selected' : 'normal' }}" />
+				<img ng-src="{{ image.url }}" class="img-responsive img-rounded image-{{ image.key.id == selectedImage.key.id ? 'selected' : 'normal' }}" />
 			</a>
 		</div>
-		<button ng-show="round.readyForVote" ng-click="submitVote()" ng-disable="!round.readyForVote || !selectedImage">Submit</button>
-	</section>
+		<button ng-show="round.readyForVote" 
+			ng-click="submitVote()" 
+			ng-disable="!round.readyForVote || !selectedImage"
+			class="btn btn-primary btn-lg btn-block">
+			<span class="glyphicon glyphicon-thumbs-up"></span>
+			Vote
+		</button>
+	</div>
 </section>

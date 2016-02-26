@@ -5,9 +5,26 @@ function shuffle(o) {
 };
 
 function processRound(round, player) {
+	if (!round)
+		return round;
+
 	round.isStoryteller = player.key.id === round.storyTellerKey.id;
 	round.hasSubmittedImage = player.key.id in round.images;
 	round.hasVoted = player.key.id in round.votes;
+
+	round.readyForStoryImage = false;
+	round.readyForOtherImage = false;
+	round.readyForVote = false;
+
+	if (round.status === 'SUBMIT_STORY' && round.isStoryteller)
+		round.readyForStoryImage = true;
+	else if (round.status === 'SUBMIT_OTHERS' && !round.isStoryteller && !round.hasSubmittedImage)
+		round.readyForOtherImage = true;
+	else if (round.status === 'SUBMIT_VOTES' && !round.isStoryteller && !round.hasVoted)
+		round.readyForVote = true;
+
+	round.hasAction = round.readyForStoryImage || round.readyForOtherImage || round.readyForVote;
+
 	return round;
 }
 

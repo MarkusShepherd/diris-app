@@ -1,14 +1,11 @@
 <section xmlns="http://www.w3.org/1999/xhtml">
-	<h2>Match</h2>
-	<ul>
-		<li><a ng-href="#/overview">Overview</a></li>
-		<li><a ng-href="#/match/{{ mId }}">Match</a></li>
-	</ul>
-	<section>
-		<blockquote>
-			<p>{{ round.story }}</p>
-		</blockquote>
-		<p>by {{ players['' + round.storyTellerKey.id].name }}</p>
+	<section class="panel panel-primary">
+		<div class="panel-body">
+			<blockquote class="quote-story">
+				<p>{{ round.story }}</p>
+			</blockquote>
+		</div>
+		<div class="panel-footer text-right">by <em>{{ players['' + round.storyTellerKey.id].name }}</em></div>
 	</section>
 	<section>
 		<h3>Correct image</h3>
@@ -35,12 +32,12 @@
 			</p>
 		</div>
 	</section>
-	<section>
-		<h3>Scores</h3>
-		<ul>
-			<li ng-repeat="(key, player) in players">
-				{{ player.name }}: {{ round.scores['' + key] }}
-			</li>
-		</ul>
+	<section class="list-group">
+		<div class="list-group-item active">
+			<h4>Scores</h4>
+		</div>
+		<a ng-repeat="(key, player) in players" class="list-group-item">
+			{{ player.name }}: {{ round.scores['' + key] }}
+		</a>
 	</section>
 </section>
