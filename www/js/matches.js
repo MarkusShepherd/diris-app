@@ -178,6 +178,23 @@ dixitApp.controller('MatchController', function($routeParams, $scope,
 		});
 	};
 
+	$scope.zoom = function(ratio) {
+		$('#image').cropper('zoom', ratio);
+	}
+
+	$scope.rotate = function(angle) {
+		$('#image').cropper('rotate', angle);
+	}
+
+	$scope.flip = function(axis) {
+		var  img = $('#image');
+		img.cropper('scale' + axis, -img.cropper('getData')['scale' + axis]);
+	}
+
+	$scope.scaleY = function(y) {
+		$('#image').cropper('scaleY', y);
+	}
+
 	$scope.selectImage = function(image) {
 		$scope.selectedImage = image;
 	};

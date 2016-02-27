@@ -27,8 +27,6 @@ function($scope, $location, $rootScope, $http, BACKEND_URL, blockUI) {
 				console.log('error');
 				console.log(data);
 				console.log(status);
-				console.log(headers);
-				console.log(config);
 				$scope.message = "There was an error";
 				myBlockUI.stop();
 			});
