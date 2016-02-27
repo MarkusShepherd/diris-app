@@ -104,25 +104,28 @@ dixitApp.controller('MatchController', function($routeParams, $scope,
 	}); */
 
 	function getImage(srcType) {
-		navigator.camera.getPicture(function(imageData) {
-			$scope.$apply(function () {
-				$scope.message = null;
-				$scope.imageData = imageData;
-				$scope.selectedImage = true;
-				$("#image")
-					.cropper('replace', "data:image/jpeg;base64," + imageData)
-					.cropper('enable');
-			});
-		}, function(message) {
+		navigator.camera.getPicture(setImage, function(message) {
 			$scope.$apply(function () {
 				$scope.message = message;
 			});
 		}, {
 			quality : 100,
 			destinationType : Camera.DestinationType.DATA_URL,
-			sourceType : srcType
+			sourceType : srcType,
+			encodingType: 0
 		});
 	};
+
+	function setImage(imageData) {
+		$scope.$apply(function () {
+			$scope.message = null;
+			$scope.imageData = imageData;
+			$scope.selectedImage = true;
+			$("#image")
+				.cropper('replace', "data:image/jpeg;base64," + imageData)
+				.cropper('enable');
+		});
+	}
 
 	$("#image").cropper({ 
 		viewMode: 3,
@@ -143,8 +146,24 @@ dixitApp.controller('MatchController', function($routeParams, $scope,
 	};
 
 	$scope.getImageFromLibrary = function() {
-		getImage(Camera.PictureSourceType.PHOTOLIBRARY);
+		if (isBrowser())
+			$('#file-input').trigger('click');
+		else
+			getImage(Camera.PictureSourceType.PHOTOLIBRARY);
 	};
+
+	$("#file-input").change(function(){
+        if (this.files && this.files[0]) {
+            var reader = new FileReader();
+            
+            reader.onload = function (e) {
+            	var d = e.target.result;
+            	setImage(d.substr(d.indexOf(",") + 1));
+            }
+            
+            reader.readAsDataURL(this.files[0]);
+        }
+	});
 
 	$scope.submitImage = function() {
 		var croppedImage = $("#image").cropper('getCroppedCanvas', {

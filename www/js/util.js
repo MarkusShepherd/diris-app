@@ -50,3 +50,7 @@ function getOrdinal(n) {
        v=n%100;
    return n+(s[(v-20)%10]||s[v]||s[0]);
 }
+
+function isBrowser() {
+	return device && device.platform === 'browser';
+}
