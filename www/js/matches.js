@@ -105,16 +105,38 @@ dixitApp.controller('MatchController', function($routeParams, $scope,
 
 	function getImage(srcType) {
 		navigator.camera.getPicture(function(imageData) {
-			$scope.imageData = imageData;
-			$("#image").attr('src', "data:image/jpeg;base64," + imageData);
+			$scope.$apply(function () {
+				$scope.message = null;
+				$scope.imageData = imageData;
+				$scope.selectedImage = true;
+				$("#image")
+					.cropper('replace', "data:image/jpeg;base64," + imageData)
+					.cropper('enable');
+			});
 		}, function(message) {
-			$scope.message = message;
+			$scope.$apply(function () {
+				$scope.message = message;
+			});
 		}, {
-			quality : 50,
+			quality : 100,
 			destinationType : Camera.DestinationType.DATA_URL,
 			sourceType : srcType
 		});
 	};
+
+	$("#image").cropper({ 
+		viewMode: 3,
+		aspectRatio: 1,
+		dragMode: 'move',
+		modal: false,
+		guides: false,
+		center: false,
+		highlight: false,
+		autoCropArea: 1,
+		cropBoxMovable: false,
+		cropBoxResizable: false,
+		toggleDragModeOnDblclick: false
+	}).cropper('disable');
 
 	$scope.getImageFromCamera = function() {
 		getImage(Camera.PictureSourceType.CAMERA);
@@ -125,9 +147,15 @@ dixitApp.controller('MatchController', function($routeParams, $scope,
 	};
 
 	$scope.submitImage = function() {
+		var croppedImage = $("#image").cropper('getCroppedCanvas', {
+			width: 1080,
+			height: 1080
+		}).toDataURL("image/jpeg", 0.5);
+		croppedImage = croppedImage.substr(croppedImage.indexOf(",") + 1);
+
 		var fd = new FormData();
 
-		fd.append("image", $scope.imageData);
+		fd.append("image", croppedImage);
 		fd.append("player", player.key.id);
 		fd.append("match", mId);
 		fd.append("round", $scope.rNo);
@@ -138,6 +166,8 @@ dixitApp.controller('MatchController', function($routeParams, $scope,
         	headers: { 'Content-Type': undefined },
         	transformRequest: angular.identity
     	}).success(function(data, status, headers, config) {
+			console.log(data);
+			console.log(status);
 			$location.path('/match/' + mId);
 		}).error(function(data, status, headers, config) {
 			console.log('error');

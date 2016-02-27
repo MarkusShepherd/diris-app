@@ -11,6 +11,16 @@ h2 {
 	margin-top: 0;
 }
 
+.image-upload-wrapper {
+	width: 90vmin;
+	height: 90vmin;
+	margin: 1em auto;
+}
+
+.image-upload {
+	max-width: 100%;
+}
+
 .image-normal, .image-selected {
 	border-style: solid;
 	border-width: 2px;

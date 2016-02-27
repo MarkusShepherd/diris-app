@@ -32,6 +32,6 @@ function($scope, $location, $rootScope, $http, BACKEND_URL, blockUI) {
 				$scope.message = "There was an error";
 				myBlockUI.stop();
 			});
-	} // login
+	}; // login
 
 }); // LoginController

@@ -14,7 +14,7 @@
 			</li> -->
 			<li ng-repeat="item in menuItems">
 				<a ng-href="{{ item.link }}" data-toggle="collapse" data-target="#myNavbar">
-					<span ng-show="item.glyphicon" class="glyphicon glyphicon-{{ glyphicon }}"></span>
+					<span ng-show="item.glyphicon" class="glyphicon glyphicon-{{ item.glyphicon }}"></span>
 					{{ item.label }}
 				</a>
 			</li>

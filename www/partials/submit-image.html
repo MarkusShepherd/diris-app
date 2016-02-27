@@ -26,14 +26,16 @@
 				</button>
 			</div>
 		</div>
-		<img id="image" alt="Image" class="img-responsive" style="width: 100%; height: auto; display: block;" />
+		<div class="image-upload-wrapper">
+			<img src="default-placeholder.png" id="image" alt="Image" class="img-responsive image-upload" />
+		</div>
 		<textarea ng-show="round.readyForStoryImage" 
 			ng-model="round.story" 
 			placeholder="Story"
 			class="form-control"></textarea>
 		<button ng-click="submitImage()" 
 			ng-show="round.readyForStoryImage || round.readyForOtherImage" 
-			ng-disable="!imageData || !round.story" class="btn btn-primary btn-lg btn-block">
+			ng-disable="!selectedImage || !imageData || !round.story" class="btn btn-primary btn-lg btn-block">
 			<span class="glyphicon glyphicon-ok"></span>
 			Submit
 		</button>
