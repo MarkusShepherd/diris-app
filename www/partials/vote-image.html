@@ -29,7 +29,7 @@
 				<span class="glyphicon glyphicon-user"></span>
 			</span>
 			<a ng-click="selectImage(image)"
-				ng-disable="round.imageToPlayer[image.key.id] == currentPlayer.key.id">
+				ng-disabled="round.imageToPlayer[image.key.id] == currentPlayer.key.id">
 				<img ng-src="{{ image.url }}" 
 					class="img-responsive img-rounded image-{{ image.key.id == selectedImage.key.id ? 'selected' : 'normal' }}" />
 			</a>
@@ -49,7 +49,7 @@
 	</div>
 	<button ng-show="round.readyForVote" 
 		ng-click="submitVote()" 
-		ng-disable="!round.readyForVote || !selectedImage"
+		ng-disabled="!round.readyForVote || !selectedImage"
 		class="btn btn-primary btn-lg btn-block">
 		<span class="glyphicon glyphicon-thumbs-up"></span>
 		Vote

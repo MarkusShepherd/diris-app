@@ -56,6 +56,11 @@ dixitApp.controller('NewMatchController', function($scope, $rootScope,
 		if (!includeCurrent)
 			playerIds.push(player.key.id);
 
+		if (playerIds.length < 4) {
+			$scope.message = "Please select at least 3 players to invite to the match!";
+			return;
+		}
+
 		$http.post(BACKEND_URL + '/match', playerIds).success(
 				function(data, status, headers, config) {
 					$location.path('/overview');

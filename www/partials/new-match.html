@@ -1,8 +1,12 @@
 <section xmlns="http://www.w3.org/1999/xhtml">
 	<h2>New Match</h2>
+	<div ng-show="message" class="alert alert-warning fade in">
+		<a class="close" data-dismiss="alert" aria-label="close">&times;</a>
+		{{ message }}
+	</div>
 	<div class="list-group">
 		<a ng-repeat="player in players | orderBy:'name'" 
-			ng-hide="player.selected" 
+			ng-hide="player.selected || player.key.id == currentPlayer.key.id" 
 			ng-click="addPlayer(player)"
 			class="list-group-item">
 			{{ player.name }}
@@ -16,7 +20,7 @@
 			{{ player.name }}
 		</a>
 	</div>
-	<button ng-click="createMatch()" ng-disable="numPlayers < 3" class="btn btn-primary btn-block btn-lg">
+	<button ng-click="createMatch()" ng-disabled="numPlayers < 3" class="btn btn-primary btn-block btn-lg">
 		<span class="glyphicon glyphicon-ok"></span>
 		Send invites
 	</button>

@@ -1,9 +1,7 @@
 <section xmlns="http://www.w3.org/1999/xhtml" class="row">
-	<div class="col-lg-12">
-		<button ng-click="newMatch()" class="btn btn-success btn-lg btn-block">
-			<span class="glyphicon glyphicon-plus"></span> New Match
-		</button>
-	</div>
+	<button ng-click="newMatch()" class="btn btn-success btn-lg btn-block">
+		<span class="glyphicon glyphicon-plus"></span> New Match
+	</button>
 	
 	<div ng-show="waiting.length > 0" class="col-sm-12 col-md-6 col-lg-4">
 		<div class="list-group">
@@ -15,6 +13,7 @@
 			</a>
 		</div>
 	</div>
+
 	<div ng-show="inprogress.length > 0" class="col-sm-12 col-md-6 col-lg-4">
 		<div class="list-group">
 			<div class="list-group-item active">
@@ -43,6 +42,7 @@
 			</a>
 		</div>
 	</div>
+
 	<div ng-show="finished.length > 0" class="col-sm-12 col-md-6 col-lg-4">
 		<div class="list-group">
 			<div class="list-group-item active">
