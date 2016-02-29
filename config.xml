@@ -24,7 +24,6 @@
     <preference name="android-minSdkVersion" value="12" />
     <preference name="android-installLocation" value="auto" />
     <gap:plugin name="org.apache.cordova.camera" />
-    <icon src="icon.png" />
     <icon gap:platform="android" gap:qualifier="ldpi" src="www/res/icon/android/icon-36-ldpi.png" />
     <icon gap:platform="android" gap:qualifier="mdpi" src="www/res/icon/android/icon-48-mdpi.png" />
     <icon gap:platform="android" gap:qualifier="hdpi" src="www/res/icon/android/icon-72-hdpi.png" />
@@ -50,8 +49,11 @@
     <gap:splash gap:platform="ios" height="768" src="www/res/screen/ios/screen-ipad-landscape.png" width="1024" />
     <gap:splash gap:platform="winphone" src="www/res/screen/windows-phone/screen-portrait.jpg" />
     <access origin="*" />
-    <engine name="browser" spec="^3.6.0" />
-    <engine name="android" spec="^4.0.0" />
-    <engine name="ios" spec="^3.8.0" />
-    <engine name="firefoxos" spec="^3.6.3" />
+    <plugin name="cordova-plugin-camera" spec="~2.1.0" />
+    <plugin name="cordova-plugin-device" spec="~1.1.1" />
+    <plugin name="cordova-plugin-whitelist" spec="~1.2.1" />
+    <engine name="android" spec="~5.1.0" />
+    <engine name="ios" spec="~4.0.1" />
+    <engine name="firefoxos" spec="~3.6.3" />
+    <engine name="browser" spec="~3.6.0" />
 </widget>
