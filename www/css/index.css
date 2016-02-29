@@ -42,3 +42,13 @@ h2 {
 .quote-story {
 	margin-bottom: 0;
 }
+
+.image-vote-container {
+	position: relative;
+}
+
+.image-vote-badge {
+	position: absolute;
+	margin: 1em;
+	font-size: 200%;
+}

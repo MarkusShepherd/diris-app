@@ -26,10 +26,13 @@
 				</button>
 			</div>
 		</div>
-		<div class="image-upload-wrapper">
+		<div ng-hide="round.hasSubmittedImage" class="image-upload-wrapper">
 			<img src="default-placeholder.png" id="image" alt="Image" class="img-responsive image-upload" />
 		</div>
-		<div class="btn-group btn-group-lg">
+		<div ng-show="round.hasSubmittedImage" class="image-upload-wrapper">
+			<img ng-src="{{ images[round.images[currentPlayer.key.id]].url }}" id="image-uploaded" alt="Image" class="img-responsive image-upload" />
+		</div>
+		<div ng-hide="round.hasSubmittedImage" class="btn-group btn-group-lg">
 			<button ng-click="zoom(0.1)" type="button" class="btn btn-primary" title="Zoom In">
 				<span class="glyphicon glyphicon-zoom-in"></span>
 			</button>
@@ -37,7 +40,7 @@
 				<span class="glyphicon glyphicon-zoom-out"></span>
 			</button>
         </div>
-		<div class="btn-group btn-group-lg">
+		<div ng-hide="round.hasSubmittedImage" class="btn-group btn-group-lg">
 			<button ng-click="rotate(-90)" type="button" class="btn btn-primary" title="Rotate Left">
 				<span class="glyphicon glyphicon-circle-arrow-left"></span>
 			</button>
@@ -45,7 +48,7 @@
 				<span class="glyphicon glyphicon-circle-arrow-right"></span>
 			</button>
         </div>
-		<div class="btn-group btn-group-lg">
+		<div ng-hide="round.hasSubmittedImage" class="btn-group btn-group-lg">
 			<button ng-click="flip('X')" type="button" class="btn btn-primary" title="Flip Horizontally">
 				<span class="glyphicon glyphicon-resize-horizontal"></span>
 			</button>

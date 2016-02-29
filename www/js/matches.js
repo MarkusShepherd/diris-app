@@ -215,7 +215,8 @@ dixitApp.controller('MatchController', function($routeParams, $scope,
 	}
 
 	$scope.selectImage = function(image) {
-		$scope.selectedImage = image;
+		if ($scope.round.imageToPlayer[image.key.id] != player.key.id)
+			$scope.selectedImage = image;
 	};
 
 	$scope.submitVote = function() {
