@@ -36,8 +36,8 @@
 		<div class="list-group-item active">
 			<h4>Scores</h4>
 		</div>
-		<a ng-repeat="(key, player) in players" class="list-group-item">
-			{{ player.name }}: {{ round.scores['' + key] }}
+		<a ng-repeat="item in round.scoresArray | orderBy:'score':true" class="list-group-item">
+			<span class="badge">{{ item.score }} points</span> {{ players['' + item.playerId].name }}
 		</a>
 	</section>
 </section>

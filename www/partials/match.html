@@ -3,8 +3,8 @@
 		<div class="list-group-item active">
 			<h4>Standings</h4>
 		</div>
-		<a ng-repeat="(key, score) in match.standings | orderBy:'score':true" class="list-group-item">
-			{{ players['' + key].name }}: {{ score }}
+		<a ng-repeat="item in match.standingsArray | orderBy:'score':true" class="list-group-item">
+			{{ players['' + item.playerId].name }}: {{ item.score }}
 		</a>
 	</section>
 	<section class="list-group">

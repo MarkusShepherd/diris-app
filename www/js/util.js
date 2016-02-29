@@ -25,6 +25,13 @@ function processRound(round, player) {
 
 	round.hasAction = round.readyForStoryImage || round.readyForOtherImage || round.readyForVote;
 
+	round.scoresArray = $.map(round.scores, function(s, pId) {
+		return {
+			playerId: pId,
+			score: s
+		}
+	});
+
 	return round;
 }
 
@@ -42,6 +49,14 @@ function processMatch(match, player) {
 	});
 	match.playerPosition = pos;
 	match.playerPositionOrd = getOrdinal(pos);
+
+	match.standingsArray = $.map(match.standings, function(s, pId) {
+		return {
+			playerId: pId,
+			score: s
+		}
+	});
+
 	return match;
 }
 
