@@ -57,6 +57,9 @@ function processMatch(match, player) {
 		}
 	});
 
+	match.createdFromNow = moment(match.created).fromNow();
+	match.lastModifiedFromNow = moment(match.lastModified).fromNow();
+
 	return match;
 }
 

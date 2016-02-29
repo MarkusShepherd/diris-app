@@ -11,6 +11,11 @@ h2 {
 	margin-top: 0;
 }
 
+a.disabled {
+	pointer-events: none;
+	cursor: default;
+}
+
 .image-upload-wrapper {
 	width: 90vmin;
 	height: 90vmin;

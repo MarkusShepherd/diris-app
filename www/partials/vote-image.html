@@ -29,7 +29,7 @@
 				<span class="glyphicon glyphicon-user"></span>
 			</span>
 			<a ng-click="selectImage(image)"
-				ng-disabled="round.imageToPlayer[image.key.id] == currentPlayer.key.id">
+				class="select-image {{ round.imageToPlayer[image.key.id] == currentPlayer.key.id ? 'disabled' : '' }}">
 				<img ng-src="{{ image.url }}" 
 					class="img-responsive img-rounded image-{{ image.key.id == selectedImage.key.id ? 'selected' : 'normal' }}" />
 			</a>

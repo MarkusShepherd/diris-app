@@ -50,7 +50,8 @@
 				<h4>Previous Matches</h4>
 			</div>
 			<a ng-repeat="match in finished | orderBy:'lastModifiedDate':true" ng-href="#/match/{{ match.key.id }}" class="list-group-item">
-				You finished {{ match.playerPositionOrd }}!
+				<span class="badge">{{ match.lastModifiedFromNow }}</span>
+				You finished <b>{{ match.playerPositionOrd }}</b>!
 			</a>
 		</div>
 	</div>
