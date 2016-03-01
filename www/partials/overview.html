@@ -26,7 +26,7 @@
 				<span class="badge">{{ match.playerPositionOrd }}</span>
 				<h4 class="list-group-item-heading">Round {{ match.currentRound + 1 }} of {{ match.totalRounds }}</h4>
 				<p ng-show="match.currentRoundObj.status === 'SUBMIT_STORY'" class="list-group-item-text">
-					{{ match.currentRoundObj.isStoryteller 
+					{{ match.currentRoundObj.isStoryTeller 
 						? 'Tell your story!' 
 						: 'Wait for the story...' }}
 				</p>
@@ -36,7 +36,7 @@
 						: "Wait for the other players' images..." }}
 				</p>
 				<p ng-show="match.currentRoundObj.status === 'SUBMIT_VOTES'" class="list-group-item-text">
-					{{ !match.currentRoundObj.isStoryteller &amp;&amp; !match.currentRoundObj.hasVoted 
+					{{ !match.currentRoundObj.isStoryTeller &amp;&amp; !match.currentRoundObj.hasVoted 
 						? 'Submit your vote!' 
 						: "Wait for the other players' votes..." }}
 				</p>

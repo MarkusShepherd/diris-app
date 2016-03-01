@@ -8,7 +8,7 @@ function processRound(round, player) {
 	if (!round)
 		return round;
 
-	round.isStoryteller = player.key.id === round.storyTellerKey.id;
+	round.isStoryTeller = player.key.id === round.storyTellerKey.id;
 	round.hasSubmittedImage = player.key.id in round.images;
 	round.hasVoted = player.key.id in round.votes;
 
@@ -16,11 +16,11 @@ function processRound(round, player) {
 	round.readyForOtherImage = false;
 	round.readyForVote = false;
 
-	if (round.status === 'SUBMIT_STORY' && round.isStoryteller)
+	if (round.status === 'SUBMIT_STORY' && round.isStoryTeller)
 		round.readyForStoryImage = true;
-	else if (round.status === 'SUBMIT_OTHERS' && !round.isStoryteller && !round.hasSubmittedImage)
+	else if (round.status === 'SUBMIT_OTHERS' && !round.isStoryTeller && !round.hasSubmittedImage)
 		round.readyForOtherImage = true;
-	else if (round.status === 'SUBMIT_VOTES' && !round.isStoryteller && !round.hasVoted)
+	else if (round.status === 'SUBMIT_VOTES' && !round.isStoryTeller && !round.hasVoted)
 		round.readyForVote = true;
 
 	round.hasAction = round.readyForStoryImage || round.readyForOtherImage || round.readyForVote;

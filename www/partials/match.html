@@ -11,7 +11,9 @@
 	<section class="list-group">
 		<a ng-repeat="round in match.rounds" 
 			ng-href="#/{{ round.status == 'FINISHED' ? 'review' : round.status == 'SUBMIT_VOTES' ? 'vote' : 'image' }}/{{ mId }}/{{ $index }}" 
-			class="list-group-item {{ round.hasAction ? 'list-group-item-info' : '' }} {{ round.status == 'WAITING' || (round.status == 'SUBMIT_STORY' &amp;&amp; !round.isStoryTeller) ? 'disabled' : '' }}">
+			class="list-group-item 
+				{{ round.hasAction ? 'list-group-item-info' : '' }} 
+				{{ round.status == 'WAITING' || (round.status == 'SUBMIT_STORY' &amp;&amp; !round.isStoryTeller) ? 'disabled' : '' }}">
 			<h4 class="list-group-item-heading">Round {{ $index + 1 }}</h4>
 			<p class="list-group-item-text">
 				<span ng-show="round.status == 'FINISHED'" class="badge">{{ round.scores['' + currentPlayer.key.id] }}</span>
