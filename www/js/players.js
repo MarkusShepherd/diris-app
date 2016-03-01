@@ -1,5 +1,5 @@
 dixitApp.controller('PlayerController', function($scope, $http, BACKEND_URL,
-		$rootScope, $location, blockUI) {
+		$rootScope, $location, blockUI, $localStorage) {
 
 	if (!("currentPlayer" in $rootScope)) {
 		$location.path('/login');
@@ -17,7 +17,9 @@ dixitApp.controller('PlayerController', function($scope, $http, BACKEND_URL,
 	$http.get(BACKEND_URL + '/player/id/' + player.key.id + '/matches/waiting')
 		.success(function(data, status, headers, config) {
 			$scope.waiting = $.map(data, function(match) {
-				return processMatch(match, player);
+				match = processMatch(match, player);
+				$localStorage['match_' + match.key.id] = match;
+				return match;
 			});
 			myBlockUI.stop();
 			console.log('Waiting: ', $scope.waiting);
@@ -32,7 +34,9 @@ dixitApp.controller('PlayerController', function($scope, $http, BACKEND_URL,
 	$http.get(BACKEND_URL + '/player/id/' + player.key.id + '/matches/inprogress')
 		.success(function(data, status, headers, config) {
 			$scope.inprogress = $.map(data, function(match) {
-				return processMatch(match, player);
+				match = processMatch(match, player);
+				$localStorage['match_' + match.key.id] = match;
+				return match;
 			});
 			myBlockUI.stop();
 			console.log('Progress: ', $scope.inprogress);
@@ -47,7 +51,9 @@ dixitApp.controller('PlayerController', function($scope, $http, BACKEND_URL,
 	$http.get(BACKEND_URL + '/player/id/' + player.key.id + '/matches/finished')
 		.success(function(data, status, headers, config) {
 			$scope.finished = $.map(data, function(match) {
-				return processMatch(match, player);
+				match = processMatch(match, player);
+				$localStorage['match_' + match.key.id] = match;
+				return match;
 			});
 			myBlockUI.stop();
 			console.log('Finished: ', $scope.finished);

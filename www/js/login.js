@@ -1,5 +1,8 @@
 dixitApp.controller('LoginController', 
-function($scope, $location, $rootScope, $http, BACKEND_URL, blockUI) {
+function($scope, $location, $rootScope, $http, BACKEND_URL, blockUI, $localStorage) {
+
+	if ($localStorage.loginPlayer)
+		$rootScope.currentPlayer = $localStorage.loginPlayer;
 
 	if ("currentPlayer" in $rootScope) {
 		$location.path('/overview');
@@ -22,6 +25,7 @@ function($scope, $location, $rootScope, $http, BACKEND_URL, blockUI) {
 				}
 
 				$rootScope.currentPlayer = player;
+				$localStorage.loginPlayer = player;
 				$location.path('/overview');
 			}).error(function(data, status, headers, config) {
 				console.log('error');

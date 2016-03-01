@@ -1,7 +1,7 @@
 var testUrl = 'http://localhost:8181';
 var liveUrl = 'http://dixit-app.appspot.com';
 
-var dixitApp = angular.module('dixitApp', [ 'ngRoute', 'blockUI' ]).constant(
+var dixitApp = angular.module('dixitApp', [ 'ngRoute', 'blockUI', 'ngStorage' ]).constant(
 		'BACKEND_URL', liveUrl);
 
 dixitApp.config([ '$routeProvider', function($routeProvider) {
@@ -36,3 +36,7 @@ dixitApp.config([ '$routeProvider', function($routeProvider) {
 		redirectTo : '/login'
 	});
 } ]);
+
+dixitApp.config(['$localStorageProvider', function ($localStorageProvider) {
+	$localStorageProvider.setKeyPrefix('dixitApp_');
+}]);

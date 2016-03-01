@@ -25,6 +25,7 @@
     "bootstrap": "^3.3.6",
     "angular-route": "^1.5.0",
     "cropper": "^2.3.0",
-    "moment": "^2.11.2"
+    "moment": "^2.11.2",
+    "ngstorage": "^0.3.10"
   }
 }
