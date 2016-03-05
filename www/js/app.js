@@ -14,6 +14,9 @@ dixitApp.config([ '$routeProvider', function($routeProvider) {
 	}).when('/overview', {
 		templateUrl : 'partials/overview.html',
 		controller : 'PlayerController'
+	}).when('/overview/:action', {
+		templateUrl : 'partials/overview.html',
+		controller : 'PlayerController'
 	}).when('/newmatch', {
 		templateUrl : 'partials/new-match.html',
 		controller : 'NewMatchController'
@@ -21,6 +24,9 @@ dixitApp.config([ '$routeProvider', function($routeProvider) {
 		templateUrl : 'partials/accept-invitation.html',
 		controller : 'PlayerController'
 	}).when('/match/:mId', {
+		templateUrl : 'partials/match.html',
+		controller : 'MatchController'
+	}).when('/match/:mId/:action', {
 		templateUrl : 'partials/match.html',
 		controller : 'MatchController'
 	}).when('/image/:mId/:rNo', {

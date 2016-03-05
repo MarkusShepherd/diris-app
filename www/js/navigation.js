@@ -1,8 +1,9 @@
-dixitApp.controller('NavigationController', function($scope, $rootScope, $location, $localStorage) {
+dixitApp.controller('NavigationController', function($scope, $rootScope, $location, $localStorage, dataService) {
+
+	$scope.currentPlayer = dataService.getLoggedInPlayer();
 
 	$scope.logout = function() {
-		delete $rootScope.currentPlayer;
-		delete $localStorage.loginPlayer;
+		dataService.setLoggedInPlayer(null);
 		$location.path('/login');
 	};
 

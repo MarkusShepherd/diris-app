@@ -1,18 +1,19 @@
 dixitApp.controller('NewMatchController', function($scope, $rootScope,
-		$location, $http, BACKEND_URL) {
+		$location, $http, dataService, BACKEND_URL) {
 
-	if (!("currentPlayer" in $rootScope)) {
+	var player = dataService.getLoggedInPlayer();
+
+	if (!player) {
 		$location.path('/login');
 		return;
 	}
 
+	$scope.currentPlayer = player;
 	$rootScope.menuItems = [{
 		link: '#/overview',
 		label: 'Overview',
 		glyphicon: 'home'
 	}];
-
-	var player = $rootScope.currentPlayer;
 
 	$http.get(BACKEND_URL + '/player').success(
 			function(data, status, headers, config) {

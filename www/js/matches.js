@@ -1,10 +1,14 @@
 dixitApp.controller('MatchController', function($routeParams, $scope,
-		$location, $http, BACKEND_URL, $rootScope, $q, blockUI) {
+		$location, $http, BACKEND_URL, $rootScope, $q, blockUI, dataService) {
 
-	if (!("currentPlayer" in $rootScope)) {
+	var player = dataService.getLoggedInPlayer();
+
+	if (!player) {
 		$location.path('/login');
 		return;
 	}
+
+	$scope.currentPlayer = player;
 
 	var myBlockUI = blockUI.instances.get('myBlockUI');
 
@@ -17,46 +21,36 @@ dixitApp.controller('MatchController', function($routeParams, $scope,
 	}];
 
 	var mId = $routeParams.mId;
-	var player = $rootScope.currentPlayer;
+	var action = $routeParams.action;
 
 	$scope.mId = mId;
 
-	var matchPromise = $http.get(BACKEND_URL + '/match/' + mId);
-
-	matchPromise.success(
-		function(data, status, headers, config) {
-			$scope.match = processMatch(data, player);
+	dataService.getMatch(mId, action === 'refresh')
+	.then(function(match) {
+		$scope.$apply(function() {
+			$scope.match = processMatch(match, player);
 
 			if ($routeParams.rNo) {
 				var rNo = $routeParams.rNo;
 				$scope.rNo = rNo;
 				$scope.round = $scope.match.rounds[rNo];
 			}
-
-			myBlockUI.stop();
-	}).error(function(data, status, headers, config) {
-		console.log('error');
-		console.log(data);
-		console.log(status);
+		});
+		console.log('Match: ', $scope.match);
+		return $scope.match;
+	}).then(function(match) {
+		$scope.players = {};
+		$.each(match.playerKeys, function(i, key) {
+			dataService.getPlayer(key.id)
+			.then(function(player) {
+				$scope.players[player.key.id] = player;
+			});
+		});
 		myBlockUI.stop();
-	});
-
-	var playersPromise = $http.get(BACKEND_URL + '/match/' + mId + '/players');
-
-	playersPromise.success(
-		function(data, status, headers, config) {
-			$scope.players = {};
-
-			for (var i = 0; i < data.length; i++) {
-				var p = data[i];
-				$scope.players['' + p.key.id] = p;
-			}
-
-			myBlockUI.stop();
-	}).error(function(data, status, headers, config) {
+	}).catch(function(response) {
 		console.log('error');
-		console.log(data);
-		console.log(status);
+		console.log(response);
+		$scope.message = "There was an error fetching the data - please try again later..."
 		myBlockUI.stop();
 	});
 
@@ -187,7 +181,7 @@ dixitApp.controller('MatchController', function($routeParams, $scope,
     	}).success(function(data, status, headers, config) {
 			console.log(data);
 			console.log(status);
-			$location.path('/match/' + mId);
+			$location.path('/match/' + mId + '/refresh');
 		}).error(function(data, status, headers, config) {
 			console.log('error');
 			console.log(data);
@@ -224,7 +218,7 @@ dixitApp.controller('MatchController', function($routeParams, $scope,
 			player.key.id + '&match=' + mId + '&round=' + $scope.rNo + '&image=' + $scope.selectedImage.key.id)
 		.success(function(data, status, headers, config) {
 			if (data)
-				$location.path('/match/' + mId);
+				$location.path('/match/' + mId + '/refresh');
 		}).error(function(data, status, headers, config) {
 			console.log('error');
 			console.log(data);

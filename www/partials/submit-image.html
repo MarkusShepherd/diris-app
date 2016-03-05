@@ -7,6 +7,7 @@
 		</div>
 		<div class="panel-footer text-right">by <em>{{ players['' + round.storyTellerKey.id].name }}</em></div>
 	</section>
+
 	<section>
 		<p ng-show="message" class="alert alert-warning fade in">
 			<a class="close" data-dismiss="alert" aria-label="close">&times;</a>
@@ -26,36 +27,41 @@
 				</button>
 			</div>
 		</div>
+
 		<div ng-hide="round.hasSubmittedImage" class="image-upload-wrapper">
 			<img src="default-placeholder.png" id="image" alt="Image" class="img-responsive image-upload" />
 		</div>
 		<div ng-show="round.hasSubmittedImage" class="image-upload-wrapper">
 			<img ng-src="{{ images[round.images[currentPlayer.key.id]].url }}" id="image-uploaded" alt="Image" class="img-responsive image-upload" />
 		</div>
-		<div ng-hide="round.hasSubmittedImage" class="btn-group btn-group-lg">
-			<button ng-click="zoom(0.1)" type="button" class="btn btn-primary" title="Zoom In">
-				<span class="glyphicon glyphicon-zoom-in"></span>
-			</button>
-			<button ng-click="zoom(-0.1)" type="button" class="btn btn-primary" title="Zoom Out">
-				<span class="glyphicon glyphicon-zoom-out"></span>
-			</button>
-        </div>
-		<div ng-hide="round.hasSubmittedImage" class="btn-group btn-group-lg">
-			<button ng-click="rotate(-90)" type="button" class="btn btn-primary" title="Rotate Left">
-				<span class="glyphicon glyphicon-circle-arrow-left"></span>
-			</button>
-			<button ng-click="rotate(90)" type="button" class="btn btn-primary" title="Rotate Right">
-				<span class="glyphicon glyphicon-circle-arrow-right"></span>
-			</button>
-        </div>
-		<div ng-hide="round.hasSubmittedImage" class="btn-group btn-group-lg">
-			<button ng-click="flip('X')" type="button" class="btn btn-primary" title="Flip Horizontally">
-				<span class="glyphicon glyphicon-resize-horizontal"></span>
-			</button>
-			<button ng-click="flip('Y')" type="button" class="btn btn-primary" title="Flip Vertically">
-				<span class="glyphicon glyphicon-resize-vertical"></span>
-			</button>
-        </div>
+
+		<div ng-hide="round.hasSubmittedImage" class="image-edit-wrapper">
+			<div class="btn-group btn-group-lg btn-group-image-edit">
+				<button ng-click="zoom(-0.1)" type="button" class="btn btn-primary" title="Zoom Out">
+					<span class="glyphicon glyphicon-zoom-out"></span>
+				</button>
+				<button ng-click="zoom(0.1)" type="button" class="btn btn-primary" title="Zoom In">
+					<span class="glyphicon glyphicon-zoom-in"></span>
+				</button>
+	        </div>
+			<div class="btn-group btn-group-lg btn-group-image-edit">
+				<button ng-click="rotate(-90)" type="button" class="btn btn-primary" title="Rotate Left">
+					<span class="glyphicon glyphicon-circle-arrow-left"></span>
+				</button>
+				<button ng-click="rotate(90)" type="button" class="btn btn-primary" title="Rotate Right">
+					<span class="glyphicon glyphicon-circle-arrow-right"></span>
+				</button>
+	        </div>
+			<div class="btn-group btn-group-lg btn-group-image-edit">
+				<button ng-click="flip('X')" type="button" class="btn btn-primary" title="Flip Horizontally">
+					<span class="glyphicon glyphicon-resize-horizontal"></span>
+				</button>
+				<button ng-click="flip('Y')" type="button" class="btn btn-primary" title="Flip Vertically">
+					<span class="glyphicon glyphicon-resize-vertical"></span>
+				</button>
+	        </div>
+		</div>
+
 		<textarea ng-show="round.readyForStoryImage" 
 			ng-model="round.story" 
 			placeholder="Story"

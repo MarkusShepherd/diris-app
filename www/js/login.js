@@ -1,11 +1,10 @@
 dixitApp.controller('LoginController', 
-function($scope, $location, $rootScope, $http, BACKEND_URL, blockUI, $localStorage) {
+function($scope, $location, $http, $localStorage, blockUI, dataService, BACKEND_URL) {
 
-	if ($localStorage.loginPlayer)
-		$rootScope.currentPlayer = $localStorage.loginPlayer;
+	var player = dataService.getLoggedInPlayer();
 
-	if ("currentPlayer" in $rootScope) {
-		$location.path('/overview');
+	if (player) {
+		$location.path('/overview/refresh');
 		return;
 	}
 
@@ -15,25 +14,23 @@ function($scope, $location, $rootScope, $http, BACKEND_URL, blockUI, $localStora
 		myBlockUI.start();
 
 		$http.get(BACKEND_URL + '/player/name/' + $scope.player.name)
-			.success(function(data, status, headers, config) {
-				var player = data[0];
-
-				if (!player) {
-					$scope.message = "There was an error - player \""
-							+ $scope.player.name + "\" not found.";
-					return;
-				}
-
-				$rootScope.currentPlayer = player;
-				$localStorage.loginPlayer = player;
-				$location.path('/overview');
-			}).error(function(data, status, headers, config) {
-				console.log('error');
-				console.log(data);
-				console.log(status);
-				$scope.message = "There was an error";
-				myBlockUI.stop();
-			});
+		.then(function(response) {
+			player = response.data[0];
+			if (!player) {
+				$scope.message = "There was an error - player \""
+						+ $scope.player.name + "\" not found.";
+				return;
+			}
+			dataService.setLoggedInPlayer(player);
+			$location.path('/overview/refresh');
+		}).catch(function(response) {
+			console.log('error');
+			console.log(response.data);
+			console.log(response.status);
+			dataService.setLoggedInPlayer(null);
+			$scope.message = "There was an error";
+			myBlockUI.stop();
+		});
 	}; // login
 
 }); // LoginController

@@ -1,28 +1,27 @@
-dixitApp.controller('RegistrationController', function($scope, $location,
-		$rootScope, $http, BACKEND_URL) {
+dixitApp.controller('RegistrationController', 
+function($scope, $location, $http, dataService, BACKEND_URL) {
 
 	$scope.register = function() {
-		$http.post(BACKEND_URL + '/player', $scope.player).success(
-				function(data, status, headers, config) {
-					var player = data;
+		$http.post(BACKEND_URL + '/player', $scope.player)
+		.then(function(response) {
+			var player = response.data;
 
-					if (!player) {
-						$scope.message = "There was an error - player \""
-								+ $scope.player.name
-								+ "\" could not be registered.";
-						return;
-					}
+			if (!player) {
+				$scope.message = "There was an error - player \""
+						+ $scope.player.name
+						+ "\" could not be registered.";
+				return;
+			}
 
-					console.log(player.key.id);
-
-					$rootScope.currentPlayer = player;
-					$location.path('/overview');
-				}).error(function(data, status, headers, config) {
+			console.log(player.key.id);
+			dataService.setLoggedInPlayer(player);
+			$location.path('/overview');
+		}).catch(function(response) {
 			console.log('error');
-			console.log(data);
-			console.log(status);
-			console.log(headers);
-			console.log(config);
+			console.log(response.data);
+			console.log(response.status);
+			console.log(response.headers);
+			console.log(response.config);
 
 			$scope.message = "There was an error";
 		});
