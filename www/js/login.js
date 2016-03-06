@@ -4,7 +4,7 @@ function($scope, $location, $http, $localStorage, blockUI, dataService, BACKEND_
 	var player = dataService.getLoggedInPlayer();
 
 	if (player) {
-		$location.path('/overview/refresh');
+		$location.path('/overview/refresh').replace();
 		return;
 	}
 
@@ -22,7 +22,7 @@ function($scope, $location, $http, $localStorage, blockUI, dataService, BACKEND_
 				return;
 			}
 			dataService.setLoggedInPlayer(player);
-			$location.path('/overview/refresh');
+			$location.path('/overview/refresh').replace();
 		}).catch(function(response) {
 			console.log('error');
 			console.log(response.data);

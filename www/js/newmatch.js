@@ -62,17 +62,14 @@ dixitApp.controller('NewMatchController', function($scope, $rootScope,
 			return;
 		}
 
-		$http.post(BACKEND_URL + '/match', playerIds).success(
-				function(data, status, headers, config) {
-					$location.path('/overview');
-				}).error(function(data, status, headers, config) {
+		$http.post(BACKEND_URL + '/match', playerIds)
+		.then(function(response) {
+			// TODO add response.data to dataService instead of force refresh below (#46)
+			$location.path('/overview/refresh');
+		}).catch(function(response) {
 			console.log('error');
-			console.log(data);
-			console.log(status);
-			console.log(headers);
-			console.log(config);
-
-			$scope.message = "There was an error";
+			console.log(response);
+			$scope.message = "There was an error when creating the match...";
 		});
 	} // createMatch
 

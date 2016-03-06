@@ -181,7 +181,7 @@ dixitApp.controller('MatchController', function($routeParams, $scope,
     	}).success(function(data, status, headers, config) {
 			console.log(data);
 			console.log(status);
-			$location.path('/match/' + mId + '/refresh');
+			$location.path('/match/' + mId + '/refresh').replace();
 		}).error(function(data, status, headers, config) {
 			console.log('error');
 			console.log(data);
@@ -218,7 +218,7 @@ dixitApp.controller('MatchController', function($routeParams, $scope,
 			player.key.id + '&match=' + mId + '&round=' + $scope.rNo + '&image=' + $scope.selectedImage.key.id)
 		.success(function(data, status, headers, config) {
 			if (data)
-				$location.path('/match/' + mId + '/refresh');
+				$location.path('/match/' + mId + '/refresh').replace();
 		}).error(function(data, status, headers, config) {
 			console.log('error');
 			console.log(data);
