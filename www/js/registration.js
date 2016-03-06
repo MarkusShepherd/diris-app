@@ -1,5 +1,5 @@
 dixitApp.controller('RegistrationController', 
-function($scope, $location, $http, dataService, BACKEND_URL) {
+function($http, $location, $scope, dataService, BACKEND_URL) {
 
 	$scope.register = function() {
 		$http.post(BACKEND_URL + '/player', $scope.player)
@@ -15,13 +15,10 @@ function($scope, $location, $http, dataService, BACKEND_URL) {
 
 			console.log(player.key.id);
 			dataService.setLoggedInPlayer(player);
-			$location.path('/overview');
+			$location.path('/overview/refresh');
 		}).catch(function(response) {
 			console.log('error');
-			console.log(response.data);
-			console.log(response.status);
-			console.log(response.headers);
-			console.log(response.config);
+			console.log(response);
 
 			$scope.message = "There was an error";
 		});

@@ -36,8 +36,14 @@ a.disabled {
 	border-color: #F00;
 }
 
-.form {
-	margin-bottom: 1em;
+.form,
+.text-story,
+.btn-block {
+	margin-bottom: 20px;
+}
+
+.btn-submit-vote {
+	margin-top: 20px;
 }
 
 .text-right {
@@ -74,14 +80,6 @@ a.disabled {
 	font-size: 18px;
 	line-height: 1.33;
 	border-radius: 25px;
-}
-
-.btn-block {
-	margin-bottom: 20px;
-}
-
-.btn-submit-vote {
-	margin-top: 20px;
 }
 
 .image-edit-wrapper {

@@ -1,5 +1,5 @@
-dixitApp.controller('NewMatchController', function($scope, $rootScope,
-		$location, $http, dataService, BACKEND_URL) {
+dixitApp.controller('NewMatchController',
+function($http, $location, $rootScope, $scope, dataService, BACKEND_URL) {
 
 	var player = dataService.getLoggedInPlayer();
 
@@ -15,15 +15,14 @@ dixitApp.controller('NewMatchController', function($scope, $rootScope,
 		glyphicon: 'home'
 	}];
 
-	$http.get(BACKEND_URL + '/player').success(
-			function(data, status, headers, config) {
-				$scope.players = data;
-			}).error(function(data, status, headers, config) {
+	dataService.getPlayers()
+	.then(function(players) {
+		$scope.players = players;
+		console.log('Players: ', $scope.players);
+	}).catch(function(response) {
 		console.log('error');
-		console.log(data);
-		console.log(status);
-		console.log(headers);
-		console.log(config);
+		console.log(response);
+		$scope.message = 'There was an error fetching the data...';
 	});
 
 	$scope.selected = {};

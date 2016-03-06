@@ -31,6 +31,30 @@ function($localStorage, $http, BACKEND_URL) {
     	}
     };
  
+    factory.getMatches = function(pId, forceRefresh, fallback) {
+    	return new Promise(function(resolve, reject) {
+			if (!forceRefresh)
+				resolve(matches);
+			else {
+				$http.get(BACKEND_URL + '/player/id/' + pId + '/matches')
+				.then(function(response) {
+					matches = {};
+					$.each(response.data, function(k, match) {
+						$localStorage['match_' + match.key.id] = match;
+						matches[match.key.id] = match;
+					});
+					resolve(response.data);
+				}).catch(function(response) {
+					if (forceRefresh && fallback)
+						// TODO add message
+						resolve(matches);
+					else
+						reject(response);
+				});
+			}
+    	});
+    };
+ 
     factory.getMatch = function(mId, forceRefresh) {
     	return new Promise(function(resolve, reject) {
 			if (!forceRefresh && mId in matches)
@@ -51,21 +75,25 @@ function($localStorage, $http, BACKEND_URL) {
     	});
     };
  
-    factory.getMatches = function(pId, forceRefresh) {
+    factory.getPlayers = function(forceRefresh, fallback) {
     	return new Promise(function(resolve, reject) {
 			if (!forceRefresh)
-				resolve(matches);
+				resolve(players);
 			else {
-				$http.get(BACKEND_URL + '/player/id/' + pId + '/matches')
+				$http.get(BACKEND_URL + '/player')
 				.then(function(response) {
-					matches = {};
-					$.each(response.data, function(k, match) {
-						$localStorage['match_' + match.key.id] = match;
-						matches[match.key.id] = match;
+					players = {};
+					$.each(response.data, function(k, player) {
+						$localStorage['player_' + player.key.id] = player;
+						players[player.key.id] = player;
 					});
 					resolve(response.data);
 				}).catch(function(response) {
-					reject(response);
+					if (forceRefresh && fallback)
+						// TODO add message
+						resolve(players);
+					else
+						reject(response);
 				});
 			}
     	});
@@ -79,14 +107,35 @@ function($localStorage, $http, BACKEND_URL) {
 				players[pId] = $localStorage['player_' + pId];
 				resolve(players[pId]);
 			} else {
-				$http.get(BACKEND_URL + '/player/id/' + pId).then(function(response) {
+				$http.get(BACKEND_URL + '/player/id/' + pId)
+				.then(function(response) {
 					$localStorage['player_' + pId] = response.data;
 					players[pId] = response.data;
 					resolve(response.data);
-				}, function(response) {
+				}).catch(function(response) {
 					reject(response);
 				});
 			}
+    	});
+    };
+ 
+    factory.getPlayerByName = function(name) {
+    	return new Promise(function(resolve, reject) {
+			$http.get(BACKEND_URL + '/player/name/' + name)
+			.then(function(response) {
+				player = response.data[0];
+				if (player) {
+					$localStorage['player_' + player.key.id] = player;
+					players[player.key.id] = player;
+					resolve(player);
+				} else {
+					response.message = "There was an error - player \"" + name + "\" not found.";
+					reject(response);
+				}
+			}).catch(function(response) {
+				response.message = "There was an error when fetching the data.";
+				reject(response);
+			});
     	});
     };
  

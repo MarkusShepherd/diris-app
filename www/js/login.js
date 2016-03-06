@@ -1,5 +1,5 @@
 dixitApp.controller('LoginController', 
-function($scope, $location, $http, $localStorage, blockUI, dataService, BACKEND_URL) {
+function($location, $scope, blockUI, dataService) {
 
 	var player = dataService.getLoggedInPlayer();
 
@@ -13,22 +13,15 @@ function($scope, $location, $http, $localStorage, blockUI, dataService, BACKEND_
 	$scope.login = function() {
 		myBlockUI.start();
 
-		$http.get(BACKEND_URL + '/player/name/' + $scope.player.name)
-		.then(function(response) {
-			player = response.data[0];
-			if (!player) {
-				$scope.message = "There was an error - player \""
-						+ $scope.player.name + "\" not found.";
-				return;
-			}
+		dataService.getPlayerByName($scope.player.name)
+		.then(function(player) {
 			dataService.setLoggedInPlayer(player);
 			$location.path('/overview/refresh').replace();
 		}).catch(function(response) {
 			console.log('error');
-			console.log(response.data);
-			console.log(response.status);
+			console.log(response);
 			dataService.setLoggedInPlayer(null);
-			$scope.message = "There was an error";
+			$scope.message = response.message || "There was an error...";
 			myBlockUI.stop();
 		});
 	}; // login

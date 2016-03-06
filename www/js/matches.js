@@ -1,5 +1,5 @@
-dixitApp.controller('MatchController', function($routeParams, $scope,
-		$location, $http, BACKEND_URL, $rootScope, $q, blockUI, dataService) {
+dixitApp.controller('MatchController',
+function($http, $location, $rootScope, $routeParams, $scope, blockUI, dataService, BACKEND_URL) {
 
 	var player = dataService.getLoggedInPlayer();
 
@@ -8,12 +8,10 @@ dixitApp.controller('MatchController', function($routeParams, $scope,
 		return;
 	}
 
-	$scope.currentPlayer = player;
-
 	var myBlockUI = blockUI.instances.get('myBlockUI');
-
 	myBlockUI.start();
 
+	$scope.currentPlayer = player;
 	$rootScope.menuItems = [{
 		link: '#/overview',
 		label: 'Overview',
@@ -91,11 +89,6 @@ dixitApp.controller('MatchController', function($routeParams, $scope,
 			myBlockUI.stop();
 		});
 	}
-
-	/* $q.all([matchPromise, playersPromise]).then(function (ret) {
-		console.log("$q.all");
-		console.log(ret);
-	}); */
 
 	function getImage(srcType) {
 		navigator.camera.getPicture(setImage, function(message) {
@@ -202,10 +195,6 @@ dixitApp.controller('MatchController', function($routeParams, $scope,
 	$scope.flip = function(axis) {
 		var  img = $('#image');
 		img.cropper('scale' + axis, -img.cropper('getData')['scale' + axis]);
-	}
-
-	$scope.scaleY = function(y) {
-		$('#image').cropper('scaleY', y);
 	}
 
 	$scope.selectImage = function(image) {
