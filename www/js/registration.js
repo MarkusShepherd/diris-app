@@ -8,8 +8,7 @@ function($http, $location, $scope, dataService, BACKEND_URL) {
 
 			if (!player) {
 				$scope.message = "There was an error - player \"" +
-					$scope.player.name +
-					"\" could not be registered.";
+					$scope.player.name + "\" could not be registered.";
 				return;
 			}
 

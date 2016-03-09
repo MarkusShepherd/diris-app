@@ -1,4 +1,4 @@
-dixitApp.controller('PlayerController', 
+dixitApp.controller('OverviewController', 
 function($location, $rootScope, $routeParams, $scope, blockUI, dataService) {
 
 	var player = dataService.getLoggedInPlayer();

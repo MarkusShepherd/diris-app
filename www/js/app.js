@@ -1,28 +1,26 @@
 var testUrl = 'http://localhost:8181';
 var liveUrl = 'http://dixit-app.appspot.com';
 
-var dixitApp = angular.module('dixitApp', [ 'ngRoute', 'blockUI', 'ngStorage' ]).constant(
-		'BACKEND_URL', liveUrl);
+var dixitApp = angular.module('dixitApp', [ 'ngRoute', 'blockUI', 'ngStorage' ]);
 
-dixitApp.config([ '$routeProvider', function($routeProvider) {
+dixitApp.constant('BACKEND_URL', liveUrl);
+
+dixitApp.config(['$routeProvider', function($routeProvider) {
 	$routeProvider.when('/login', {
 		templateUrl : 'partials/login.html',
 		controller : 'LoginController'
 	}).when('/register', {
-		templateUrl : 'partials/register.html',
+		templateUrl : 'partials/registration.html',
 		controller : 'RegistrationController'
 	}).when('/overview', {
 		templateUrl : 'partials/overview.html',
-		controller : 'PlayerController'
+		controller : 'OverviewController'
 	}).when('/overview/:action', {
 		templateUrl : 'partials/overview.html',
-		controller : 'PlayerController'
+		controller : 'OverviewController'
 	}).when('/newmatch', {
 		templateUrl : 'partials/new-match.html',
 		controller : 'NewMatchController'
-	}).when('/accept/:mId', {
-		templateUrl : 'partials/accept-invitation.html',
-		controller : 'PlayerController'
 	}).when('/match/:mId', {
 		templateUrl : 'partials/match.html',
 		controller : 'MatchController'
@@ -31,17 +29,17 @@ dixitApp.config([ '$routeProvider', function($routeProvider) {
 		controller : 'MatchController'
 	}).when('/image/:mId/:rNo', {
 		templateUrl : 'partials/submit-image.html',
-		controller : 'MatchController'
+		controller : 'SubmitImageController'
 	}).when('/vote/:mId/:rNo', {
 		templateUrl : 'partials/vote-image.html',
-		controller : 'MatchController'
+		controller : 'VoteImageController'
 	}).when('/review/:mId/:rNo', {
 		templateUrl : 'partials/review-round.html',
-		controller : 'MatchController'
+		controller : 'ReviewRoundController'
 	}).otherwise({
 		redirectTo : '/login'
 	});
-} ]);
+}]);
 
 dixitApp.config(['$localStorageProvider', function ($localStorageProvider) {
 	$localStorageProvider.setKeyPrefix('dixitApp_');

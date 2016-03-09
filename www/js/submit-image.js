@@ -1,4 +1,4 @@
-dixitApp.controller('MatchController',
+dixitApp.controller('SubmitImageController',
 function($http, $location, $rootScope, $routeParams, $scope, blockUI, dataService, BACKEND_URL) {
 
 	var player = dataService.getLoggedInPlayer();
@@ -11,29 +11,28 @@ function($http, $location, $rootScope, $routeParams, $scope, blockUI, dataServic
 	var myBlockUI = blockUI.instances.get('myBlockUI');
 	myBlockUI.start();
 
+	var mId = $routeParams.mId;
+	var rNo = $routeParams.rNo;
+
+	$scope.mId = mId;
+	$scope.rNo = rNo;
+
 	$scope.currentPlayer = player;
 	$rootScope.menuItems = [{
 		link: '#/overview',
 		label: 'Overview',
 		glyphicon: 'home'
+	}, {
+		link: '#/match/' + mId,
+		label: 'Match',
+		glyphicon: 'knight'
 	}];
 
-	var mId = $routeParams.mId;
-	var action = $routeParams.action;
-	var rNo = $routeParams.rNo;
-
-	$scope.mId = mId;
-
-	dataService.getMatch(mId, action === 'refresh')
+	dataService.getMatch(mId)
 	.then(function(match) {
 		$scope.$apply(function() {
 			$scope.match = processMatch(match, player);
-
-			if ($routeParams.rNo) {
-				var rNo = $routeParams.rNo;
-				$scope.rNo = rNo;
-				$scope.round = $scope.match.rounds[rNo];
-			}
+			$scope.round = $scope.match.rounds[rNo];
 		});
 		console.log('Match: ', $scope.match);
 		return $scope.match;
@@ -57,7 +56,7 @@ function($http, $location, $rootScope, $routeParams, $scope, blockUI, dataServic
 		myBlockUI.stop();
 	});
 
-	dataService.getImages(mId, rNo, true, false)
+	dataService.getImages(mId, rNo, true, true)
 	.then(function(images) {
 		$scope.$apply(function() {
 			$scope.images = {};
@@ -98,20 +97,6 @@ function($http, $location, $rootScope, $routeParams, $scope, blockUI, dataServic
 		});
 	}
 
-	$("#image").cropper({ 
-		viewMode: 3,
-		aspectRatio: 1,
-		dragMode: 'move',
-		modal: false,
-		guides: false,
-		center: false,
-		highlight: false,
-		autoCropArea: 1,
-		cropBoxMovable: false,
-		cropBoxResizable: false,
-		toggleDragModeOnDblclick: false
-	}).cropper('disable');
-
 	$scope.getImageFromCamera = function() {
 		getImage(Camera.PictureSourceType.CAMERA);
 	};
@@ -122,19 +107,6 @@ function($http, $location, $rootScope, $routeParams, $scope, blockUI, dataServic
 		else
 			getImage(Camera.PictureSourceType.PHOTOLIBRARY);
 	};
-
-	$("#file-input").change(function(){
-        if (this.files && this.files[0]) {
-            var reader = new FileReader();
-            
-            reader.onload = function (e) {
-            	var d = e.target.result;
-            	setImage(d.substr(d.indexOf(",") + 1));
-            };
-            
-            reader.readAsDataURL(this.files[0]);
-        }
-	});
 
 	$scope.submitImage = function() {
 		var croppedImage = $("#image").cropper('getCroppedCanvas', {
@@ -178,42 +150,31 @@ function($http, $location, $rootScope, $routeParams, $scope, blockUI, dataServic
 		img.cropper('scale' + axis, -img.cropper('getData')['scale' + axis]);
 	};
 
-	$scope.selectImage = function(image) {
-		if ($scope.round.imageToPlayer[image.key.id] != player.key.id)
-			$scope.selectedImage = image;
-	};
+	$("#image").cropper({ 
+		viewMode: 3,
+		aspectRatio: 1,
+		dragMode: 'move',
+		modal: false,
+		guides: false,
+		center: false,
+		highlight: false,
+		autoCropArea: 1,
+		cropBoxMovable: false,
+		cropBoxResizable: false,
+		toggleDragModeOnDblclick: false
+	}).cropper('disable');
 
-	$scope.submitVote = function() {
-		$http.get(BACKEND_URL + '/vote?player=' + 
-			player.key.id + '&match=' + mId + '&round=' + $scope.rNo + '&image=' + $scope.selectedImage.key.id)
-		.then(function(response) {
-			if (response.data)
-				$location.path('/match/' + mId + '/refresh').replace();
-			else
-				$scope.message = "There was an error...";
-		}).catch(function(response) {
-			console.log('error');
-			console.log(response);
-			$scope.message = "There was an error";
-		});
-	};
+	$("#file-input").change(function(){
+        if (this.files && this.files[0]) {
+            var reader = new FileReader();
+            
+            reader.onload = function (e) {
+            	var d = e.target.result;
+            	setImage(d.substr(d.indexOf(",") + 1));
+            };
+            
+            reader.readAsDataURL(this.files[0]);
+        }
+	});
 
-	$scope.filterValues = function(items, value) {
-		var result = [];
-		angular.forEach(items, function(v, k) {
-	        if (v == value)
-	        	result.push(k);
-	    });
-	    return result;
-	};
-
-	$scope.filterOutKey = function(items, key) {
-		var result = [];
-		angular.forEach(items, function(v, k) {
-	        if (k != key)
-	        	result.push(v);
-	    });
-	    return result;
-	};
-
-}); // MatchController
+});
