@@ -40,8 +40,8 @@
 <body>
 	<nav ng-controller="NavigationController" ng-include="'partials/navigation.html'" class="navbar navbar-inverse"></nav>
 	<div class="container" ng-view="" block-ui="myBlockUI"></div>
-	<script type="text/javascript"
-		src="https://cdn.flurry.com/js/flurry.js"></script>
+
+	<script type="text/javascript" src="https://cdn.flurry.com/js/flurry.js"></script>
 	<script type="text/javascript">
 		//<![CDATA[
 		FlurryAgent.startSession("8XWN22P4C7ZBG6W833PP");
@@ -63,9 +63,6 @@
 
 		ga('create', 'UA-56725382-3', 'auto');
 		ga('send', 'pageview');
-		if (currentPlayer) {
-			ga('set', '&amp;uid', currentPlayer.key.id);
-		}
 		//]]>
 	</script>
 </body>

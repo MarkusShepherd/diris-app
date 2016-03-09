@@ -31,7 +31,7 @@
 				<a ng-repeat="match in matches | orderBy:'lastModifiedDate':true | filter:{status:'IN_PROGRESS'}:true" 
 					ng-href="#/match/{{ match.key.id }}" 
 					class="list-group-item {{ match.currentRoundObj.hasAction ? 'list-group-item-info' : '' }}">
-					<span class="badge">{{ match.playerPositionOrd }}</span>
+					<span ng-show="match.currentRound" class="badge">{{ match.playerPositionOrd }}</span>
 					<h4 class="list-group-item-heading">Round {{ match.currentRound + 1 }} of {{ match.totalRounds }}</h4>
 					<p ng-show="match.currentRoundObj.status === 'SUBMIT_STORY'" class="list-group-item-text">
 						{{ match.currentRoundObj.isStoryTeller 

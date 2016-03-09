@@ -53,7 +53,6 @@
     <plugin name="cordova-plugin-device" spec="~1.1.1" />
     <plugin name="cordova-plugin-whitelist" spec="~1.2.1" />
     <engine name="android" spec="~5.1.0" />
-    <engine name="firefoxos" spec="~3.6.3" />
     <engine name="browser" spec="~3.6.0" />
     <engine name="ios" spec="~4.0.1" />
 </widget>

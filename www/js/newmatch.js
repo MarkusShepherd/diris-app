@@ -46,7 +46,7 @@ function($http, $location, $rootScope, $scope, dataService, BACKEND_URL) {
 
 		var includeCurrent = false;
 
-		for (pId in $scope.selected) {
+		for (var pId in $scope.selected) {
 			var id = parseInt(pId, 10);
 			playerIds.push(id);
 			if (id == player.key.id)
@@ -70,6 +70,6 @@ function($http, $location, $rootScope, $scope, dataService, BACKEND_URL) {
 			console.log(response);
 			$scope.message = "There was an error when creating the match...";
 		});
-	} // createMatch
+	}; // createMatch
 
 }); // NewMatchController

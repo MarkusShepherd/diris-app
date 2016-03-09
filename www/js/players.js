@@ -31,7 +31,7 @@ function($location, $rootScope, $routeParams, $scope, blockUI, dataService) {
 	}).catch(function(response) {
 		console.log('error');
 		console.log(response);
-		$scope.message = "There was an error fetching the data - please try again later..."
+		$scope.message = "There was an error fetching the data - please try again later...";
 	});
 
 	dataService.getPlayers(action === 'refresh', true)
@@ -45,6 +45,6 @@ function($location, $rootScope, $routeParams, $scope, blockUI, dataService) {
 
 	$scope.newMatch = function() {
 		$location.path('/newmatch');
-	}
+	};
 
 }); // PlayerController

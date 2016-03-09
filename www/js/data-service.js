@@ -45,10 +45,15 @@ function($localStorage, $http, BACKEND_URL) {
 					});
 					resolve(response.data);
 				}).catch(function(response) {
-					if (forceRefresh && fallback)
+					if (forceRefresh && fallback) {
 						// TODO add message
+						$.each($localStorage, function(key, match) {
+							if (key.substr(0, 6) === 'match_')
+								matches[key.substr(6)] = match;
+						});
+						console.log("Cached: ", matches);
 						resolve(matches);
-					else
+					} else
 						reject(response);
 				});
 			}
@@ -89,10 +94,14 @@ function($localStorage, $http, BACKEND_URL) {
 					});
 					resolve(response.data);
 				}).catch(function(response) {
-					if (forceRefresh && fallback)
+					if (forceRefresh && fallback) {
 						// TODO add message
+						$.each($localStorage, function(key, player) {
+							if (key.substr(0, 7) === 'player_')
+								players[key.substr(7)] = player;
+						});
 						resolve(players);
-					else
+					} else
 						reject(response);
 				});
 			}
@@ -136,6 +145,62 @@ function($localStorage, $http, BACKEND_URL) {
 				response.message = "There was an error when fetching the data.";
 				reject(response);
 			});
+    	});
+    };
+ 
+    factory.getImages = function(mId, rNo, forceRefresh, fallback) {
+    	return new Promise(function(resolve, reject) {
+			if (!forceRefresh)
+				this.getMatch(mId)
+				.then(function(match) {
+					// TODO find images in match object
+					resolve(images);
+				}).catch(function() {
+					resolve(images);
+				});
+			else {
+				var url = BACKEND_URL + '/match/' + mId + '/images';
+				if (rNo !== undefined && rNo !== null)
+					url += '/' + rNo;
+				$http.get(url)
+				.then(function(response) {
+					$.each(response.data, function(k, image) {
+						$localStorage['image_' + image.key.id] = image;
+						images[image.key.id] = image;
+					});
+					resolve(response.data);
+				}).catch(function(response) {
+					if (forceRefresh && fallback) {
+						// TODO add message
+						$.each($localStorage, function(key, image) {
+							if (key.substr(0, 6) === 'image_')
+								images[key.substr(6)] = image;
+						});
+						resolve(images);
+					} else
+						reject(response);
+				});
+			}
+    	});
+    };
+ 
+    factory.getImage = function(iId, forceRefresh) {
+    	return new Promise(function(resolve, reject) {
+			if (!forceRefresh && iId in images)
+				resolve(images[iId]);
+			else if (!forceRefresh && ('image_' + iId) in $localStorage) {
+				images[iId] = $localStorage['image_' + iId];
+				resolve(images[iId]);
+			} else {
+				$http.get(BACKEND_URL + '/image/' + iId)
+				.then(function(response) {
+					$localStorage['image_' + iId] = response.data;
+					images[iId] = response.data;
+					resolve(response.data);
+				}).catch(function(response) {
+					reject(response);
+				});
+			}
     	});
     };
  

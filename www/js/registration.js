@@ -7,9 +7,9 @@ function($http, $location, $scope, dataService, BACKEND_URL) {
 			var player = response.data;
 
 			if (!player) {
-				$scope.message = "There was an error - player \""
-						+ $scope.player.name
-						+ "\" could not be registered.";
+				$scope.message = "There was an error - player \"" +
+					$scope.player.name +
+					"\" could not be registered.";
 				return;
 			}
 
@@ -22,6 +22,6 @@ function($http, $location, $scope, dataService, BACKEND_URL) {
 
 			$scope.message = "There was an error";
 		});
-	} // login
+	}; // login
 
 }); // RegistrationController
