@@ -37,16 +37,22 @@ function($http, $location, $rootScope, $routeParams, $scope, blockUI, dataServic
 		console.log('Match: ', $scope.match);
 		return $scope.match;
 	}).then(function(match) {
-		$scope.players = {};
-		$.each(match.playerKeys, function(i, key) {
-			dataService.getPlayer(key.id)
-			.then(function(player) {
-				$scope.$apply(function() {
-					$scope.players[player.key.id] = player;
+		if ($scope.round.status === 'SUBMIT_STORY' || $scope.round.status === 'SUBMIT_OTHERS')
+			$location.path('/image/' + mId + '/' + rNo).replace();
+		else if ($scope.round.status === 'FINISHED')
+			$location.path('/review/' + mId + '/' + rNo).replace();
+		else {
+			$scope.players = {};
+			$.each(match.playerKeys, function(i, key) {
+				dataService.getPlayer(key.id)
+				.then(function(player) {
+					$scope.$apply(function() {
+						$scope.players[player.key.id] = player;
+					});
 				});
 			});
-		});
-		myBlockUI.stop();
+			myBlockUI.stop();
+		}
 	}).catch(function(response) {
 		console.log('error');
 		console.log(response);
