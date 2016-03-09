@@ -17,12 +17,18 @@ function($http, $location, $rootScope, $scope, dataService, BACKEND_URL) {
 
 	dataService.getPlayers()
 	.then(function(players) {
-		$scope.players = players;
-		console.log('Players: ', $scope.players);
+		$scope.$apply(function () {
+			$scope.players = players;
+			$scope.playersArray = $.map(players, function(player) {
+				return player;
+			});
+		});
 	}).catch(function(response) {
 		console.log('error');
 		console.log(response);
-		$scope.message = 'There was an error fetching the data...';
+		$scope.$apply(function () {
+			$scope.message = 'There was an error fetching the data...';
+		});
 	});
 
 	$scope.selected = {};

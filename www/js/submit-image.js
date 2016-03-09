@@ -34,7 +34,6 @@ function($http, $location, $rootScope, $routeParams, $scope, blockUI, dataServic
 			$scope.match = processMatch(match, player);
 			$scope.round = $scope.match.rounds[rNo];
 		});
-		console.log('Match: ', $scope.match);
 		return $scope.match;
 	}).then(function(match) {
 		if ($scope.round.status === 'SUBMIT_VOTES')
@@ -70,7 +69,6 @@ function($http, $location, $rootScope, $routeParams, $scope, blockUI, dataServic
 				$scope.images['' + img.key.id] = img;
 			});
 		});
-		console.log('Images: ', $scope.images);
 	}).catch(function(response) {
 		console.log('error');
 		console.log(response);
@@ -170,7 +168,7 @@ function($http, $location, $rootScope, $routeParams, $scope, blockUI, dataServic
 		toggleDragModeOnDblclick: false
 	}).cropper('disable');
 
-	$("#file-input").change(function(){
+	$("#file-input").change(function() {
         if (this.files && this.files[0]) {
             var reader = new FileReader();
             

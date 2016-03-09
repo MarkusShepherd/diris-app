@@ -34,7 +34,6 @@ function($location, $rootScope, $routeParams, $scope, blockUI, dataService) {
 			$scope.match = processMatch(match, player);
 			$scope.round = $scope.match.rounds[rNo];
 		});
-		console.log('Match: ', $scope.match);
 		return $scope.match;
 	}).then(function(match) {
 		if ($scope.round.status === 'SUBMIT_STORY' || $scope.round.status === 'SUBMIT_OTHERS')
@@ -70,7 +69,6 @@ function($location, $rootScope, $routeParams, $scope, blockUI, dataService) {
 				$scope.images['' + img.key.id] = img;
 			});
 		});
-		console.log('Images: ', $scope.images);
 	}).catch(function(response) {
 		console.log('error');
 		console.log(response);

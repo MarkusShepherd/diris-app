@@ -5,7 +5,7 @@
 		{{ message }}
 	</div>
 	<div class="list-group">
-		<a ng-repeat="player in players | orderBy:'name'" 
+		<a ng-repeat="player in playersArray | orderBy:'name'" 
 			ng-hide="player.selected || player.key.id == currentPlayer.key.id" 
 			ng-click="addPlayer(player)"
 			class="list-group-item">

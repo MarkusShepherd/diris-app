@@ -51,7 +51,6 @@ function($localStorage, $http, BACKEND_URL) {
 							if (key.substr(0, 6) === 'match_')
 								matches[key.substr(6)] = match;
 						});
-						console.log("Cached: ", matches);
 						resolve(matches);
 					} else
 						reject(response);
@@ -92,7 +91,7 @@ function($localStorage, $http, BACKEND_URL) {
 						$localStorage['player_' + player.key.id] = player;
 						players[player.key.id] = player;
 					});
-					resolve(response.data);
+					resolve(players);
 				}).catch(function(response) {
 					if (forceRefresh && fallback) {
 						// TODO add message
@@ -168,7 +167,7 @@ function($localStorage, $http, BACKEND_URL) {
 						$localStorage['image_' + image.key.id] = image;
 						images[image.key.id] = image;
 					});
-					resolve(response.data);
+					resolve(images);
 				}).catch(function(response) {
 					if (forceRefresh && fallback) {
 						// TODO add message
