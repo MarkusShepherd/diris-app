@@ -1,5 +1,5 @@
 dixitApp.controller('MatchController',
-function($http, $location, $rootScope, $routeParams, $scope, blockUI, dataService, BACKEND_URL) {
+function($location, $rootScope, $routeParams, $scope, blockUI, dataService) {
 
 	var player = dataService.getLoggedInPlayer();
 

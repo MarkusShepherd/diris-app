@@ -1,4 +1,5 @@
-dixitApp.controller('NavigationController', function($scope, $location, dataService) {
+dixitApp.controller('NavigationController',
+function($scope, $location, dataService) {
 
 	$scope.currentPlayer = dataService.getLoggedInPlayer();
 
