@@ -7,9 +7,6 @@
 	</p>
 
 	<form id="login" name="myform" novalidate="novalidate" ng-submit="login()" role="form" class="form">
-		<!-- <input type="email" name="email" placeholder="Email" ng-model="player.email" ng-required="true" /><br />
-		<p ng-show="myform.email.$invalid &amp;&amp; myform.email.$touched">Must be a valid email</p> -->
-
 		<div class="form-group">
 			<label class="sr-only" for="name">User name:</label>
 			<input type="text" id="name" name="name" placeholder="Name" ng-model="player.name" ng-required="true"  class="form-control" />
@@ -17,9 +14,6 @@
 		<p ng-show="myform.name.$invalid &amp;&amp; myform.name.$touched" class="alert alert-warning fade in">
 			Name is required
 		</p>
-
-		<!-- <input type="password" name="password" placeholder="Password" ng-model="player.password" ng-required="true" /><br />
-		<p ng-show="myform.password.$invalid &amp;&amp; myform.password.$touched">Password is required</p> -->
 
 		<button type="submit" ng-disabled="myform.$invalid" class="btn btn-primary btn-lg btn-block">
 			<span class="glyphicon glyphicon-log-in"></span>

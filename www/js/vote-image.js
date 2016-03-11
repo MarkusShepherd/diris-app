@@ -61,7 +61,7 @@ function($http, $location, $rootScope, $routeParams, $scope, blockUI, dataServic
 		myBlockUI.stop();
 	});
 
-	dataService.getImages(mId, rNo, true, true)
+	dataService.getImages(mId, rNo)
 	.then(function(images) {
 		$scope.$apply(function() {
 			$scope.images = {};

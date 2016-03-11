@@ -34,8 +34,10 @@ function($localStorage, $http, BACKEND_URL) {
     factory.getMatches = function(pId, forceRefresh, fallback) {
     	return new Promise(function(resolve, reject) {
 			if (!forceRefresh)
+				// TODO make sure only matches of pId are returned
 				resolve(matches);
 			else {
+				// TODO why not use localStorage?
 				$http.get(BACKEND_URL + '/player/id/' + pId + '/matches')
 				.then(function(response) {
 					matches = {};
@@ -84,6 +86,7 @@ function($localStorage, $http, BACKEND_URL) {
 			if (!forceRefresh)
 				resolve(players);
 			else {
+				// TODO why not use localStorage?
 				$http.get(BACKEND_URL + '/player')
 				.then(function(response) {
 					players = {};
@@ -147,15 +150,51 @@ function($localStorage, $http, BACKEND_URL) {
     	});
     };
  
+    factory.getImage = function(iId, forceRefresh) {
+    	return new Promise(function(resolve, reject) {
+			if (!forceRefresh && iId in images)
+				resolve(images[iId]);
+			else if (!forceRefresh && ('image_' + iId) in $localStorage) {
+				images[iId] = $localStorage['image_' + iId];
+				resolve(images[iId]);
+			} else {
+				$http.get(BACKEND_URL + '/image/' + iId)
+				.then(function(response) {
+					$localStorage['image_' + iId] = response.data;
+					images[iId] = response.data;
+					resolve(response.data);
+				}).catch(function(response) {
+					reject(response);
+				});
+			}
+    	});
+    };
+ 
     factory.getImages = function(mId, rNo, forceRefresh, fallback) {
     	return new Promise(function(resolve, reject) {
 			if (!forceRefresh)
-				this.getMatch(mId)
+				factory.getMatch(mId)
 				.then(function(match) {
-					// TODO find images in match object
-					resolve(images);
+					var rounds = rNo in match.rounds ? [match.rounds[rNo]] : match.rounds;
+					var promises = [];
+					$.each(rounds, function(i, round) {
+						$.each(round.images, function(k, iId) {
+							promises.push(factory.getImage(iId, false));
+						});
+					});
+
+					Promise.all(promises)
+					.then(function(response) {
+						var result = {};
+						$.each(response, function(k, image) {
+							result[image.key.id] = image;
+						});
+						resolve(result);
+					}).catch(function(reason) {
+						reject(reason);
+					});
 				}).catch(function() {
-					resolve(images);
+					reject("Match could not be found");
 				});
 			else {
 				var url = BACKEND_URL + '/match/' + mId + '/images';
@@ -178,26 +217,6 @@ function($localStorage, $http, BACKEND_URL) {
 						resolve(images);
 					} else
 						reject(response);
-				});
-			}
-    	});
-    };
- 
-    factory.getImage = function(iId, forceRefresh) {
-    	return new Promise(function(resolve, reject) {
-			if (!forceRefresh && iId in images)
-				resolve(images[iId]);
-			else if (!forceRefresh && ('image_' + iId) in $localStorage) {
-				images[iId] = $localStorage['image_' + iId];
-				resolve(images[iId]);
-			} else {
-				$http.get(BACKEND_URL + '/image/' + iId)
-				.then(function(response) {
-					$localStorage['image_' + iId] = response.data;
-					images[iId] = response.data;
-					resolve(response.data);
-				}).catch(function(response) {
-					reject(response);
 				});
 			}
     	});
