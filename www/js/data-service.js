@@ -134,7 +134,7 @@ function($localStorage, $http, BACKEND_URL) {
     	return new Promise(function(resolve, reject) {
 			$http.get(BACKEND_URL + '/player/name/' + name)
 			.then(function(response) {
-				player = response.data[0];
+				var player = response.data[0];
 				if (player) {
 					$localStorage['player_' + player.key.id] = player;
 					players[player.key.id] = player;

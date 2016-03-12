@@ -83,10 +83,10 @@ a.disabled {
 }
 
 .image-edit-wrapper {
-	margin: 0 0 20px;
+	margin: 0 0 15px;
 	text-align: center;
 }
 
 .btn-group-image-edit {
-	margin: 0 5px;
+	margin: 0 5px 5px;
 }
