@@ -28,19 +28,21 @@ function($location, $rootScope, $routeParams, $scope, blockUI, dataService) {
 		$scope.$apply(function() {
 			$scope.match = processMatch(match, player);
 		});
-		console.log('Match: ', $scope.match);
 		return $scope.match;
 	}).then(function(match) {
+		var promises = $.map(match.playerKeys, function(key) {
+			return dataService.getPlayer(key.id);
+		});
 		$scope.players = {};
-		$.each(match.playerKeys, function(i, key) {
-			dataService.getPlayer(key.id)
-			.then(function(player) {
-				$scope.$apply(function() {
+		Promise.all(promises)
+		.then(function(players) {
+			$scope.$apply(function() {
+				$.each(players, function(i, player) {
 					$scope.players[player.key.id] = player;
 				});
 			});
+			myBlockUI.stop();
 		});
-		myBlockUI.stop();
 	}).catch(function(response) {
 		console.log('error');
 		console.log(response);

@@ -41,16 +41,19 @@ function($http, $location, $rootScope, $routeParams, $scope, blockUI, dataServic
 		else if ($scope.round.status === 'FINISHED')
 			$location.path('/review/' + mId + '/' + rNo).replace();
 		else {
+			var promises = $.map(match.playerKeys, function(key) {
+				return dataService.getPlayer(key.id);
+			});
 			$scope.players = {};
-			$.each(match.playerKeys, function(i, key) {
-				dataService.getPlayer(key.id)
-				.then(function(player) {
-					$scope.$apply(function() {
+			Promise.all(promises)
+			.then(function(players) {
+				$scope.$apply(function() {
+					$.each(players, function(i, player) {
 						$scope.players[player.key.id] = player;
 					});
 				});
+				myBlockUI.stop();
 			});
-			myBlockUI.stop();
 		}
 	}).catch(function(response) {
 		console.log('error');
@@ -91,12 +94,16 @@ function($http, $location, $rootScope, $routeParams, $scope, blockUI, dataServic
 			else {
 				console.log('error');
 				console.log(response);
-				$scope.message = "There was an error...";
+				$scope.$apply(function() {
+					$scope.message = "There was an error...";
+				});
 			}
 		}).catch(function(response) {
 			console.log('error');
 			console.log(response);
-			$scope.message = "There was an error";
+			$scope.$apply(function() {
+				$scope.message = "There was an error";
+			});
 		});
 	};
 

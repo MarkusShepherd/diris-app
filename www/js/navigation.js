@@ -1,10 +1,13 @@
 dixitApp.controller('NavigationController',
-function($scope, $location, dataService) {
+function($rootScope, $scope, $location, dataService) {
 
-	$scope.currentPlayer = dataService.getLoggedInPlayer();
+	$scope.$watch(dataService.getLoggedInPlayer, function(player) {
+		$scope.currentPlayer = player;
+	});
 
 	$scope.logout = function() {
 		dataService.setLoggedInPlayer(null);
+		$rootScope.menuItems = [];
 		$location.path('/login');
 	};
 

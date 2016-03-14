@@ -7,8 +7,10 @@ function($http, $location, $scope, dataService, BACKEND_URL) {
 			var player = response.data;
 
 			if (!player) {
-				$scope.message = "There was an error - player \"" +
-					$scope.player.name + "\" could not be registered.";
+				$scope.$apply(function() {
+					$scope.message = "There was an error - player \"" +
+						$scope.player.name + "\" could not be registered.";
+				});
 				return;
 			}
 
@@ -19,7 +21,9 @@ function($http, $location, $scope, dataService, BACKEND_URL) {
 			console.log('error');
 			console.log(response);
 
-			$scope.message = "There was an error";
+			$scope.$apply(function() {
+				$scope.message = "There was an error";
+			});
 		});
 	}; // login
 

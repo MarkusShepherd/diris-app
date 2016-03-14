@@ -12,10 +12,8 @@ function($localStorage, $http, BACKEND_URL) {
     		var player = $localStorage.loggedInPlayer;
     		if (player)
     			loggedInPlayer = player;
-    		else {
-    			loggedInPlayer = null;
-    			delete $localStorage.loggedInPlayer;
-    		}
+    		else
+    			return null;
     	}
 
 		return loggedInPlayer;

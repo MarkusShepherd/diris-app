@@ -21,7 +21,9 @@ function($location, $scope, blockUI, dataService) {
 			console.log('error');
 			console.log(response);
 			dataService.setLoggedInPlayer(null);
-			$scope.message = response.message || "There was an error...";
+			$scope.$apply(function() {
+				$scope.message = response.message || "There was an error...";
+			});
 			myBlockUI.stop();
 		});
 	}; // login

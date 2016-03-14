@@ -42,7 +42,7 @@
 </head>
 <body>
 	<nav ng-controller="NavigationController" ng-include="'partials/navigation.html'" class="navbar navbar-inverse"></nav>
-	<div class="container" ng-view="" block-ui="myBlockUI"></div>
+	<div class="container" ng-view="" block-ui="myBlockUI" autoscroll="true"></div>
 
 	<script type="text/javascript" src="https://cdn.flurry.com/js/flurry.js"></script>
 	<script type="text/javascript">
@@ -62,7 +62,7 @@
 			a.src = g;
 			m.parentNode.insertBefore(a, m)
 		})(window, document, 'script',
-				'//www.google-analytics.com/analytics.js', 'ga');
+				'http://www.google-analytics.com/analytics.js', 'ga');
 
 		ga('create', 'UA-56725382-3', 'auto');
 		ga('send', 'pageview');
