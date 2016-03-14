@@ -19,7 +19,9 @@
 				<span ng-show="round.status == 'FINISHED'" class="badge">{{ round.scores['' + currentPlayer.key.id] }}</span>
 				{{ players['' + round.storyTellerKey.id].name }}<span ng-show="round.story">: "{{ round.story }}"</span>
 			</p>
-			<img ng-show="round.status == 'FINISHED'" ng-src="{{ images[round.images['' + round.storyTellerKey.id]].url }}" class="img-thumbnail" />
+			<div ng-show="round.status == 'FINISHED'" class="image-overview-container">
+				<img ng-src="{{ images[round.images['' + round.storyTellerKey.id]].url }}" class="img-responsive img-rounded image-overview" />
+			</div>
 			<p ng-show="round.readyForStoryImage" class="list-group-item-text">Tell your story!</p>
 			<p ng-show="round.readyForOtherImage" class="list-group-item-text">Submit your image!</p>
 			<span ng-show="round.readyForVote" ng-repeat="(pId, iId) in round.images">

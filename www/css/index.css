@@ -26,14 +26,18 @@ a.disabled {
 	max-width: 100%;
 }
 
-.image-normal, .image-selected {
-	border-style: solid;
-	border-width: 2px;
-	border-color: #000;
+.image-normal,
+.image-selected,
+.image-user {
+	border: none;
 }
 
 .image-selected {
-	border-color: #F00;
+	box-shadow: 0 0 15px 5px #3c763d;
+}
+
+.image-user {
+	opacity: .75;
 }
 
 .form,
@@ -50,8 +54,61 @@ a.disabled {
 	text-align: right;
 }
 
+.clear-both {
+	clear: both;
+}
+
 .quote-story {
 	margin-bottom: 0;
+}
+
+.image-overview-container,
+.image-review-container {
+	max-width: 90vmin;
+	max-height: 90vmin;
+	margin: 0 auto;
+}
+
+.image-overview-container {
+	margin-top: 10px;
+}
+
+.image-review-container {
+	position: relative;
+	margin-bottom: 20px;
+}
+
+.image-overview,
+.image-review {
+
+}
+
+.submitted-by-container,
+.guessed-by-container {
+	display: inline-block;
+	position: absolute;
+}
+
+.submitted-by-container {
+	top: 5px;
+	left: 5px;
+}
+
+.guessed-by-container {
+	right: 5px;
+	bottom: 5px;
+}
+
+.player-icon {
+	margin: 5px;
+}
+
+.select-image {
+	display: block;
+	max-width: 90vmin;
+	max-height: 90vmin;
+	margin: 0 auto;
+	padding: 10px;
 }
 
 .image-vote-container {
@@ -60,8 +117,9 @@ a.disabled {
 
 .image-vote-badge {
 	position: absolute;
-	margin: 1em;
+	margin: 10px;
 	font-size: 200%;
+	background-color: #3c763d;
 }
 
 .btn-circle {
