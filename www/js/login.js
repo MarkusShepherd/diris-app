@@ -14,14 +14,16 @@ function($location, $scope, blockUI, dataService) {
 		myBlockUI.start();
 
 		dataService.getPlayerByName($scope.player.name)
-		.then(function(player) {
-			dataService.setLoggedInPlayer(player);
-			$location.path('/overview/refresh').replace();
-		}).catch(function(response) {
-			console.log('error');
-			console.log(response);
-			dataService.setLoggedInPlayer(null);
+		.then(function(result) {
 			$scope.$apply(function() {
+				dataService.setLoggedInPlayer(result);
+				$location.path('/overview/refresh').replace();
+			});
+		}).catch(function(response) {
+			console.log('LoginController: error');
+			console.log('LoginController: response = ' + JSON.stringify(response));
+			$scope.$apply(function() {
+				dataService.setLoggedInPlayer(null);
 				$scope.message = response.message || "There was an error...";
 			});
 			myBlockUI.stop();

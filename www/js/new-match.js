@@ -70,11 +70,15 @@ function($http, $location, $rootScope, $scope, dataService, BACKEND_URL) {
 		$http.post(BACKEND_URL + '/match', playerIds)
 		.then(function(response) {
 			// TODO add response.data to dataService instead of force refresh below (#46)
-			$location.path('/overview/refresh');
+			$scope.$apply(function() {
+				$location.path('/overview/refresh');
+			});
 		}).catch(function(response) {
 			console.log('error');
 			console.log(response);
-			$scope.message = "There was an error when creating the match...";
+			$scope.$apply(function() {
+				$scope.message = "There was an error when creating the match...";
+			});
 		});
 	}; // createMatch
 

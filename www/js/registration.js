@@ -15,8 +15,11 @@ function($http, $location, $scope, dataService, BACKEND_URL) {
 			}
 
 			console.log(player.key.id);
-			dataService.setLoggedInPlayer(player);
-			$location.path('/overview/refresh');
+
+			$scope.$apply(function() {
+				dataService.setLoggedInPlayer(player);
+				$location.path('/overview/refresh');
+			});
 		}).catch(function(response) {
 			console.log('error');
 			console.log(response);

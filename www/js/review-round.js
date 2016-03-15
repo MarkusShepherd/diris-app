@@ -37,9 +37,9 @@ function($location, $rootScope, $routeParams, $scope, blockUI, dataService) {
 		return $scope.match;
 	}).then(function(match) {
 		if ($scope.round.status === 'SUBMIT_STORY' || $scope.round.status === 'SUBMIT_OTHERS')
-			$location.path('/image/' + mId + '/' + rNo).replace();
+			$scope.$apply(function() { $location.path('/image/' + mId + '/' + rNo).replace(); });
 		else if ($scope.round.status === 'SUBMIT_VOTE')
-			$location.path('/vote/' + mId + '/' + rNo).replace();
+			$scope.$apply(function() { $location.path('/vote/' + mId + '/' + rNo).replace(); });
 		else {
 			var promises = $.map(match.playerKeys, function(key) {
 				return dataService.getPlayer(key.id);
