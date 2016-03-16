@@ -148,6 +148,28 @@ function($localStorage, $http, BACKEND_URL) {
     	});
     };
  
+    factory.getPlayerByEmail = function(email) {
+    	return new Promise(function(resolve, reject) {
+    		// TODO save in localStorage, retrieve by email
+			$http.get(BACKEND_URL + '/player/email/' + email)
+			.then(function(response) {
+				var player = response.data;
+				console.log(response);
+				if (player) {
+					$localStorage['player_' + player.key.id] = player;
+					players[player.key.id] = player;
+					resolve(player);
+				} else {
+					response.message = "There was an error - player \"" + email + "\" not found.";
+					reject(response);
+				}
+			}).catch(function(response) {
+				response.message = "There was an error when fetching the data.";
+				reject(response);
+			});
+    	});
+    };
+ 
     factory.getImage = function(iId, forceRefresh) {
     	return new Promise(function(resolve, reject) {
 			if (!forceRefresh && iId in images)
