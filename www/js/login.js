@@ -1,5 +1,5 @@
 dixitApp.controller('LoginController', 
-function($location, $scope, blockUI, dataService) {
+function($location, $scope, $timeout, blockUI, dataService) {
 
 	var player = dataService.getLoggedInPlayer();
 
@@ -15,15 +15,15 @@ function($location, $scope, blockUI, dataService) {
 
 		dataService.getPlayerByName($scope.player.name)
 		.then(function(result) {
-			$scope.$apply(function() {
-				dataService.setLoggedInPlayer(result);
+			dataService.setLoggedInPlayer(result);
+			$timeout(function() {
 				$location.path('/overview/refresh').replace();
 			});
 		}).catch(function(response) {
 			console.log('LoginController: error');
 			console.log('LoginController: response = ' + JSON.stringify(response));
+			dataService.setLoggedInPlayer(null);
 			$scope.$apply(function() {
-				dataService.setLoggedInPlayer(null);
 				$scope.message = response.message || "There was an error...";
 			});
 			myBlockUI.stop();

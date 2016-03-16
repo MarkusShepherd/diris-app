@@ -1,5 +1,5 @@
 dixitApp.controller('VoteImageController',
-function($http, $location, $rootScope, $routeParams, $scope, blockUI, dataService, BACKEND_URL) {
+function($http, $location, $rootScope, $routeParams, $scope, $timeout, blockUI, dataService, BACKEND_URL) {
 
 	var player = dataService.getLoggedInPlayer();
 
@@ -37,9 +37,9 @@ function($http, $location, $rootScope, $routeParams, $scope, blockUI, dataServic
 		return $scope.match;
 	}).then(function(match) {
 		if ($scope.round.status === 'SUBMIT_STORY' || $scope.round.status === 'SUBMIT_OTHERS')
-			$scope.$apply(function() { $location.path('/image/' + mId + '/' + rNo).replace(); });
+			$timeout(function() { $location.path('/image/' + mId + '/' + rNo).replace(); });
 		else if ($scope.round.status === 'FINISHED')
-			$scope.$apply(function() { $location.path('/review/' + mId + '/' + rNo).replace(); });
+			$timeout(function() { $location.path('/review/' + mId + '/' + rNo).replace(); });
 		else {
 			var promises = $.map(match.playerKeys, function(key) {
 				return dataService.getPlayer(key.id);
@@ -90,7 +90,7 @@ function($http, $location, $rootScope, $routeParams, $scope, blockUI, dataServic
 			player.key.id + '&match=' + mId + '&round=' + $scope.rNo + '&image=' + $scope.selectedImage.key.id)
 		.then(function(response) {
 			if (response.data)
-				$scope.$apply(function() { $location.path('/match/' + mId + '/refresh').replace(); });
+				$timeout(function() { $location.path('/match/' + mId + '/refresh').replace(); });
 			else {
 				console.log('error');
 				console.log(response);

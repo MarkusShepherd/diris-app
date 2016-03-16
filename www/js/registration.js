@@ -1,5 +1,5 @@
 dixitApp.controller('RegistrationController', 
-function($http, $location, $scope, dataService, BACKEND_URL) {
+function($http, $location, $scope, $timeout, dataService, BACKEND_URL) {
 
 	$scope.register = function() {
 		$http.post(BACKEND_URL + '/player', $scope.player)
@@ -16,8 +16,8 @@ function($http, $location, $scope, dataService, BACKEND_URL) {
 
 			console.log(player.key.id);
 
-			$scope.$apply(function() {
-				dataService.setLoggedInPlayer(player);
+			dataService.setLoggedInPlayer(player);
+			$timeout(function() {
 				$location.path('/overview/refresh');
 			});
 		}).catch(function(response) {

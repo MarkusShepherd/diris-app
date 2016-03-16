@@ -1,5 +1,5 @@
 dixitApp.controller('NewMatchController',
-function($http, $location, $rootScope, $scope, dataService, BACKEND_URL) {
+function($http, $location, $rootScope, $scope, $timeout, dataService, BACKEND_URL) {
 
 	var player = dataService.getLoggedInPlayer();
 
@@ -70,7 +70,7 @@ function($http, $location, $rootScope, $scope, dataService, BACKEND_URL) {
 		$http.post(BACKEND_URL + '/match', playerIds)
 		.then(function(response) {
 			// TODO add response.data to dataService instead of force refresh below (#46)
-			$scope.$apply(function() {
+			$timeout(function() {
 				$location.path('/overview/refresh');
 			});
 		}).catch(function(response) {
