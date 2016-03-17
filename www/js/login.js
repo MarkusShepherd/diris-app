@@ -1,5 +1,5 @@
 dixitApp.controller('LoginController', 
-function($http, $localStorage, $location, $scope, $timeout, auth, blockUI, dataService, BACKEND_URL) {
+function($http, $localStorage, $location, $log, $scope, $timeout, auth, blockUI, dataService, BACKEND_URL) {
 
 	if (auth.isAuthenticated)
 		$location.path('/overview/refresh').replace();
@@ -23,7 +23,7 @@ function($http, $localStorage, $location, $scope, $timeout, auth, blockUI, dataS
 					name: name,
 					email: email
 				}
-				console.log('LoginController: try to register new player', player);
+				$log.debug('LoginController: try to register new player', player);
 
 				$http.post(BACKEND_URL + '/player', player)
 				.then(function(response) {
@@ -38,15 +38,15 @@ function($http, $localStorage, $location, $scope, $timeout, auth, blockUI, dataS
 						return;
 					}
 
-					console.log(player.key.id);
+					$log.debug(player.key.id);
 
 					dataService.setLoggedInPlayer(player);
 					$timeout(function() {
 						$location.path('/overview/refresh').replace();
 					});
 				}).catch(function(response) {
-					console.log('error');
-					console.log(response);
+					$log.debug('error');
+					$log.debug(response);
 
 					dataService.setLoggedInPlayer(null);
 					$scope.$apply(function() {
@@ -56,7 +56,7 @@ function($http, $localStorage, $location, $scope, $timeout, auth, blockUI, dataS
 				});
 			});
 		}, function (err) {
-			console.log("Error:", err);
+			$log.debug("Error:", err);
 			dataService.setLoggedInPlayer(null);
 			$scope.$apply(function() {
 				$scope.message = "There was an error...";

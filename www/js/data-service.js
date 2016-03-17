@@ -154,7 +154,6 @@ function($localStorage, $http, BACKEND_URL) {
 			$http.get(BACKEND_URL + '/player/email/' + email)
 			.then(function(response) {
 				var player = response.data;
-				console.log(response);
 				if (player) {
 					$localStorage['player_' + player.key.id] = player;
 					players[player.key.id] = player;

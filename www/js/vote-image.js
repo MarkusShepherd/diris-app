@@ -1,5 +1,5 @@
 dixitApp.controller('VoteImageController',
-function($http, $location, $rootScope, $routeParams, $scope, $timeout, blockUI, dataService, BACKEND_URL) {
+function($http, $location, $log, $rootScope, $routeParams, $scope, $timeout, blockUI, dataService, BACKEND_URL) {
 
 	var player = dataService.getLoggedInPlayer();
 
@@ -55,8 +55,8 @@ function($http, $location, $rootScope, $routeParams, $scope, $timeout, blockUI, 
 			});
 		}
 	}).catch(function(response) {
-		console.log('error');
-		console.log(response);
+		$log.debug('error');
+		$log.debug(response);
 		$scope.$apply(function() {
 			$scope.message = "There was an error fetching the data - please try again later...";
 			blockUI.stop();
@@ -72,8 +72,8 @@ function($http, $location, $rootScope, $routeParams, $scope, $timeout, blockUI, 
 			});
 		});
 	}).catch(function(response) {
-		console.log('error');
-		console.log(response);
+		$log.debug('error');
+		$log.debug(response);
 		$scope.$apply(function() {
 			$scope.message = "There was an error fetching the data - please try again later...";
 		});
@@ -91,15 +91,15 @@ function($http, $location, $rootScope, $routeParams, $scope, $timeout, blockUI, 
 			if (response.data)
 				$timeout(function() { $location.path('/match/' + mId + '/refresh').replace(); });
 			else {
-				console.log('error');
-				console.log(response);
+				$log.debug('error');
+				$log.debug(response);
 				$scope.$apply(function() {
 					$scope.message = "There was an error...";
 				});
 			}
 		}).catch(function(response) {
-			console.log('error');
-			console.log(response);
+			$log.debug('error');
+			$log.debug(response);
 			$scope.$apply(function() {
 				$scope.message = "There was an error";
 			});

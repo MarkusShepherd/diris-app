@@ -5,7 +5,7 @@ var dixitApp = angular.module('dixitApp', ['angular-jwt', 'auth0', 'blockUI', 'n
 
 dixitApp.constant('BACKEND_URL', liveUrl);
 
-dixitApp.config(function(authProvider, jwtInterceptorProvider, $httpProvider, $routeProvider, $localStorageProvider) {
+dixitApp.config(function(authProvider, jwtInterceptorProvider, $httpProvider, $routeProvider, $localStorageProvider, $logProvider) {
 	authProvider.init({
 		domain: 'dixit.auth0.com',
 		clientID: 'SyQYBfqUOcxOgrXHjTUMKJGfJFPwLuBZ',
@@ -58,6 +58,8 @@ dixitApp.config(function(authProvider, jwtInterceptorProvider, $httpProvider, $r
 	});
 
 	$localStorageProvider.setKeyPrefix('dixitApp_');
+
+	$logProvider.debugEnabled(false);
 });
 
 dixitApp.run(function($localStorage, $rootScope, auth) {

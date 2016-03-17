@@ -1,5 +1,5 @@
 dixitApp.controller('ReviewRoundController',
-function($location, $rootScope, $routeParams, $scope, $timeout, blockUI, dataService) {
+function($location, $log, $rootScope, $routeParams, $scope, $timeout, blockUI, dataService) {
 
 	var player = dataService.getLoggedInPlayer();
 
@@ -55,8 +55,8 @@ function($location, $rootScope, $routeParams, $scope, $timeout, blockUI, dataSer
 			});
 		}
 	}).catch(function(response) {
-		console.log('error');
-		console.log(response);
+		$log.debug('error');
+		$log.debug(response);
 		$scope.$apply(function() {
 			$scope.message = "There was an error fetching the data - please try again later...";
 			blockUI.stop();
@@ -72,8 +72,8 @@ function($location, $rootScope, $routeParams, $scope, $timeout, blockUI, dataSer
 			});
 		});
 	}).catch(function(response) {
-		console.log('error');
-		console.log(response);
+		$log.debug('error');
+		$log.debug(response);
 		$scope.$apply(function() {
 			$scope.message = "There was an error fetching the data - please try again later...";
 		});

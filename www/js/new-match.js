@@ -1,5 +1,5 @@
 dixitApp.controller('NewMatchController',
-function($http, $location, $rootScope, $scope, $timeout, dataService, BACKEND_URL) {
+function($http, $location, $log, $rootScope, $scope, $timeout, dataService, BACKEND_URL) {
 
 	var player = dataService.getLoggedInPlayer();
 
@@ -24,8 +24,8 @@ function($http, $location, $rootScope, $scope, $timeout, dataService, BACKEND_UR
 			});
 		});
 	}).catch(function(response) {
-		console.log('error');
-		console.log(response);
+		$log.debug('error');
+		$log.debug(response);
 		$scope.$apply(function () {
 			$scope.message = 'There was an error fetching the data...';
 		});
@@ -74,8 +74,8 @@ function($http, $location, $rootScope, $scope, $timeout, dataService, BACKEND_UR
 				$location.path('/overview/refresh');
 			});
 		}).catch(function(response) {
-			console.log('error');
-			console.log(response);
+			$log.debug('error');
+			$log.debug(response);
 			$scope.$apply(function() {
 				$scope.message = "There was an error when creating the match...";
 			});

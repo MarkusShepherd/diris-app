@@ -1,5 +1,5 @@
 dixitApp.controller('MatchController',
-function($location, $rootScope, $routeParams, $scope, blockUI, dataService) {
+function($location, $log, $rootScope, $routeParams, $scope, blockUI, dataService) {
 
 	var player = dataService.getLoggedInPlayer();
 
@@ -43,8 +43,8 @@ function($location, $rootScope, $routeParams, $scope, blockUI, dataService) {
 			});
 		});
 	}).catch(function(response) {
-		console.log('error');
-		console.log(response);
+		$log.debug('error');
+		$log.debug(response);
 		$scope.$apply(function() {
 			$scope.message = "There was an error fetching the data - please try again later...";
 			blockUI.stop();
@@ -59,10 +59,10 @@ function($location, $rootScope, $routeParams, $scope, blockUI, dataService) {
 				$scope.images['' + img.key.id] = img;
 			});
 		});
-		console.log('Images: ', $scope.images);
+		$log.debug('Images: ', $scope.images);
 	}).catch(function(response) {
-		console.log('error');
-		console.log(response);
+		$log.debug('error');
+		$log.debug(response);
 		$scope.$apply(function() {
 			$scope.message = "There was an error fetching the data - please try again later...";
 		});
