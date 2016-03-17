@@ -6,6 +6,9 @@
 			<span class="icon-bar"></span>
 		</button>
 		<a class="navbar-brand" href="#/overview">Dixit</a>
+		<a ng-show="refreshPath || refreshReload" ng-click="refresh()" class="navbar-brand">
+			<span class="glyphicon glyphicon-refresh"></span>
+		</a>
 	</div>
 	<div ng-show="(menuItems &amp;&amp; menuItems.length) || currentPlayer" class="collapse navbar-collapse" id="myNavbar">
 		<ul ng-show="menuItems &amp;&amp; menuItems.length" class="nav navbar-nav">

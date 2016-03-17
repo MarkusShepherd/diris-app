@@ -14,6 +14,8 @@ function($http, $location, $log, $rootScope, $scope, $timeout, dataService, BACK
 		label: 'Overview',
 		glyphicon: 'home'
 	}];
+	$rootScope.refreshPath = null;
+	$rootScope.refreshReload = false;
 
 	dataService.getPlayers()
 	.then(function(players) {

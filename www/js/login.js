@@ -1,12 +1,14 @@
 dixitApp.controller('LoginController', 
-function($http, $localStorage, $location, $log, $scope, $timeout, auth, blockUI, dataService, BACKEND_URL) {
+function($http, $localStorage, $location, $log, $rootScope, $scope, $timeout, auth, blockUI, dataService, BACKEND_URL) {
+
+	$rootScope.menuItems = [];
+	$rootScope.refreshPath = null;
+	$rootScope.refreshReload = false;
 
 	if (auth.isAuthenticated)
 		$location.path('/overview/refresh').replace();
 	else
 		auth.signin({}, function(profile, token) {
-			blockUI.start();
-
 			$localStorage.profile = profile;
 			$localStorage.token = token;
 

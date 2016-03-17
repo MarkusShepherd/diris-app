@@ -10,10 +10,14 @@ function($location, $log, $rootScope, $routeParams, $scope, blockUI, dataService
 
 	$scope.currentPlayer = player;
 	$rootScope.menuItems = [];
-	
-	blockUI.start();
+
+	if (!blockUI.state().blocking)
+		blockUI.start();
 
 	var action = $routeParams.action;
+
+	$rootScope.refreshPath = '/overview/refresh';
+	$rootScope.refreshReload = action === 'refresh';
 
 	dataService.getMatches(player.key.id, action === 'refresh', true)
 	.then(function(matches) {

@@ -1,5 +1,5 @@
 dixitApp.controller('NavigationController',
-function($localStorage, $location, $rootScope, $scope, auth, dataService) {
+function($localStorage, $location, $rootScope, $route, $scope, auth, dataService) {
 
 	$scope.$watch(dataService.getLoggedInPlayer, function(player) {
 		$scope.currentPlayer = player;
@@ -10,7 +10,13 @@ function($localStorage, $location, $rootScope, $scope, auth, dataService) {
 		delete $localStorage.profile;
 		delete $localStorage.token;
 		dataService.setLoggedInPlayer(null);
-		$rootScope.menuItems = [];
 		$location.path('/login');
+	};
+
+	$scope.refresh = function() {
+		if ($rootScope.refreshReload)
+			$route.reload();
+		else if ($rootScope.refreshPath)
+			$location.path($rootScope.refreshPath).replace();
 	};
 });

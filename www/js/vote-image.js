@@ -8,7 +8,8 @@ function($http, $location, $log, $rootScope, $routeParams, $scope, $timeout, blo
 		return;
 	}
 
-	blockUI.start();
+	if (!blockUI.state().blocking)
+		blockUI.start();
 
 	var mId = $routeParams.mId;
 	var rNo = $routeParams.rNo;
@@ -26,6 +27,8 @@ function($http, $location, $log, $rootScope, $routeParams, $scope, $timeout, blo
 		label: 'Match',
 		glyphicon: 'knight'
 	}];
+	$rootScope.refreshPath = null;
+	$rootScope.refreshReload = false;
 
 	dataService.getMatch(mId)
 	.then(function(match) {

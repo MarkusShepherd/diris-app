@@ -8,7 +8,8 @@ function($location, $log, $rootScope, $routeParams, $scope, blockUI, dataService
 		return;
 	}
 
-	blockUI.start();
+	if (!blockUI.state().blocking)
+		blockUI.start();
 
 	$scope.currentPlayer = player;
 	$rootScope.menuItems = [{
@@ -19,6 +20,9 @@ function($location, $log, $rootScope, $routeParams, $scope, blockUI, dataService
 
 	var mId = $routeParams.mId;
 	var action = $routeParams.action;
+
+	$rootScope.refreshPath = '/match/' + mId + '/refresh';
+	$rootScope.refreshReload = action === 'refresh';
 
 	$scope.mId = mId;
 
