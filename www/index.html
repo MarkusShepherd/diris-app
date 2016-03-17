@@ -16,6 +16,8 @@
 
 <script type="text/javascript" src="cordova.js"></script>
 
+<script type="text/javascript" src="lib/es6-promise.js"></script>
+
 <script type="text/javascript" src="lib/angular.js"></script>
 <script type="text/javascript" src="lib/angular-route.js"></script>
 <script type="text/javascript" src="lib/angular-cookies.js"></script>
@@ -37,7 +39,6 @@
 <script type="text/javascript" src="js/data-service.js"></script>
 <script type="text/javascript" src="js/navigation.js"></script>
 <script type="text/javascript" src="js/login.js"></script>
-<script type="text/javascript" src="js/registration.js"></script>
 <script type="text/javascript" src="js/overview.js"></script>
 <script type="text/javascript" src="js/new-match.js"></script>
 <script type="text/javascript" src="js/match.js"></script>
@@ -48,7 +49,7 @@
 </head>
 <body>
 	<nav ng-controller="NavigationController" ng-include="'partials/navigation.html'" class="navbar navbar-inverse"></nav>
-	<div class="container" ng-view="" block-ui="myBlockUI" autoscroll="true"></div>
+	<div class="container" ng-view="" autoscroll="true"></div>
 
 	<script type="text/javascript" src="https://cdn.flurry.com/js/flurry.js"></script>
 	<script type="text/javascript">

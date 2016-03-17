@@ -8,8 +8,7 @@ function($http, $location, $rootScope, $routeParams, $scope, $timeout, blockUI, 
 		return;
 	}
 
-	var myBlockUI = blockUI.instances.get('myBlockUI');
-	myBlockUI.start();
+	blockUI.start();
 
 	var mId = $routeParams.mId;
 	var rNo = $routeParams.rNo;
@@ -51,8 +50,8 @@ function($http, $location, $rootScope, $routeParams, $scope, $timeout, blockUI, 
 					$.each(players, function(i, player) {
 						$scope.players[player.key.id] = player;
 					});
+					blockUI.stop();
 				});
-				myBlockUI.stop();
 			});
 		}
 	}).catch(function(response) {
@@ -60,8 +59,8 @@ function($http, $location, $rootScope, $routeParams, $scope, $timeout, blockUI, 
 		console.log(response);
 		$scope.$apply(function() {
 			$scope.message = "There was an error fetching the data - please try again later...";
+			blockUI.stop();
 		});
-		myBlockUI.stop();
 	});
 
 	dataService.getImages(mId, rNo, true, true)

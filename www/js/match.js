@@ -8,8 +8,7 @@ function($location, $rootScope, $routeParams, $scope, blockUI, dataService) {
 		return;
 	}
 
-	var myBlockUI = blockUI.instances.get('myBlockUI');
-	myBlockUI.start();
+	blockUI.start();
 
 	$scope.currentPlayer = player;
 	$rootScope.menuItems = [{
@@ -40,16 +39,16 @@ function($location, $rootScope, $routeParams, $scope, blockUI, dataService) {
 				$.each(players, function(i, player) {
 					$scope.players[player.key.id] = player;
 				});
+				blockUI.stop();
 			});
-			myBlockUI.stop();
 		});
 	}).catch(function(response) {
 		console.log('error');
 		console.log(response);
 		$scope.$apply(function() {
 			$scope.message = "There was an error fetching the data - please try again later...";
+			blockUI.stop();
 		});
-		myBlockUI.stop();
 	});
 
 	dataService.getImages(mId, undefined, true, true)

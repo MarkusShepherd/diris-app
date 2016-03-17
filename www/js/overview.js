@@ -11,8 +11,7 @@ function($location, $rootScope, $routeParams, $scope, blockUI, dataService) {
 	$scope.currentPlayer = player;
 	$rootScope.menuItems = [];
 	
-	var myBlockUI = blockUI.instances.get('myBlockUI');
-	myBlockUI.start();
+	blockUI.start();
 
 	var action = $routeParams.action;
 
@@ -25,8 +24,8 @@ function($location, $rootScope, $routeParams, $scope, blockUI, dataService) {
 				return processMatch(match, player);
 			});
 			$scope.status = status;
+			blockUI.stop();
 		});
-		myBlockUI.stop();
 		console.log('Matches: ', $scope.matches);
 	}).catch(function(response) {
 		console.log('error');

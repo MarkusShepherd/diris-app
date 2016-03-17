@@ -1,13 +1,11 @@
 dixitApp.controller('LoginController', 
 function($http, $localStorage, $location, $scope, $timeout, auth, blockUI, dataService, BACKEND_URL) {
 
-	var myBlockUI = blockUI.instances.get('myBlockUI');
-
 	if (auth.isAuthenticated)
 		$location.path('/overview/refresh').replace();
 	else
 		auth.signin({}, function(profile, token) {
-			myBlockUI.start();
+			blockUI.start();
 
 			$localStorage.profile = profile;
 			$localStorage.token = token;
@@ -53,8 +51,8 @@ function($http, $localStorage, $location, $scope, $timeout, auth, blockUI, dataS
 					dataService.setLoggedInPlayer(null);
 					$scope.$apply(function() {
 						$scope.message = response.message || "There was an error...";
+						blockUI.stop();
 					});
-					myBlockUI.stop();
 				});
 			});
 		}, function (err) {
