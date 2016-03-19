@@ -9,12 +9,18 @@ function($http, $localStorage, $location, $log, $rootScope, $scope, $timeout, au
 		$location.path('/overview/refresh').replace();
 	else
 		auth.signin({}, function(profile, token) {
+			$log.debug(profile);
+			$log.debug(token);
+
 			$localStorage.profile = profile;
 			$localStorage.token = token;
 
 			var name = profile.username;
 			var email = profile.email;
-			dataService.getPlayerByName(name)
+			var userID = profile.user_id;
+			var avatar = profile.picture;
+
+			dataService.getPlayerByExternalId(userID)
 			.then(function(result) {
 				dataService.setLoggedInPlayer(result);
 				$timeout(function() {
@@ -23,7 +29,9 @@ function($http, $localStorage, $location, $log, $rootScope, $scope, $timeout, au
 			}).catch(function(response) {
 				var player = {
 					name: name,
-					email: email
+					email: email,
+					externalID: userID,
+					avatarURL: avatar
 				}
 				$log.debug('LoginController: try to register new player', player);
 

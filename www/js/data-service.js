@@ -128,6 +128,26 @@ function($localStorage, $http, BACKEND_URL) {
     	});
     };
  
+    factory.getPlayerByExternalId = function(pId, forceRefresh) {
+    	return new Promise(function(resolve, reject) {
+			$http.get(BACKEND_URL + '/player/id/' + pId + '/external')
+			.then(function(response) {
+				var player = response.data;
+				if (player) {
+					$localStorage['player_' + player.key.id] = player;
+					players[player.key.id] = player;
+					resolve(player);
+				} else {
+					response.message = "There was an error - player could not be found.";
+					reject(response);
+				}
+			}).catch(function(response) {
+				response.message = "There was an error when fetching the data.";
+				reject(response);
+			});
+    	});
+    };
+ 
     factory.getPlayerByName = function(name) {
     	return new Promise(function(resolve, reject) {
 			$http.get(BACKEND_URL + '/player/name/' + name)
@@ -151,7 +171,7 @@ function($localStorage, $http, BACKEND_URL) {
     factory.getPlayerByEmail = function(email) {
     	return new Promise(function(resolve, reject) {
     		// TODO save in localStorage, retrieve by email
-			$http.get(BACKEND_URL + '/player/email/' + email)
+			$http.get(BACKEND_URL + '/player/email?email=' + email)
 			.then(function(response) {
 				var player = response.data;
 				if (player) {
