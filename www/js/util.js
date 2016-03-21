@@ -60,6 +60,8 @@ function processMatch(match, player) {
 	match.createdFromNow = moment(match.created).fromNow();
 	match.lastModifiedFromNow = moment(match.lastModified).fromNow();
 
+	match.hasAccepted = !!(match.status != "WAITING" || match.accepted[player.key.id]);
+
 	return match;
 }
 

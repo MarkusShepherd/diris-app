@@ -56,13 +56,15 @@ function($http, $location, $log, $rootScope, $scope, $timeout, dataService, BACK
 
 		for (var pId in $scope.selected) {
 			var id = parseInt(pId, 10);
-			playerIds.push(id);
-			if (id == player.key.id)
+			if (id == player.key.id) {
 				includeCurrent = true;
+				playerIds.unshift(id);
+			} else
+				playerIds.push(id);
 		}
 
 		if (!includeCurrent)
-			playerIds.push(player.key.id);
+			playerIds.unshift(player.key.id);
 
 		if (playerIds.length < 4) {
 			$scope.message = "Please select at least 3 players to invite to the match!";
@@ -71,6 +73,7 @@ function($http, $location, $log, $rootScope, $scope, $timeout, dataService, BACK
 
 		$http.post(BACKEND_URL + '/match', playerIds)
 		.then(function(response) {
+			$log.debug(response);
 			// TODO add response.data to dataService instead of force refresh below (#46)
 			$timeout(function() {
 				$location.path('/overview/refresh');

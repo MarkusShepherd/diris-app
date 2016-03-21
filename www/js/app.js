@@ -34,6 +34,10 @@ function(authProvider, jwtInterceptorProvider, $httpProvider, $routeProvider, $l
 		templateUrl : 'partials/new-match.html',
 		controller : 'NewMatchController',
 		requiresLogin: true
+	}).when('/accept/:mId', {
+		templateUrl : 'partials/accept.html',
+		controller : 'AcceptController',
+		requiresLogin: true
 	}).when('/match/:mId', {
 		templateUrl : 'partials/match.html',
 		controller : 'MatchController',

@@ -16,9 +16,9 @@
 					<h4>Invitations</h4>
 				</div>
 				<a ng-repeat="match in matches | orderBy:'lastModifiedDate':true | filter:{status:'WAITING'}:true" 
-					ng-href="#/accept/{{ currentPlayer.key.id }}/{{ match.key.id }}" 
+					ng-href="#/accept/{{ match.key.id }}" 
 					class="list-group-item">
-					by {{ player }}
+					By {{ players['' + match.invitingPlayer.id].name }}
 				</a>
 			</div>
 		</div>
