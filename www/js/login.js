@@ -1,5 +1,5 @@
 dixitApp.controller('LoginController', 
-function($http, $localStorage, $location, $log, $rootScope, $scope, $timeout, auth, blockUI, dataService, BACKEND_URL) {
+function($http, $localStorage, $location, $log, $rootScope, $scope, $timeout, auth, blockUI, toastr, dataService, BACKEND_URL) {
 
 	$rootScope.menuItems = [];
 	$rootScope.refreshPath = null;
@@ -9,7 +9,7 @@ function($http, $localStorage, $location, $log, $rootScope, $scope, $timeout, au
 		$location.path('/overview/refresh').replace();
 	else
 		auth.signin({}, function(profile, token) {
-			$log.debug(profile);
+			$log.debug(JSON.stringify(profile));
 			$log.debug(token);
 
 			$localStorage.profile = profile;
@@ -22,28 +22,31 @@ function($http, $localStorage, $location, $log, $rootScope, $scope, $timeout, au
 
 			dataService.getPlayerByExternalId(userID)
 			.then(function(result) {
+				$log.debug('LoginController: found player', JSON.stringify(result));
 				dataService.setLoggedInPlayer(result);
 				$timeout(function() {
 					$location.path('/overview/refresh').replace();
 				});
 			}).catch(function(response) {
+				$log.debug('LoginController: could not found player', JSON.stringify(response));
 				var player = {
 					name: name,
 					email: email,
 					externalID: userID,
 					avatarURL: avatar
-				}
-				$log.debug('LoginController: try to register new player', player);
+				};
+				$log.debug('LoginController: try to register new player', JSON.stringify(player));
 
 				$http.post(BACKEND_URL + '/player', player)
 				.then(function(response) {
+					$log.debug('LoginController: registered new player', JSON.stringify(response));
 					var player = response.data;
 
 					if (!player) {
 						$scope.$apply(function() {
-							$scope.message = "There was an error - player \"" +
+							toastr.error("There was an error - player \"" +
 								name + "\" could not be registered. " +
-								"Please try again in a couple of minutes.";
+								"Please try again in a couple of minutes.");
 						});
 						return;
 					}
@@ -55,21 +58,21 @@ function($http, $localStorage, $location, $log, $rootScope, $scope, $timeout, au
 						$location.path('/overview/refresh').replace();
 					});
 				}).catch(function(response) {
-					$log.debug('error');
-					$log.debug(response);
+					$log.debug('LoginController: error when registering new player');
+					$log.debug(JSON.stringify(response));
 
 					dataService.setLoggedInPlayer(null);
 					$scope.$apply(function() {
-						$scope.message = response.message || "There was an error...";
+						toastr.error(response.message || "There was an error...");
 						blockUI.stop();
 					});
 				});
 			});
 		}, function (err) {
-			$log.debug("Error:", err);
+			$log.debug("LoginController: error", JSON.stringify(err));
 			dataService.setLoggedInPlayer(null);
 			$scope.$apply(function() {
-				$scope.message = "There was an error...";
+				toastr.error("There was an error...");
 			});
 		});
 }); // LoginController

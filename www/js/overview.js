@@ -1,5 +1,5 @@
 dixitApp.controller('OverviewController', 
-function($location, $log, $rootScope, $routeParams, $scope, blockUI, dataService) {
+function($location, $log, $rootScope, $routeParams, $scope, blockUI, toastr, dataService) {
 
 	var player = dataService.getLoggedInPlayer();
 
@@ -35,7 +35,7 @@ function($location, $log, $rootScope, $routeParams, $scope, blockUI, dataService
 		$log.debug('error');
 		$log.debug(response);
 		$scope.$apply(function() {
-			$scope.message = "There was an error fetching the data - please try again later...";
+			toastr.error("There was an error fetching the data - please try again later...");
 		});
 	});
 

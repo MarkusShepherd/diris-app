@@ -1,5 +1,5 @@
 dixitApp.controller('SubmitImageController',
-function($http, $location, $log, $rootScope, $routeParams, $scope, $timeout, blockUI, dataService, BACKEND_URL) {
+function($http, $location, $log, $rootScope, $routeParams, $scope, $timeout, blockUI, toastr, dataService, BACKEND_URL) {
 
 	var player = dataService.getLoggedInPlayer();
 
@@ -61,7 +61,7 @@ function($http, $location, $log, $rootScope, $routeParams, $scope, $timeout, blo
 		$log.debug('error');
 		$log.debug(response);
 		$scope.$apply(function() {
-			$scope.message = "There was an error fetching the data - please try again later...";
+			toastr.error("There was an error fetching the data - please try again later...");
 			blockUI.stop();
 		});
 	});
@@ -78,14 +78,14 @@ function($http, $location, $log, $rootScope, $routeParams, $scope, $timeout, blo
 		$log.debug('error');
 		$log.debug(response);
 		$scope.$apply(function() {
-			$scope.message = "There was an error fetching the data - please try again later...";
+			toastr.error("There was an error fetching the data - please try again later...");
 		});
 	});
 
 	function getImage(srcType) {
 		navigator.camera.getPicture(setImage, function(message) {
 			$scope.$apply(function () {
-				$scope.message = message;
+				toastr.error(message);
 			});
 		}, {
 			quality : 100,
@@ -97,7 +97,6 @@ function($http, $location, $log, $rootScope, $routeParams, $scope, $timeout, blo
 
 	function setImage(imageData) {
 		$scope.$apply(function () {
-			$scope.message = null;
 			$scope.imageData = imageData;
 			$scope.selectedImage = true;
 			$("#image")
@@ -145,7 +144,7 @@ function($http, $location, $log, $rootScope, $routeParams, $scope, $timeout, blo
 			$log.debug('error');
 			$log.debug(response);
 			$scope.$apply(function() {
-				$scope.message = "There was an error";
+				toastr.error("There was an error");
 			});
 		});
 	};

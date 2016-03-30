@@ -1,11 +1,28 @@
 dixitApp.factory('dataService', 
-function($localStorage, $http, BACKEND_URL) {
+function($localStorage, $log, $http, BACKEND_URL) {
      
     var factory = {}, 
     	matches = {},
     	players = {},
     	images = {},
-    	loggedInPlayer = null;
+    	loggedInPlayer = null,
+    	gcmRegistrationID = null;
+
+    factory.setGcmRegistrationId = function(gri) {
+    	gcmRegistrationID = null;
+    };
+
+    factory.updatePlayer = function(pId, player) {
+		$http.post(BACKEND_URL + '/player/update/' + pId, player)
+		.then(function(response) {
+			$log.debug("Successfully updated player " + pId);
+			$log.debug(response);
+		})
+		.catch(function(response) {
+			$log.debug("Failed to updated player " + pId);
+			$log.debug(response);
+		});
+    };
 
     factory.getLoggedInPlayer = function() {
     	if (!loggedInPlayer) {
@@ -23,6 +40,15 @@ function($localStorage, $http, BACKEND_URL) {
     	if (player) {
     		loggedInPlayer = player;
     		$localStorage.loggedInPlayer = player;
+
+    		// TODO this never seems to trigger
+    		if (gcmRegistrationID) {
+    			$log.debug("Updating GCM ID " + gcmRegistrationID + " for player " + player.name + "(" + player.key.id + ")");
+    			factory.updatePlayer(player.key.id, {
+    				gcmRegistrationID: gcmRegistrationID
+    			});
+    			gcmRegistrationID = null;
+    		}
     	} else {
     		loggedInPlayer = null;
     		delete $localStorage.loggedInPlayer;

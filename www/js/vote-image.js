@@ -1,5 +1,5 @@
 dixitApp.controller('VoteImageController',
-function($http, $location, $log, $rootScope, $routeParams, $scope, $timeout, blockUI, dataService, BACKEND_URL) {
+function($http, $location, $log, $rootScope, $routeParams, $scope, $timeout, blockUI, toastr, dataService, BACKEND_URL) {
 
 	var player = dataService.getLoggedInPlayer();
 
@@ -61,7 +61,7 @@ function($http, $location, $log, $rootScope, $routeParams, $scope, $timeout, blo
 		$log.debug('error');
 		$log.debug(response);
 		$scope.$apply(function() {
-			$scope.message = "There was an error fetching the data - please try again later...";
+			toastr.error("There was an error fetching the data - please try again later...");
 			blockUI.stop();
 		});
 	});
@@ -78,7 +78,7 @@ function($http, $location, $log, $rootScope, $routeParams, $scope, $timeout, blo
 		$log.debug('error');
 		$log.debug(response);
 		$scope.$apply(function() {
-			$scope.message = "There was an error fetching the data - please try again later...";
+			toastr.error("There was an error fetching the data - please try again later...");
 		});
 	});
 
@@ -97,14 +97,14 @@ function($http, $location, $log, $rootScope, $routeParams, $scope, $timeout, blo
 				$log.debug('error');
 				$log.debug(response);
 				$scope.$apply(function() {
-					$scope.message = "There was an error...";
+					toastr.error("There was an error...");
 				});
 			}
 		}).catch(function(response) {
 			$log.debug('error');
 			$log.debug(response);
 			$scope.$apply(function() {
-				$scope.message = "There was an error";
+				toastr.error("There was an error");
 			});
 		});
 	};
