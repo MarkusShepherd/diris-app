@@ -76,7 +76,8 @@ dixitApp.config(function(authProvider, jwtInterceptorProvider, $httpProvider, $r
 		preventDuplicates: false,
 		preventOpenDuplicates: true,
 		extendedTimeOut: 1000,
-		timeOut: 5000
+		timeOut: 10000
+		// TODO force refresh on click
 	});
 });
 

@@ -9,7 +9,7 @@ function($localStorage, $log, $http, BACKEND_URL) {
     	gcmRegistrationID = null;
 
     factory.setGcmRegistrationId = function(gri) {
-    	gcmRegistrationID = null;
+    	gcmRegistrationID = gri;
     };
 
     factory.updatePlayer = function(pId, player) {
@@ -41,7 +41,6 @@ function($localStorage, $log, $http, BACKEND_URL) {
     		loggedInPlayer = player;
     		$localStorage.loggedInPlayer = player;
 
-    		// TODO this never seems to trigger
     		if (gcmRegistrationID) {
     			$log.debug("Updating GCM ID " + gcmRegistrationID + " for player " + player.name + "(" + player.key.id + ")");
     			factory.updatePlayer(player.key.id, {
