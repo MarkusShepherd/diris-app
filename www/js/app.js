@@ -59,6 +59,18 @@ dixitApp.config(function(authProvider, jwtInterceptorProvider, $httpProvider, $r
 		templateUrl : 'partials/review-round.html',
 		controller : 'ReviewRoundController',
 		requiresLogin: true
+	}).when('/profile', {
+		templateUrl : 'partials/profile.html',
+		controller : 'ProfileController',
+		requiresLogin: true
+	}).when('/profile/:pId', {
+		templateUrl : 'partials/profile.html',
+		controller : 'ProfileController',
+		requiresLogin: true
+	}).when('/profile/:pId/:action', {
+		templateUrl : 'partials/profile.html',
+		controller : 'ProfileController',
+		requiresLogin: true
 	}).otherwise({
 		redirectTo : '/login'
 	});
