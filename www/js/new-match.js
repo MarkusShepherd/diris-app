@@ -1,5 +1,5 @@
 dixitApp.controller('NewMatchController',
-function($http, $location, $log, $rootScope, $scope, $timeout, dataService, BACKEND_URL) {
+function($http, $location, $log, $rootScope, $scope, $timeout, toastr, dataService, BACKEND_URL) {
 
 	var player = dataService.getLoggedInPlayer();
 
@@ -29,7 +29,7 @@ function($http, $location, $log, $rootScope, $scope, $timeout, dataService, BACK
 		$log.debug('error');
 		$log.debug(response);
 		$scope.$apply(function () {
-			$scope.message = 'There was an error fetching the data...';
+			toastr.error('There was an error fetching the data...');
 		});
 	});
 
@@ -67,7 +67,7 @@ function($http, $location, $log, $rootScope, $scope, $timeout, dataService, BACK
 			playerIds.unshift(player.key.id);
 
 		if (playerIds.length < 4) {
-			$scope.message = "Please select at least 3 players to invite to the match!";
+			toastr.error("Please select at least 3 players to invite to the match!");
 			return;
 		}
 
@@ -75,6 +75,7 @@ function($http, $location, $log, $rootScope, $scope, $timeout, dataService, BACK
 		.then(function(response) {
 			$log.debug(response);
 			// TODO add response.data to dataService instead of force refresh below (#46)
+			// TODO check a new match has been added
 			$timeout(function() {
 				$location.path('/overview/refresh');
 			});
@@ -82,7 +83,7 @@ function($http, $location, $log, $rootScope, $scope, $timeout, dataService, BACK
 			$log.debug('error');
 			$log.debug(response);
 			$scope.$apply(function() {
-				$scope.message = "There was an error when creating the match...";
+				toastr.error("There was an error when creating the match...");
 			});
 		});
 	}; // createMatch

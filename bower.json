@@ -31,10 +31,12 @@
     "auth0-lock": "^9.0.0",
     "angular-jwt": "^0.0.9",
     "auth0-angular": "^4.1.0",
-    "angular-animate": "^1.5.1",
-    "es6-promise": "^3.2.1"
+    "angular-animate": "^1.5.2",
+    "es6-promise": "^3.2.1",
+    "angular-toastr": "^1.7.0",
+    "angular-ui-notification": "^0.1.0"
   },
   "resolutions": {
-    "angular": "^1.5.1"
+    "angular": "1.5.2"
   }
 }

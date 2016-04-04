@@ -1,12 +1,13 @@
 var testUrl = 'http://localhost:8181';
 var liveUrl = 'http://dixit-app.appspot.com';
+var devUrl  = 'https://0-1-0-dot-dixit-app.appspot.com/';
 
-var dixitApp = angular.module('dixitApp', ['angular-jwt', 'auth0', 'blockUI', 'ngRoute', 'ngStorage']);
+var dixitApp = angular.module('dixitApp', ['angular-jwt', 'auth0', 'blockUI', 'ngAnimate', 'ngRoute', 'ngStorage', 'toastr']);
 
 dixitApp.constant('BACKEND_URL', liveUrl);
 
-dixitApp.config(
-function(authProvider, jwtInterceptorProvider, $httpProvider, $routeProvider, $localStorageProvider, $logProvider, blockUIConfig) {
+dixitApp.config(function(authProvider, jwtInterceptorProvider, $httpProvider, $routeProvider,
+	$localStorageProvider, $logProvider, blockUIConfig, toastrConfig) {
 	authProvider.init({
 		domain: 'dixit.auth0.com',
 		clientID: 'SyQYBfqUOcxOgrXHjTUMKJGfJFPwLuBZ',
@@ -67,9 +68,20 @@ function(authProvider, jwtInterceptorProvider, $httpProvider, $routeProvider, $l
 	$logProvider.debugEnabled(false);
 
 	blockUIConfig.autoBlock = false;
+
+	angular.extend(toastrConfig, {
+		autoDismiss: false,
+		newestOnTop: false,
+		positionClass: 'toast-bottom-right',
+		preventDuplicates: false,
+		preventOpenDuplicates: true,
+		extendedTimeOut: 1000,
+		timeOut: 10000
+		// TODO force refresh on click
+	});
 });
 
-dixitApp.run(function($localStorage, $rootScope, auth) {
+dixitApp.run(function($localStorage, $log, $rootScope, auth, dataService, toastr) {
 	auth.hookEvents();
 
 	$rootScope.$on('$locationChangeStart', function() {
@@ -79,4 +91,53 @@ dixitApp.run(function($localStorage, $rootScope, auth) {
 				auth.authenticate($localStorage.profile, token);
 		}
 	});
+
+	if (isBrowser())
+		$log.debug('No notifications on browser');
+	else {
+		var push = PushNotification.init({ 
+			android: {
+				senderID: 879361060795
+			},
+			ios: {
+				alert: true,
+				badge: true,
+				sound: true
+			},
+			windows: {}
+		});
+
+		push.on('registration', function(data) {
+			$log.debug("Registered push");
+			$log.debug(data);
+			$log.debug(data.registrationId);
+			
+			var player = dataService.getLoggedInPlayer();
+			if (player && player.key && player.key.id)
+				dataService.updatePlayer(player.key.id, {
+    				gcmRegistrationID: data.registrationId
+    			});
+			else
+				dataService.setGcmRegistrationId(data.registrationId);
+		});
+
+		push.on('notification', function(data) {
+			$log.debug("Received notification");
+			$log.debug(data);
+			$log.debug(data.message);
+			$log.debug(data.title);
+			$log.debug(data.count);
+			$log.debug(data.sound);
+			$log.debug(data.image);
+			$log.debug(data.additionalData);
+			toastr.info(data.message, data.title);
+		});
+
+		push.on('error', function(e) {
+			$log.debug("Error in notifications");
+			$log.debug(e);
+			$log.debug(e.message);
+			toastr.error(e.message);
+		});
+	}
 });

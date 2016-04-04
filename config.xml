@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="info.riemannhypothesis.dixit.client" version="0.2.1" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0">
+<widget id="info.riemannhypothesis.dixit.client" version="0.3.0" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0">
     <name>Dixit</name>
     <description>
 		Dixit image guessing game.
@@ -57,7 +57,10 @@
     <engine name="ios" spec="~4.0.1" />
     <plugin name="cordova-plugin-inappbrowser" spec="~1.2.1" />
     <feature name="InAppBrowser">
-      <param name="ios-package" value="CDVInAppBrowser" />
-      <param name="android-package" value="org.apache.cordova.InAppBrowser" />
+        <param name="ios-package" value="CDVInAppBrowser" />
+        <param name="android-package" value="org.apache.cordova.InAppBrowser" />
     </feature>
+    <plugin name="phonegap-plugin-push" spec="~1.6.0">
+        <variable name="SENDER_ID" value="879361060795" />
+    </plugin>
 </widget>

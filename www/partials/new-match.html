@@ -1,9 +1,6 @@
 <section xmlns="http://www.w3.org/1999/xhtml">
 	<h2>New Match</h2>
-	<div ng-show="message" class="alert alert-warning fade in">
-		<a class="close" data-dismiss="alert" aria-label="close">&times;</a>
-		{{ message }}
-	</div>
+
 	<div class="list-group">
 		<a ng-repeat="player in playersArray | orderBy:'name'" 
 			ng-hide="player.selected || player.key.id == currentPlayer.key.id" 
@@ -12,7 +9,8 @@
 			{{ player.name }}
 		</a>
 	</div>
-	<h2>Selected</h2>
+
+	<h3>Selected</h3>
 	<div class="list-group">
 		<a ng-repeat="(id, player) in selected" 
 			ng-click="removePlayer(player)"
@@ -20,6 +18,7 @@
 			{{ player.name }}
 		</a>
 	</div>
+
 	<button ng-click="createMatch()" ng-disabled="numPlayers < 3" class="btn btn-primary btn-block btn-lg">
 		<span class="glyphicon glyphicon-ok"></span>
 		Send invites

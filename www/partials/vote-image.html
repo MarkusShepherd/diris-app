@@ -16,10 +16,6 @@
 	<div ng-show="round.hasVoted" class="alert alert-success fade in">
 		You have already voted in this round, now wait for the other players...
 	</div>
-	<div ng-show="message" class="alert alert-warning fade in">
-		<a class="close" data-dismiss="alert" aria-label="close">&times;</a>
-		{{ message }}
-	</div>
 	<div ng-hide="round.hasVoted" class="row">
 		<div ng-repeat="(key, image) in images" 
 			class="col-lg-4 col-md-6 col-sm-12 container-{{ image.key.id == selectedImage.key.id ? 'selected' : 'normal' }}">
