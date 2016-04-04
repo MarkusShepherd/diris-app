@@ -6,7 +6,8 @@
 		You have accepted the invitation by <b>{{ players['' + match.invitingPlayer.id].name }}</b> to participate in their match. Please wait for the other players to join the match too.
 	</div>
 	<section class="list-group">
-		<a ng-repeat="(pId, acc) in match.accepted" 
+		<a ng-repeat="(pId, acc) in match.accepted"
+			ng-href="#/profile/{{ pId }}"
 			class="list-group-item {{ acc ? 'list-group-item-success' : 'list-group-item-info' }}">
 			<img ng-show="players['' + pId].avatarURL" ng-src="{{ players['' + pId].avatarURL }}" class="img-circle player-icon-accept" />
 			<span ng-hide="players['' + pId].avatarURL" class="btn btn-primary btn-circle player-icon-accept">
