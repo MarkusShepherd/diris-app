@@ -72,5 +72,9 @@ function getOrdinal(n) {
 }
 
 function isBrowser() {
-	return device && device.platform === 'browser';
+	try {
+		return device && device.platform === 'browser';
+	} catch (err) {
+		return true;
+	}
 }
