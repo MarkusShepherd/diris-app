@@ -1,4 +1,4 @@
-dixitApp.controller('SubmitImageController',
+dirisApp.controller('SubmitImageController',
 function($http, $location, $log, $rootScope, $routeParams, $scope, $timeout, blockUI, toastr, dataService, BACKEND_URL) {
 
 	var player = dataService.getLoggedInPlayer();
@@ -162,7 +162,7 @@ function($http, $location, $log, $rootScope, $routeParams, $scope, $timeout, blo
 		img.cropper('scale' + axis, -img.cropper('getData')['scale' + axis]);
 	};
 
-	$("#image").cropper({ 
+	$("#image").cropper({
 		viewMode: 3,
 		aspectRatio: 1,
 		dragMode: 'move',
@@ -179,12 +179,12 @@ function($http, $location, $log, $rootScope, $routeParams, $scope, $timeout, blo
 	$("#file-input").change(function() {
         if (this.files && this.files[0]) {
             var reader = new FileReader();
-            
+
             reader.onload = function (e) {
             	var d = e.target.result;
             	setImage(d.substr(d.indexOf(",") + 1));
             };
-            
+
             reader.readAsDataURL(this.files[0]);
         }
 	});

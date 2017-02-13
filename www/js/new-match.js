@@ -1,4 +1,4 @@
-dixitApp.controller('NewMatchController',
+dirisApp.controller('NewMatchController',
 function($http, $location, $log, $rootScope, $scope, $timeout, toastr, dataService, BACKEND_URL) {
 
 	var player = dataService.getLoggedInPlayer();

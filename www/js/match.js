@@ -1,4 +1,4 @@
-dixitApp.controller('MatchController',
+dirisApp.controller('MatchController',
 function($location, $log, $rootScope, $routeParams, $scope, blockUI, toastr, dataService) {
 
 	var player = dataService.getLoggedInPlayer();

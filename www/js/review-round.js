@@ -1,4 +1,4 @@
-dixitApp.controller('ReviewRoundController',
+dirisApp.controller('ReviewRoundController',
 function($location, $log, $rootScope, $routeParams, $scope, $timeout, blockUI, toastr, dataService) {
 
 	var player = dataService.getLoggedInPlayer();

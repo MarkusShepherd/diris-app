@@ -1,4 +1,4 @@
-dixitApp.controller('LoginController', 
+dirisApp.controller('LoginController',
 function($http, $localStorage, $location, $log, $rootScope, $scope, $timeout, auth, blockUI, toastr, dataService, BACKEND_URL) {
 
 	$rootScope.menuItems = [];

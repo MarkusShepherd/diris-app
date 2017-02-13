@@ -1,12 +1,12 @@
-var testUrl = 'http://localhost:8181';
-var liveUrl = 'http://dixit-app.appspot.com';
+var testUrl = 'http://localhost:8000';
+var liveUrl = 'http://diris-app.appspot.com';
 var devUrl  = 'https://0-1-0-dot-dixit-app.appspot.com/';
 
-var dixitApp = angular.module('dixitApp', ['angular-jwt', 'auth0', 'blockUI', 'ngAnimate', 'ngRoute', 'ngStorage', 'toastr']);
+var dirisApp = angular.module('dirisApp', ['angular-jwt', 'auth0', 'blockUI', 'ngAnimate', 'ngRoute', 'ngStorage', 'toastr']);
 
-dixitApp.constant('BACKEND_URL', liveUrl);
+dirisApp.constant('BACKEND_URL', testUrl);
 
-dixitApp.config(function(authProvider, jwtInterceptorProvider, $httpProvider, $routeProvider,
+dirisApp.config(function(authProvider, jwtInterceptorProvider, $httpProvider, $routeProvider,
 	$localStorageProvider, $logProvider, blockUIConfig, toastrConfig) {
 	authProvider.init({
 		domain: 'dixit.auth0.com',
@@ -75,7 +75,7 @@ dixitApp.config(function(authProvider, jwtInterceptorProvider, $httpProvider, $r
 		redirectTo : '/login'
 	});
 
-	$localStorageProvider.setKeyPrefix('dixitApp_');
+	$localStorageProvider.setKeyPrefix('dirisApp_');
 
 	$logProvider.debugEnabled(false);
 
@@ -93,7 +93,7 @@ dixitApp.config(function(authProvider, jwtInterceptorProvider, $httpProvider, $r
 	});
 });
 
-dixitApp.run(function($localStorage, $log, $rootScope, auth, dataService, toastr) {
+dirisApp.run(function($localStorage, $log, $rootScope, auth, dataService, toastr) {
 	auth.hookEvents();
 
 	$rootScope.$on('$locationChangeStart', function() {
@@ -107,7 +107,7 @@ dixitApp.run(function($localStorage, $log, $rootScope, auth, dataService, toastr
 	if (isBrowser())
 		$log.debug('No notifications on browser');
 	else {
-		var push = PushNotification.init({ 
+		var push = PushNotification.init({
 			android: {
 				senderID: 879361060795
 			},
@@ -123,7 +123,7 @@ dixitApp.run(function($localStorage, $log, $rootScope, auth, dataService, toastr
 			$log.debug("Registered push");
 			$log.debug(data);
 			$log.debug(data.registrationId);
-			
+
 			var player = dataService.getLoggedInPlayer();
 			if (player && player.key && player.key.id)
 				dataService.updatePlayer(player.key.id, {

@@ -1,4 +1,4 @@
-dixitApp.controller('ProfileController', 
+dirisApp.controller('ProfileController',
 function($location, $log, $rootScope, $routeParams, $scope, blockUI, dataService) {
 
 	var player = dataService.getLoggedInPlayer();

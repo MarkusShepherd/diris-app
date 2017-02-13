@@ -1,4 +1,4 @@
-dixitApp.controller('VoteImageController',
+dirisApp.controller('VoteImageController',
 function($http, $location, $log, $rootScope, $routeParams, $scope, $timeout, blockUI, toastr, dataService, BACKEND_URL) {
 
 	var player = dataService.getLoggedInPlayer();
@@ -88,7 +88,7 @@ function($http, $location, $log, $rootScope, $routeParams, $scope, $timeout, blo
 	};
 
 	$scope.submitVote = function() {
-		$http.get(BACKEND_URL + '/vote?player=' + 
+		$http.get(BACKEND_URL + '/vote?player=' +
 			player.key.id + '&match=' + mId + '&round=' + $scope.rNo + '&image=' + $scope.selectedImage.key.id)
 		.then(function(response) {
 			if (response.data)

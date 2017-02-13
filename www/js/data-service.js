@@ -1,7 +1,7 @@
-dixitApp.factory('dataService', 
+dirisApp.factory('dataService',
 function($localStorage, $log, $http, BACKEND_URL) {
-     
-    var factory = {}, 
+
+    var factory = {},
     	matches = {},
     	players = {},
     	images = {},
@@ -53,7 +53,7 @@ function($localStorage, $log, $http, BACKEND_URL) {
     		delete $localStorage.loggedInPlayer;
     	}
     };
- 
+
     factory.getMatches = function(pId, forceRefresh, fallback) {
     	return new Promise(function(resolve, reject) {
 			if (!forceRefresh)
@@ -83,7 +83,7 @@ function($localStorage, $log, $http, BACKEND_URL) {
 			}
     	});
     };
- 
+
     factory.getMatch = function(mId, forceRefresh) {
     	return new Promise(function(resolve, reject) {
 			if (!forceRefresh && mId in matches)
@@ -103,7 +103,7 @@ function($localStorage, $log, $http, BACKEND_URL) {
 			}
     	});
     };
- 
+
     factory.getPlayers = function(forceRefresh, fallback) {
     	return new Promise(function(resolve, reject) {
 			if (!forceRefresh)
@@ -132,7 +132,7 @@ function($localStorage, $log, $http, BACKEND_URL) {
 			}
     	});
     };
- 
+
     factory.getPlayer = function(pId, forceRefresh) {
     	return new Promise(function(resolve, reject) {
 			if (!forceRefresh && pId in players)
@@ -152,7 +152,7 @@ function($localStorage, $log, $http, BACKEND_URL) {
 			}
     	});
     };
- 
+
     factory.getPlayerByExternalId = function(pId, forceRefresh) {
     	return new Promise(function(resolve, reject) {
 			$http.get(BACKEND_URL + '/player/id/' + pId + '/external')
@@ -172,7 +172,7 @@ function($localStorage, $log, $http, BACKEND_URL) {
 			});
     	});
     };
- 
+
     factory.getPlayerByName = function(name) {
     	return new Promise(function(resolve, reject) {
 			$http.get(BACKEND_URL + '/player/name/' + name)
@@ -192,7 +192,7 @@ function($localStorage, $log, $http, BACKEND_URL) {
 			});
     	});
     };
- 
+
     factory.getPlayerByEmail = function(email) {
     	return new Promise(function(resolve, reject) {
     		// TODO save in localStorage, retrieve by email
@@ -213,7 +213,7 @@ function($localStorage, $log, $http, BACKEND_URL) {
 			});
     	});
     };
- 
+
     factory.getImage = function(iId, forceRefresh) {
     	return new Promise(function(resolve, reject) {
 			if (!forceRefresh && iId in images)
@@ -233,7 +233,7 @@ function($localStorage, $log, $http, BACKEND_URL) {
 			}
     	});
     };
- 
+
     factory.getImages = function(mId, rNo, forceRefresh, fallback) {
     	return new Promise(function(resolve, reject) {
 			if (!forceRefresh)
@@ -285,6 +285,6 @@ function($localStorage, $log, $http, BACKEND_URL) {
 			}
     	});
     };
- 
+
     return factory;
 });

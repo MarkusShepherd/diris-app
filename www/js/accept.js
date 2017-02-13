@@ -1,4 +1,4 @@
-dixitApp.controller('AcceptController',
+dirisApp.controller('AcceptController',
 function($http, $location, $log, $rootScope, $routeParams, $scope, $timeout, blockUI, toastr, dataService, BACKEND_URL) {
 
 	var player = dataService.getLoggedInPlayer();

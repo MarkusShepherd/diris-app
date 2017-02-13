@@ -1,4 +1,4 @@
-dixitApp.controller('NavigationController',
+dirisApp.controller('NavigationController',
 function($localStorage, $location, $rootScope, $route, $scope, auth, dataService) {
 
 	$scope.$watch(dataService.getLoggedInPlayer, function(player) {
