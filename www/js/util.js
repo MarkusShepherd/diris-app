@@ -8,27 +8,38 @@ function processRound(round, player) {
 	if (!round)
 		return round;
 
-	round.isStoryTeller = player.key.id === round.storyTellerKey.id;
-	round.hasSubmittedImage = player.key.id in round.images;
-	round.hasVoted = player.key.id in round.votes;
+	// round.details = $.filter(round.player_round_details || [],
+	// 	                     function (details) { return !!(details && details.player === player.pk); })[0];
+
+	$.each(round.player_round_details, function(i, details) {
+		if (details.player === player.pk)
+			round.details = details;
+	});
+
+	if (!round.details)
+		return round;
+
+	round.isStoryTeller = player.pk === round.storyteller;
+	round.hasSubmittedImage = !!round.details.image;
+	round.hasVoted = !!round.details.vote;
 
 	round.readyForStoryImage = false;
 	round.readyForOtherImage = false;
 	round.readyForVote = false;
 
-	if (round.status === 'SUBMIT_STORY' && round.isStoryTeller)
+	if (round.status === 's' && round.isStoryTeller)
 		round.readyForStoryImage = true;
-	else if (round.status === 'SUBMIT_OTHERS' && !round.isStoryTeller && !round.hasSubmittedImage)
+	else if (round.status === 'o' && !round.isStoryTeller && !round.hasSubmittedImage)
 		round.readyForOtherImage = true;
-	else if (round.status === 'SUBMIT_VOTES' && !round.isStoryTeller && !round.hasVoted)
+	else if (round.status === 'v' && !round.isStoryTeller && !round.hasVoted)
 		round.readyForVote = true;
 
 	round.hasAction = round.readyForStoryImage || round.readyForOtherImage || round.readyForVote;
 
-	round.scoresArray = $.map(round.scores, function(s, pId) {
+	round.scoresArray = $.map(round.player_round_details, function(details) {
 		return {
-			playerId: pId,
-			score: s
+			playerPk: details.player,
+			score: details.score
 		};
 	});
 
@@ -36,31 +47,43 @@ function processRound(round, player) {
 }
 
 function processMatch(match, player) {
+	console.log(player.pk);
+	console.log(match.player_match_details);
+
 	match.rounds = $.map(match.rounds, function(round) {
 		return processRound(round, player);
 	});
-	match.currentRoundObj = match.rounds[match.currentRound];
+	match.currentRoundObj = match.rounds[(match.current_round || 1) - 1];
 
-	var score = match.standings[player.key.id];
+	// match.details = $.filter(match.player_match_details || [],
+	// 	                     function (details) { return !!(details && details.player === player.pk); })[0];
+	$.each(match.player_match_details, function(i, details) {
+		console.log(details);
+		if (details.player === player.pk)
+			match.details = details;
+	});
+
+	var score = match.details.score;
 	var pos = 1;
-	$.each(match.standings, function(k, v) {
-		if (v > score)
+	$.each(match.player_match_details, function(i, details) {
+		if (details.score > score)
 			pos++;
 	});
+
 	match.playerPosition = pos;
 	match.playerPositionOrd = getOrdinal(pos);
 
-	match.standingsArray = $.map(match.standings, function(s, pId) {
+	match.standingsArray = $.map(match.player_match_details, function(details) {
 		return {
-			playerId: pId,
-			score: s
+			playerId: details.player,
+			score: details.score
 		};
 	});
 
 	match.createdFromNow = moment(match.created).fromNow();
-	match.lastModifiedFromNow = moment(match.lastModified).fromNow();
+	match.lastModifiedFromNow = moment(match.last_modified).fromNow();
 
-	match.hasAccepted = !!(match.status != "WAITING" || match.accepted[player.key.id]);
+	match.hasAccepted = match.details.invitation_status === 'a';
 
 	return match;
 }

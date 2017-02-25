@@ -1,9 +1,10 @@
 dirisApp.controller('OverviewController',
-function($location, $log, $rootScope, $routeParams, $scope, blockUI, toastr, dataService) {
+function OverviewController($location, $log, $rootScope, $routeParams, $scope,
+							authManager, blockUI, toastr, dataService) {
 
 	var player = dataService.getLoggedInPlayer();
 
-	if (!player) {
+	if (!authManager.isAuthenticated() || !player) {
 		$location.path('/login');
 		return;
 	}
@@ -19,33 +20,34 @@ function($location, $log, $rootScope, $routeParams, $scope, blockUI, toastr, dat
 	$rootScope.refreshPath = '/overview/refresh';
 	$rootScope.refreshReload = action === 'refresh';
 
-	dataService.getMatches(player.key.id, action === 'refresh', true)
-	.then(function(matches) {
-		$scope.$apply(function() {
+	dataService.getMatches(action === 'refresh', true)
+	.then(function (matches) {
+		$log.debug(matches);
+		// $scope.$apply(function () {
 			var status = {};
-			$scope.matches = $.map(matches, function(match) {
+			$scope.matches = $.map(matches, function (match) {
 				status[match.status] = true;
 				return processMatch(match, player);
 			});
 			$scope.status = status;
 			blockUI.stop();
-		});
+		// });
 		$log.debug('Matches: ', $scope.matches);
-	}).catch(function(response) {
+	}).catch(function (response) {
 		$log.debug('error');
 		$log.debug(response);
-		$scope.$apply(function() {
+		// $scope.$apply(function() {
 			toastr.error("There was an error fetching the data - please try again later...");
-		});
+		// });
 	});
 
 	dataService.getPlayers(action === 'refresh', true)
-	.then(function(players) {
-		$scope.$apply(function() {
+	.then(function (players) {
+		// $scope.$apply(function() {
 			$scope.players = players;
-		});
+		// });
 		$log.debug('Players: ', $scope.players);
-	}).catch(function(response) {
+	}).catch(function (response) {
 		$log.debug('error');
 		$log.debug(response);
 	});

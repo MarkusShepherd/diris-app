@@ -1,28 +1,30 @@
 var testUrl = 'http://localhost:8000';
 var liveUrl = 'http://diris-app.appspot.com';
-var devUrl  = 'https://0-1-0-dot-dixit-app.appspot.com/';
 
-var dirisApp = angular.module('dirisApp', ['angular-jwt', 'auth0', 'blockUI', 'ngAnimate', 'ngRoute', 'ngStorage', 'toastr']);
+var dirisApp = angular.module('dirisApp', ['angular-jwt', 'blockUI', 'ngAnimate',
+	                                       'ngRoute', 'ngStorage', 'toastr']);
 
 dirisApp.constant('BACKEND_URL', testUrl);
 
-dirisApp.config(function(authProvider, jwtInterceptorProvider, $httpProvider, $routeProvider,
-	$localStorageProvider, $logProvider, blockUIConfig, toastrConfig) {
-	authProvider.init({
-		domain: 'dixit.auth0.com',
-		clientID: 'SyQYBfqUOcxOgrXHjTUMKJGfJFPwLuBZ',
-		loginUrl: '/login'
+dirisApp.config(function (jwtOptionsProvider, $httpProvider, $routeProvider,
+						  $localStorageProvider, $logProvider, blockUIConfig, toastrConfig) {
+	jwtOptionsProvider.config({
+		authPrefix: 'JWT ',
+		unauthenticatedRedirectPath: '/login',
+		whiteListedDomains: ['diris-app.appspot.com', 'localhost'],
+		tokenGetter: ['$localStorage', function ($localStorage) {
+			return $localStorage.token;
+		}]
 	});
-
-	jwtInterceptorProvider.tokenGetter = ['$localStorage', function($localStorage) {
-		return $localStorage.token;
-	}];
 
 	$httpProvider.interceptors.push('jwtInterceptor');
 
 	$routeProvider.when('/login', {
 		templateUrl : 'partials/login.html',
 		controller : 'LoginController'
+	}).when('/register', {
+		templateUrl : 'partials/registration.html',
+		controller : 'RegistrationController'
 	}).when('/overview', {
 		templateUrl : 'partials/overview.html',
 		controller : 'OverviewController',
@@ -77,7 +79,7 @@ dirisApp.config(function(authProvider, jwtInterceptorProvider, $httpProvider, $r
 
 	$localStorageProvider.setKeyPrefix('dirisApp_');
 
-	$logProvider.debugEnabled(false);
+	$logProvider.debugEnabled(true);
 
 	blockUIConfig.autoBlock = false;
 
@@ -93,16 +95,13 @@ dirisApp.config(function(authProvider, jwtInterceptorProvider, $httpProvider, $r
 	});
 });
 
-dirisApp.run(function($localStorage, $log, $rootScope, auth, dataService, toastr) {
-	auth.hookEvents();
+dirisApp.run(function($localStorage, $log, $rootScope, authManager, dataService, toastr) {
+	authManager.checkAuthOnRefresh();
+	// authManager.redirectWhenUnauthenticated();
 
-	$rootScope.$on('$locationChangeStart', function() {
-		if (!auth.isAuthenticated) {
-			var token = $localStorage.token;
-			if (token)
-				auth.authenticate($localStorage.profile, token);
-		}
-	});
+	// $rootScope.$on('tokenHasExpired', function() {
+	//     do something
+	// });
 
 	if (isBrowser())
 		$log.debug('No notifications on browser');
@@ -127,8 +126,8 @@ dirisApp.run(function($localStorage, $log, $rootScope, auth, dataService, toastr
 			var player = dataService.getLoggedInPlayer();
 			if (player && player.key && player.key.id)
 				dataService.updatePlayer(player.key.id, {
-    				gcmRegistrationID: data.registrationId
-    			});
+					gcmRegistrationID: data.registrationId
+				});
 			else
 				dataService.setGcmRegistrationId(data.registrationId);
 		});
