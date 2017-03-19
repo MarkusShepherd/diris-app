@@ -1,5 +1,5 @@
 dirisApp.controller('ProfileController',
-function($location, $log, $rootScope, $routeParams, $scope, blockUI, dataService) {
+function ProfileController($location, $log, $rootScope, $routeParams, $scope, blockUI, dataService) {
 
 	var player = dataService.getLoggedInPlayer();
 
@@ -18,14 +18,14 @@ function($location, $log, $rootScope, $routeParams, $scope, blockUI, dataService
 	if (!blockUI.state().blocking)
 		blockUI.start();
 
-	var pId = $routeParams.pId;
+	var pPk = $routeParams.pPk;
 	var action = $routeParams.action;
 
-	if (!pId)
-		pId = player.key.id;
+	if (!pPk)
+		pPk = player.pk;
 
 	if (!action)
-		if (pId == player.key.id)
+		if (pPk == player.pk)
 			action = 'edit';
 		else
 			action = 'view';
@@ -33,12 +33,10 @@ function($location, $log, $rootScope, $routeParams, $scope, blockUI, dataService
 	$rootScope.refreshPath = null;
 	$rootScope.refreshReload = false;
 
-	dataService.getPlayer(pId)
-	.then(function(player) {
-		$scope.$apply(function() {
-			$scope.player = player;
-			blockUI.stop();
-		});
+	dataService.getPlayer(pPk)
+	.then(function (player) {
+		$scope.player = player;
+		blockUI.stop();
 		$log.debug('Player: ', $scope.player);
 	}).catch(function(response) {
 		$log.debug('error');

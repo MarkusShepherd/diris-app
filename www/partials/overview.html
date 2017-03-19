@@ -26,7 +26,7 @@
 					ng-href="#/match/{{ match.pk }}"
 					class="list-group-item {{ match.currentRoundObj.hasAction ? 'list-group-item-info' : '' }}">
 					<span ng-show="match.current_round" class="badge">{{ match.playerPositionOrd }}</span>
-					<h4 class="list-group-item-heading">Round {{ match.current_round + 1 }} of {{ match.total_rounds }}</h4>
+					<h4 class="list-group-item-heading">Round {{ match.current_round }} of {{ match.total_rounds }}</h4>
 					<p ng-show="match.currentRoundObj.status === 's'" class="list-group-item-text">
 						{{ match.currentRoundObj.isStoryTeller
 							? 'Tell your story!'

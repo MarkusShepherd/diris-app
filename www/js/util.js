@@ -36,7 +36,9 @@ function processRound(round, player) {
 
 	round.hasAction = round.readyForStoryImage || round.readyForOtherImage || round.readyForVote;
 
+	round.scores = {};
 	round.scoresArray = $.map(round.player_round_details, function(details) {
+		round.scores['' + details.player] = details.score;
 		return {
 			playerPk: details.player,
 			score: details.score
@@ -47,9 +49,6 @@ function processRound(round, player) {
 }
 
 function processMatch(match, player) {
-	console.log(player.pk);
-	console.log(match.player_match_details);
-
 	match.rounds = $.map(match.rounds, function(round) {
 		return processRound(round, player);
 	});
@@ -57,13 +56,14 @@ function processMatch(match, player) {
 
 	// match.details = $.filter(match.player_match_details || [],
 	// 	                     function (details) { return !!(details && details.player === player.pk); })[0];
-	$.each(match.player_match_details, function(i, details) {
-		console.log(details);
+	match.accepted = {};
+	$.each(match.player_match_details, function (i, details) {
+		match.accepted['' + details.player] = details.invitation_status === 'a';
 		if (details.player === player.pk)
 			match.details = details;
 	});
 
-	var score = match.details.score;
+	var score = match.details ? match.details.score : 0;
 	var pos = 1;
 	$.each(match.player_match_details, function(i, details) {
 		if (details.score > score)
@@ -73,9 +73,11 @@ function processMatch(match, player) {
 	match.playerPosition = pos;
 	match.playerPositionOrd = getOrdinal(pos);
 
-	match.standingsArray = $.map(match.player_match_details, function(details) {
+	match.scores = {};
+	match.standingsArray = $.map(match.player_match_details, function (details) {
+		match.scores['' + details.player] = details.score;
 		return {
-			playerId: details.player,
+			playerPk: details.player,
 			score: details.score
 		};
 	});
@@ -83,7 +85,7 @@ function processMatch(match, player) {
 	match.createdFromNow = moment(match.created).fromNow();
 	match.lastModifiedFromNow = moment(match.last_modified).fromNow();
 
-	match.hasAccepted = match.details.invitation_status === 'a';
+	match.hasAccepted = match.details && match.details.invitation_status === 'a';
 
 	return match;
 }

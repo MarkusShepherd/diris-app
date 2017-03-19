@@ -1,6 +1,6 @@
 dirisApp.controller('AcceptController',
-function($http, $location, $log, $rootScope, $routeParams, $scope, $timeout, blockUI, toastr, dataService, BACKEND_URL) {
-
+function AcceptController($location, $log, $q, $rootScope, $routeParams, $scope,
+	                      blockUI, toastr, dataService) {
 	var player = dataService.getLoggedInPlayer();
 
 	if (!player) {
@@ -20,53 +20,38 @@ function($http, $location, $log, $rootScope, $routeParams, $scope, $timeout, blo
 	$rootScope.refreshPath = null;
 	$rootScope.refreshReload = false;
 
-	var mId = $routeParams.mId;
-	$scope.mId = mId;
+	var mPk = $routeParams.mPk;
+	$scope.mPk = mPk;
 
-	dataService.getMatch(mId)
-	.then(function(match) {
-		$scope.$apply(function() {
-			$scope.match = processMatch(match, player);
-		});
+	dataService.getMatch(mPk)
+	.then(function (match) {
+		$scope.match = processMatch(match, player);
 		return $scope.match;
-	}).then(function(match) {
-		var promises = $.map(match.playerKeys, function(key) {
-			return dataService.getPlayer(key.id);
-		});
+	}).then(function (match) {
+		var promises = $.map(match.players, dataService.getPlayer);
 		$scope.players = {};
-		Promise.all(promises)
-		.then(function(players) {
-			$scope.$apply(function() {
-				$.each(players, function(i, player) {
-					$scope.players[player.key.id] = player;
-				});
-				blockUI.stop();
+		$q.all(promises)
+		.then(function (players) {
+			$.each(players, function (i, player) {
+				$scope.players[player.pk] = player;
 			});
-		});
-	}).catch(function(response) {
-		$log.debug('error');
-		$log.debug(response);
-		$scope.$apply(function() {
-			toastr.error("There was an error fetching the data - please try again later...");
 			blockUI.stop();
 		});
+	}).catch(function (response) {
+		$log.debug('error');
+		$log.debug(response);
+		toastr.error("There was an error fetching the data - please try again later...");
+		blockUI.stop();
 	});
 
-	$scope.accept = function() {
-		$log.debug("Hit accept");
-
-		$http.post(BACKEND_URL + '/match/' + mId + '/accept/' + player.key.id)
-		.then(function(response) {
-			$log.debug(response);
-			$timeout(function() {
-				$location.path('/overview/refresh');
-			});
-		}).catch(function(response) {
+	$scope.accept = function accept() {
+		dataService.respondToInvitation(mPk, true)
+		.then(function (match) {
+			$location.path('/overview/refresh');
+		}).catch(function (response) {
 			$log.debug('error');
 			$log.debug(response);
-			$scope.$apply(function() {
-				toastr.error("There was an error...");
-			});
+			toastr.error("There was an error...");
 		});
 	};
 }); // AcceptController

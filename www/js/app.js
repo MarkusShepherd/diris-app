@@ -6,14 +6,14 @@ var dirisApp = angular.module('dirisApp', ['angular-jwt', 'blockUI', 'ngAnimate'
 
 dirisApp.constant('BACKEND_URL', testUrl);
 
-dirisApp.config(function (jwtOptionsProvider, $httpProvider, $routeProvider,
-						  $localStorageProvider, $logProvider, blockUIConfig, toastrConfig) {
+dirisApp.config(function ($httpProvider, $routeProvider, $localStorageProvider, $logProvider,
+	                      blockUIConfig, jwtOptionsProvider, toastrConfig) {
 	jwtOptionsProvider.config({
 		authPrefix: 'JWT ',
 		unauthenticatedRedirectPath: '/login',
 		whiteListedDomains: ['diris-app.appspot.com', 'localhost'],
-		tokenGetter: ['$localStorage', function ($localStorage) {
-			return $localStorage.token;
+		tokenGetter: ['dataService', function (dataService) {
+			return dataService.getTokenSync();
 		}]
 	});
 
@@ -37,27 +37,27 @@ dirisApp.config(function (jwtOptionsProvider, $httpProvider, $routeProvider,
 		templateUrl : 'partials/new-match.html',
 		controller : 'NewMatchController',
 		requiresLogin: true
-	}).when('/accept/:mId', {
+	}).when('/accept/:mPk', {
 		templateUrl : 'partials/accept.html',
 		controller : 'AcceptController',
 		requiresLogin: true
-	}).when('/match/:mId', {
+	}).when('/match/:mPk', {
 		templateUrl : 'partials/match.html',
 		controller : 'MatchController',
 		requiresLogin: true
-	}).when('/match/:mId/:action', {
+	}).when('/match/:mPk/:action', {
 		templateUrl : 'partials/match.html',
 		controller : 'MatchController',
 		requiresLogin: true
-	}).when('/image/:mId/:rNo', {
+	}).when('/image/:mPk/:rNo', {
 		templateUrl : 'partials/submit-image.html',
 		controller : 'SubmitImageController',
 		requiresLogin: true
-	}).when('/vote/:mId/:rNo', {
+	}).when('/vote/:mPk/:rNo', {
 		templateUrl : 'partials/vote-image.html',
 		controller : 'VoteImageController',
 		requiresLogin: true
-	}).when('/review/:mId/:rNo', {
+	}).when('/review/:mPk/:rNo', {
 		templateUrl : 'partials/review-round.html',
 		controller : 'ReviewRoundController',
 		requiresLogin: true
@@ -65,11 +65,11 @@ dirisApp.config(function (jwtOptionsProvider, $httpProvider, $routeProvider,
 		templateUrl : 'partials/profile.html',
 		controller : 'ProfileController',
 		requiresLogin: true
-	}).when('/profile/:pId', {
+	}).when('/profile/:pPk', {
 		templateUrl : 'partials/profile.html',
 		controller : 'ProfileController',
 		requiresLogin: true
-	}).when('/profile/:pId/:action', {
+	}).when('/profile/:pPk/:action', {
 		templateUrl : 'partials/profile.html',
 		controller : 'ProfileController',
 		requiresLogin: true

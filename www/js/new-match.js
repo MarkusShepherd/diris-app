@@ -1,5 +1,6 @@
 dirisApp.controller('NewMatchController',
-function($http, $location, $log, $rootScope, $scope, $timeout, toastr, dataService, BACKEND_URL) {
+function NewMatchController($http, $location, $log, $rootScope, $scope, $timeout,
+	                        toastr, dataService, BACKEND_URL) {
 
 	var player = dataService.getLoggedInPlayer();
 
@@ -18,19 +19,15 @@ function($http, $location, $log, $rootScope, $scope, $timeout, toastr, dataServi
 	$rootScope.refreshReload = false;
 
 	dataService.getPlayers()
-	.then(function(players) {
-		$scope.$apply(function () {
-			$scope.players = players;
-			$scope.playersArray = $.map(players, function(player) {
-				return player;
-			});
+	.then(function (players) {
+		$scope.players = players;
+		$scope.playersArray = $.map(players, function(player) {
+			return player;
 		});
 	}).catch(function(response) {
 		$log.debug('error');
 		$log.debug(response);
-		$scope.$apply(function () {
-			toastr.error('There was an error fetching the data...');
-		});
+		toastr.error('There was an error fetching the player data...');
 	});
 
 	$scope.selected = {};
@@ -39,52 +36,44 @@ function($http, $location, $log, $rootScope, $scope, $timeout, toastr, dataServi
 
 	$scope.addPlayer = function(p) {
 		p.selected = true;
-		$scope.selected["" + p.key.id] = p;
+		$scope.selected["" + p.pk] = p;
 		$scope.numPlayers++;
 	};
 
 	$scope.removePlayer = function(p) {
 		p.selected = false;
-		delete $scope.selected["" + p.key.id];
+		delete $scope.selected["" + p.pk];
 		$scope.numPlayers--;
 	};
 
 	$scope.createMatch = function() {
-		var playerIds = [];
+		var playerPks = [];
 
 		var includeCurrent = false;
 
-		for (var pId in $scope.selected) {
-			var id = parseInt(pId, 10);
-			if (id == player.key.id) {
+		for (var pk in $scope.selected)
+			if (pk == player.pk) {
 				includeCurrent = true;
-				playerIds.unshift(id);
+				playerPks.unshift(pk);
 			} else
-				playerIds.push(id);
-		}
+				playerPks.push(pk);
 
 		if (!includeCurrent)
-			playerIds.unshift(player.key.id);
+			playerPks.unshift(player.pk);
 
-		if (playerIds.length < 4) {
+		if (playerPks.length < 4) {
 			toastr.error("Please select at least 3 players to invite to the match!");
 			return;
 		}
 
-		$http.post(BACKEND_URL + '/match', playerIds)
-		.then(function(response) {
-			$log.debug(response);
-			// TODO add response.data to dataService instead of force refresh below (#46)
-			// TODO check a new match has been added
-			$timeout(function() {
-				$location.path('/overview/refresh');
-			});
+		dataService.createMatch(playerPks)
+		.then(function(match) {
+			$log.debug(match);
+			$location.path('/overview');
 		}).catch(function(response) {
 			$log.debug('error');
 			$log.debug(response);
-			$scope.$apply(function() {
-				toastr.error("There was an error when creating the match...");
-			});
+			toastr.error("There was an error when creating the match...");
 		});
 	}; // createMatch
 

@@ -1,22 +1,15 @@
 dirisApp.controller('NavigationController',
-function($localStorage, $location, $rootScope, $route, $scope, dataService) {
-//auth,
+function NavigationController($location, $rootScope, $route, $scope, dataService) {
+	$scope.$watch(dataService.getLoggedInPlayer, function (player) {
+		$scope.currentPlayer = player;
+	});
 
-	// $scope.$watch(dataService.getLoggedInPlayer, function(player) {
-	// 	$scope.currentPlayer = player;
-	// });
-
-	$scope.logout = function() {
-		// auth.signout();
-		delete $localStorage.profile;
-		delete $localStorage.token;
-		// dataService.setLoggedInPlayer(null);
+	$scope.logout = function logout() {
 		dataService.setToken(null);
-		authManager.unauthenticate();
 		$location.path('/login');
 	};
 
-	$scope.refresh = function() {
+	$scope.refresh = function refresh() {
 		if ($rootScope.refreshReload)
 			$route.reload();
 		else if ($rootScope.refreshPath)

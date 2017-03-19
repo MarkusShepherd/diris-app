@@ -2,19 +2,21 @@ dirisApp.controller('LoginController',
 function LoginController($http, $localStorage, $location, $log, $rootScope, $scope, $timeout,
 	                     authManager, blockUI, jwtHelper, toastr, dataService, BACKEND_URL) {
 
-	$rootScope.menuItems = [];
-	$rootScope.refreshPath = null;
-	$rootScope.refreshReload = false;
+	var player = dataService.getLoggedInPlayer();
 
-	if (authManager.isAuthenticated()) {
+	if (player) {
 		$log.debug('already authenticated');
 		$location.path('/overview/refresh').replace();
 		return;
 	}
 
+	$rootScope.menuItems = [];
+	$rootScope.refreshPath = null;
+	$rootScope.refreshReload = false;
+
 	var myBlockUI = blockUI.instances.get('myBlockUI');
 
-	$scope.login = function() {
+	$scope.login = function login() {
 		myBlockUI.start();
 
 		$log.debug('try to login');
@@ -26,15 +28,11 @@ function LoginController($http, $localStorage, $location, $log, $rootScope, $sco
 			if (!token)
 				throw new Error('no token');
 
-			authManager.authenticate();
-
 			$timeout(function() {
 				$location.path('/overview/refresh').replace();
 			});
 		}).catch(function (response) {
 			$log.debug(response);
-
-			authManager.unauthenticate();
 
 			$scope.$apply(function() {
 				$scope.message = response.message || "There was an error...";

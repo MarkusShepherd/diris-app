@@ -4,7 +4,7 @@ function OverviewController($location, $log, $rootScope, $routeParams, $scope,
 
 	var player = dataService.getLoggedInPlayer();
 
-	if (!authManager.isAuthenticated() || !player) {
+	if (!player) {
 		$location.path('/login');
 		return;
 	}
@@ -22,37 +22,30 @@ function OverviewController($location, $log, $rootScope, $routeParams, $scope,
 
 	dataService.getMatches(action === 'refresh', true)
 	.then(function (matches) {
-		$log.debug(matches);
-		// $scope.$apply(function () {
-			var status = {};
-			$scope.matches = $.map(matches, function (match) {
-				status[match.status] = true;
-				return processMatch(match, player);
-			});
-			$scope.status = status;
-			blockUI.stop();
-		// });
-		$log.debug('Matches: ', $scope.matches);
+		var status = {};
+		$scope.matches = $.map(matches, function (match) {
+			status[match.status] = true;
+			return processMatch(match, player);
+		});
+		$scope.status = status;
+		blockUI.stop();
+		$log.debug('Matches:', $scope.matches);
 	}).catch(function (response) {
 		$log.debug('error');
 		$log.debug(response);
-		// $scope.$apply(function() {
-			toastr.error("There was an error fetching the data - please try again later...");
-		// });
+		toastr.error("There was an error fetching the data - please try again later...");
 	});
 
 	dataService.getPlayers(action === 'refresh', true)
 	.then(function (players) {
-		// $scope.$apply(function() {
-			$scope.players = players;
-		// });
-		$log.debug('Players: ', $scope.players);
+		$scope.players = players;
+		$log.debug('Players:', $scope.players);
 	}).catch(function (response) {
 		$log.debug('error');
 		$log.debug(response);
 	});
 
-	$scope.newMatch = function() {
+	$scope.newMatch = function newMatch() {
 		$location.path('/newmatch');
 	};
 
