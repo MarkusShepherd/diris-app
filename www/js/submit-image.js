@@ -1,5 +1,6 @@
 dirisApp.controller('SubmitImageController',
-function($http, $location, $log, $rootScope, $routeParams, $scope, $timeout, blockUI, toastr, dataService, BACKEND_URL) {
+function SubmitImageController($http, $location, $log, $q, $rootScope, $routeParams, $scope, $timeout,
+	                           blockUI, toastr, dataService, BACKEND_URL) {
 
 	var player = dataService.getLoggedInPlayer();
 
@@ -11,10 +12,10 @@ function($http, $location, $log, $rootScope, $routeParams, $scope, $timeout, blo
 	if (!blockUI.state().blocking)
 		blockUI.start();
 
-	var mId = $routeParams.mId;
+	var mPk = $routeParams.mPk;
 	var rNo = $routeParams.rNo;
 
-	$scope.mId = mId;
+	$scope.mPk = mPk;
 	$scope.rNo = rNo;
 
 	$scope.currentPlayer = player;
@@ -23,63 +24,51 @@ function($http, $location, $log, $rootScope, $routeParams, $scope, $timeout, blo
 		label: 'Overview',
 		glyphicon: 'home'
 	}, {
-		link: '#/match/' + mId,
+		link: '#/match/' + mPk,
 		label: 'Match',
 		glyphicon: 'knight'
 	}];
 	$rootScope.refreshPath = null;
 	$rootScope.refreshReload = false;
 
-	dataService.getMatch(mId)
-	.then(function(match) {
-		$scope.$apply(function() {
-			$scope.match = processMatch(match, player);
-			$scope.round = $scope.match.rounds[rNo];
-		});
+	dataService.getMatch(mPk)
+	.then(function (match) {
+		$scope.match = processMatch(match, player);
+		$scope.round = $scope.match.rounds[rNo - 1];
 		return $scope.match;
-	}).then(function(match) {
-		if ($scope.round.status === 'SUBMIT_VOTES')
-			$timeout(function() { $location.path('/vote/' + mId + '/' + rNo).replace(); });
-		else if ($scope.round.status === 'FINISHED')
-			$timeout(function() { $location.path('/review/' + mId + '/' + rNo).replace(); });
+	}).then(function (match) {
+		if ($scope.round.status === 'v')
+			$location.path('/vote/' + mPk + '/' + rNo).replace();
+		else if ($scope.round.status === 'f')
+			$location.path('/review/' + mPk + '/' + rNo).replace();
 		else {
-			var promises = $.map(match.playerKeys, function(key) {
-				return dataService.getPlayer(key.id);
-			});
+			var promises = $.map(match.players, dataService.getPlayer);
 			$scope.players = {};
-			Promise.all(promises)
-			.then(function(players) {
-				$scope.$apply(function() {
-					$.each(players, function(i, player) {
-						$scope.players[player.key.id] = player;
-					});
-					blockUI.stop();
+			$q.all(promises)
+			.then(function (players) {
+				$.each(players, function(i, player) {
+					$scope.players[player.pk] = player;
 				});
+				blockUI.stop();
 			});
 		}
 	}).catch(function(response) {
 		$log.debug('error');
 		$log.debug(response);
-		$scope.$apply(function() {
-			toastr.error("There was an error fetching the data - please try again later...");
-			blockUI.stop();
-		});
+		toastr.error("There was an error fetching the data - please try again later...");
+		blockUI.stop();
 	});
 
-	dataService.getImages(mId, rNo, true, true)
-	.then(function(images) {
-		$scope.$apply(function() {
-			$scope.images = {};
-			$.each(images, function(k, img) {
-				$scope.images['' + img.key.id] = img;
-			});
+	dataService.getImages()
+	.then(function (images) {
+		$scope.images = {};
+		$.each(images, function(k, img) {
+			$scope.images['' + img.pk] = img;
 		});
 	}).catch(function(response) {
 		$log.debug('error');
 		$log.debug(response);
-		$scope.$apply(function() {
-			toastr.error("There was an error fetching the data - please try again later...");
-		});
+		toastr.error("There was an error fetching the data - please try again later...");
 	});
 
 	function getImage(srcType) {
@@ -105,59 +94,45 @@ function($http, $location, $log, $rootScope, $routeParams, $scope, $timeout, blo
 		});
 	}
 
-	$scope.getImageFromCamera = function() {
+	$scope.getImageFromCamera = function getImageFromCamera() {
 		getImage(Camera.PictureSourceType.CAMERA);
 	};
 
-	$scope.getImageFromLibrary = function() {
+	$scope.getImageFromLibrary = function getImageFromLibrary() {
 		if (isBrowser())
 			$('#file-input').trigger('click');
 		else
 			getImage(Camera.PictureSourceType.PHOTOLIBRARY);
 	};
 
-	$scope.submitImage = function() {
-		var croppedImage = $("#image").cropper('getCroppedCanvas', {
-			width: 1080,
-			height: 1080
-		}).toDataURL("image/jpeg", 0.5);
-		croppedImage = croppedImage.substr(croppedImage.indexOf(",") + 1);
-
-		var fd = new FormData();
-
-		fd.append("image", croppedImage);
-		fd.append("player", player.key.id);
-		fd.append("match", mId);
-		fd.append("round", $scope.rNo);
-		if ($scope.round.story)
-			fd.append("story", $scope.round.story);
-
-		$http.post(BACKEND_URL + '/image', fd, {
-        	headers: { 'Content-Type': undefined },
-        	transformRequest: angular.identity
-    	}).then(function(response) {
-			$log.debug(response);
-			$timeout(function() {
-				$location.path('/match/' + mId + '/refresh').replace();
-			});
-		}).catch(function(response) {
+	$scope.submitImage = function submitImage() {
+		$q(function (resolve, reject) {
+			$("#image").cropper('getCroppedCanvas', {
+				width: 1080,
+				height: 1080
+			}).toBlob(resolve, 'image/jpeg', 0.5);
+		}).then(function (image) {
+			$log.debug(image);
+			return dataService.submitImage(mPk, rNo, image, $scope.round.story);
+		}).then(function (match) {
+			$log.debug(match);
+			$location.path('/match/' + mPk + '/refresh').replace();
+		}).catch(function (response) {
 			$log.debug('error');
 			$log.debug(response);
-			$scope.$apply(function() {
-				toastr.error("There was an error");
-			});
+			toastr.error("There was an error");
 		});
 	};
 
-	$scope.zoom = function(ratio) {
+	$scope.zoom = function zoom(ratio) {
 		$('#image').cropper('zoom', ratio);
 	};
 
-	$scope.rotate = function(angle) {
+	$scope.rotate = function rotate(angle) {
 		$('#image').cropper('rotate', angle);
 	};
 
-	$scope.flip = function(axis) {
+	$scope.flip = function flip(axis) {
 		var  img = $('#image');
 		img.cropper('scale' + axis, -img.cropper('getData')['scale' + axis]);
 	};
@@ -176,7 +151,7 @@ function($http, $location, $log, $rootScope, $routeParams, $scope, $timeout, blo
 		toggleDragModeOnDblclick: false
 	}).cropper('disable');
 
-	$("#file-input").change(function() {
+	$("#file-input").change(function () {
         if (this.files && this.files[0]) {
             var reader = new FileReader();
 
