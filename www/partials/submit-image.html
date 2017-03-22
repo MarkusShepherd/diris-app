@@ -5,7 +5,7 @@
 				<p>{{ round.story }}</p>
 			</blockquote>
 		</div>
-		<div class="panel-footer text-right">by <em>{{ players['' + round.storyTellerKey.id].name }}</em></div>
+		<div class="panel-footer text-right">by <em>{{ players['' + round.storyteller].user.username }}</em></div>
 	</section>
 
 	<section>
@@ -28,7 +28,7 @@
 			<img src="default-placeholder.png" id="image" alt="Image" class="img-responsive image-upload" />
 		</div>
 		<div ng-show="round.hasSubmittedImage" class="image-upload-wrapper">
-			<img ng-src="{{ match.currentRoundObj.details.image.file }}" id="image-uploaded" alt="Image" class="img-responsive image-upload" />
+			<img ng-src="{{ round.details.image.file }}" id="image-uploaded" alt="Image" class="img-responsive image-upload" />
 		</div>
 
 		<div ng-hide="round.hasSubmittedImage" class="image-edit-wrapper">

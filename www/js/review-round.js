@@ -1,5 +1,6 @@
 dirisApp.controller('ReviewRoundController',
-function($location, $log, $rootScope, $routeParams, $scope, $timeout, blockUI, toastr, dataService) {
+function ReviewRoundController($location, $log, $q, $rootScope, $routeParams, $scope, $timeout,
+	                           blockUI, toastr, dataService) {
 
 	var player = dataService.getLoggedInPlayer();
 
@@ -11,10 +12,10 @@ function($location, $log, $rootScope, $routeParams, $scope, $timeout, blockUI, t
 	if (!blockUI.state().blocking)
 		blockUI.start();
 
-	var mId = $routeParams.mId;
+	var mPk = $routeParams.mPk;
 	var rNo = $routeParams.rNo;
 
-	$scope.mId = mId;
+	$scope.mPk = mPk;
 	$scope.rNo = rNo;
 
 	$scope.currentPlayer = player;
@@ -23,77 +24,65 @@ function($location, $log, $rootScope, $routeParams, $scope, $timeout, blockUI, t
 		label: 'Overview',
 		glyphicon: 'home'
 	}, {
-		link: '#/match/' + mId,
+		link: '#/match/' + mPk,
 		label: 'Match',
 		glyphicon: 'knight'
 	}];
 	$rootScope.refreshPath = null;
 	$rootScope.refreshReload = false;
 
-	dataService.getMatch(mId)
-	.then(function(match) {
-		$scope.$apply(function() {
-			$scope.match = processMatch(match, player);
-			$scope.round = $scope.match.rounds[rNo];
-		});
+	dataService.getMatch(mPk)
+	.then(function (match) {
+		$scope.match = processMatch(match, player);
+		$scope.round = $scope.match.rounds[rNo];
 		return $scope.match;
 	}).then(function(match) {
-		if ($scope.round.status === 'SUBMIT_STORY' || $scope.round.status === 'SUBMIT_OTHERS')
-			$timeout(function() { $location.path('/image/' + mId + '/' + rNo).replace(); });
-		else if ($scope.round.status === 'SUBMIT_VOTE')
-			$timeout(function() { $location.path('/vote/' + mId + '/' + rNo).replace(); });
+		if ($scope.round.status === 's' || $scope.round.status === 'o')
+			$location.path('/image/' + mPk + '/' + rNo).replace();
+		else if ($scope.round.status === 'v')
+			$location.path('/vote/' + mPk + '/' + rNo).replace();
 		else {
-			var promises = $.map(match.playerKeys, function(key) {
-				return dataService.getPlayer(key.id);
-			});
+			var promises = $.map(match.players, dataService.getPlayer);
 			$scope.players = {};
-			Promise.all(promises)
-			.then(function(players) {
-				$scope.$apply(function() {
-					$.each(players, function(i, player) {
-						$scope.players[player.key.id] = player;
-					});
-					blockUI.stop();
+			$q.all(promises)
+			.then(function (players) {
+				$.each(players, function (i, player) {
+					$scope.players[player.pk] = player;
 				});
+				blockUI.stop();
 			});
 		}
-	}).catch(function(response) {
+	}).catch(function (response) {
 		$log.debug('error');
 		$log.debug(response);
-		$scope.$apply(function() {
-			toastr.error("There was an error fetching the data - please try again later...");
-			blockUI.stop();
-		});
+		toastr.error("There was an error fetching the data - please try again later...");
+		blockUI.stop();
 	});
 
-	dataService.getImages(mId, rNo, true, true)
-	.then(function(images) {
-		$scope.$apply(function() {
-			$scope.images = {};
-			$.each(images, function(k, img) {
-				$scope.images['' + img.key.id] = img;
-			});
+	dataService.getImages(true, true)
+	.then(function (images) {
+		$scope.images = {};
+		$.each(images, function(k, img) {
+			$scope.images['' + img.pk] = img;
 		});
-	}).catch(function(response) {
+	}).catch(function (response) {
 		$log.debug('error');
 		$log.debug(response);
-		$scope.$apply(function() {
-			toastr.error("There was an error fetching the data - please try again later...");
-		});
+		toastr.error("There was an error fetching the data - please try again later...");
 	});
 
-	$scope.filterValues = function(items, value) {
+	$scope.filterValues = function filterValues(items, value) {
 		var result = [];
-		angular.forEach(items, function(v, k) {
+		angular.forEach(items, function (v, k) {
 	        if (v == value)
 	        	result.push(k);
 	    });
 	    return result;
 	};
 
-	$scope.filterOutKey = function(items, key) {
+	$scope.filterOutKey = function filterOutKey(items, key) {
 		var result = [];
-		angular.forEach(items, function(v, k) {
+		angular.forEach(items, function (v, k) {
 	        if (k != key)
 	        	result.push(v);
 	    });

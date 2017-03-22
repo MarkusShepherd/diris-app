@@ -34,7 +34,7 @@ function SubmitImageController($http, $location, $log, $q, $rootScope, $routePar
 	dataService.getMatch(mPk)
 	.then(function (match) {
 		$scope.match = processMatch(match, player);
-		$scope.round = $scope.match.rounds[rNo - 1];
+		$scope.round = $scope.match.currentRoundObj;
 		return $scope.match;
 	}).then(function (match) {
 		if ($scope.round.status === 'v')

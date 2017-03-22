@@ -30,8 +30,8 @@
 			</div>
 			<p ng-show="round.readyForStoryImage" class="list-group-item-text">Tell your story!</p>
 			<p ng-show="round.readyForOtherImage" class="list-group-item-text">Submit your image!</p>
-			<span ng-show="round.readyForVote" ng-repeat="(pId, iId) in round.images">
-				<img ng-src="{{ images['' + iId].url }}" class="img-circle" style="width: 100px; height: 100px;" />
+			<span ng-show="round.readyForVote" ng-repeat="image in round.images">
+				<img ng-src="{{ image.file }}" class="img-circle" style="width: 100px; height: 100px;" />
 			</span>
 			<p ng-show="round.readyForVote" class="list-group-item-text">Vote!</p>
 		</a>

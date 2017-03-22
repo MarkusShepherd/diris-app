@@ -115,6 +115,7 @@ function dataService($localStorage, $log, $http, $q, authManager, jwtHelper, BAC
 
 		return $http.get(BACKEND_URL + '/matches/')
 		.then(function (response) {
+			$log.debug('Matches from server:', response.data.results);
 			matches = {};
 			$.each(response.data.results, function (k, match) {
 				setMatch(match);
@@ -144,6 +145,7 @@ function dataService($localStorage, $log, $http, $q, authManager, jwtHelper, BAC
 
 		return $http.get(BACKEND_URL + '/matches/' + mPk)
 		.then(function (response) {
+			$log.debug('Match from server:', response.data);
 			setMatch(response.data);
 			return matches[mPk];
 		});

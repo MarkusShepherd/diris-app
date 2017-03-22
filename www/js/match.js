@@ -1,5 +1,5 @@
 dirisApp.controller('MatchController',
-function($location, $log, $q, $rootScope, $routeParams, $scope, blockUI, toastr, dataService) {
+function MatchController($location, $log, $q, $rootScope, $routeParams, $scope, blockUI, toastr, dataService) {
 
 	var player = dataService.getLoggedInPlayer();
 
@@ -28,8 +28,11 @@ function($location, $log, $q, $rootScope, $routeParams, $scope, blockUI, toastr,
 
 	dataService.getMatch(mPk, action === 'refresh')
 	.then(function (match) {
+		$log.debug('Match:', match);
 		$scope.match = processMatch(match, player);
-		$log.debug($scope.match);
+		$scope.round = $scope.match.currentRoundObj;
+		$log.debug('Match processed:', $scope.match);
+		$log.debug('Round:', $scope.round);
 		return $scope.match;
 	}).then(function (match) {
 		var promises = $.map(match.players, dataService.getPlayer);
