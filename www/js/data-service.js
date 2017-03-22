@@ -140,7 +140,7 @@ function dataService($localStorage, $log, $http, $q, authManager, jwtHelper, BAC
 
 		if (!forceRefresh && ('match_' + mPk) in $localStorage) {
 			matches[mPk] = $localStorage['match_' + mPk];
-			return $q.resolve(matches[mPk])
+			return $q.resolve(matches[mPk]);
 		}
 
 		return $http.get(BACKEND_URL + '/matches/' + mPk)
@@ -164,7 +164,7 @@ function dataService($localStorage, $log, $http, $q, authManager, jwtHelper, BAC
 
 			return match;
 		});
-	}
+	};
 
 	function setPlayer(player) {
 		$localStorage['player_' + player.pk] = player;
