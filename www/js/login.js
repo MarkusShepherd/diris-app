@@ -1,13 +1,16 @@
 'use strict';
 
-dirisApp.controller('LoginController',
-function LoginController($location, $log, $rootScope, $scope, 
-                         blockUI, jwtHelper, toastr, dataService, BACKEND_URL) {
-
+dirisApp.controller('LoginController', function LoginController(
+    $location,
+    $log,
+    $rootScope,
+    $scope,
+    blockUI,
+    dataService
+) {
     var player = dataService.getLoggedInPlayer();
 
     if (player) {
-        $log.debug('already authenticated');
         $location.path('/overview/refresh').replace();
         return;
     }
@@ -20,15 +23,16 @@ function LoginController($location, $log, $rootScope, $scope,
         blockUI.start();
 
         dataService.getToken($scope.player.name, $scope.player.password)
-        .then(function (token) {
-            $log.debug('token:', token);
-            if (!token)
-                throw new Error('no token');
-            $location.path('/overview/refresh').replace();
-        }).catch(function (response) {
-            $log.debug(response);
-            $scope.message = response.message || "There was an error...";
-            blockUI.stop();
-        });
+            .then(function (token) {
+                $log.debug('token:', token);
+                if (!token) {
+                    throw new Error('no token');
+                }
+                $location.path('/overview/refresh').replace();
+            }).catch(function (response) {
+                $log.debug(response);
+                $scope.message = response.message || "There was an error...";
+                blockUI.stop();
+            });
     }; // login
 }); // LoginController

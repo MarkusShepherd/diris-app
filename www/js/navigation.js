@@ -1,7 +1,12 @@
 'use strict';
 
-dirisApp.controller('NavigationController',
-function NavigationController($location, $rootScope, $route, $scope, dataService) {
+dirisApp.controller('NavigationController', function NavigationController(
+    $location,
+    $rootScope,
+    $route,
+    $scope,
+    dataService
+) {
     $scope.$watch(dataService.getLoggedInPlayer, function (player) {
         $scope.currentPlayer = player;
     });
@@ -12,9 +17,10 @@ function NavigationController($location, $rootScope, $route, $scope, dataService
     };
 
     $scope.refresh = function refresh() {
-        if ($rootScope.refreshReload)
+        if ($rootScope.refreshReload) {
             $route.reload();
-        else if ($rootScope.refreshPath)
+        } else if ($rootScope.refreshPath) {
             $location.path($rootScope.refreshPath).replace();
+        }
     };
 });

@@ -1,8 +1,14 @@
 'use strict';
 
-dirisApp.controller('NewMatchController',
-function NewMatchController($location, $log, $rootScope, $scope, blockUI, toastr, dataService) {
-
+dirisApp.controller('NewMatchController', function NewMatchController(
+    $location,
+    $log,
+    $rootScope,
+    $scope,
+    blockUI,
+    toastr,
+    dataService
+) {
     var player = dataService.getLoggedInPlayer();
 
     if (!player) {
@@ -10,8 +16,9 @@ function NewMatchController($location, $log, $rootScope, $scope, blockUI, toastr
         return;
     }
 
-    if (!blockUI.state().blocking)
+    if (!blockUI.state().blocking) {
         blockUI.start();
+    }
 
     $scope.currentPlayer = player;
     $rootScope.menuItems = [{
@@ -23,14 +30,14 @@ function NewMatchController($location, $log, $rootScope, $scope, blockUI, toastr
     $rootScope.refreshReload = false;
 
     dataService.getPlayers()
-    .then(function (players) {
-        $scope.players = players;
-        $scope.playersArray = players;
-    }).catch(function (response) {
-        $log.debug('error');
-        $log.debug(response);
-        toastr.error('There was an error fetching the player data...');
-    }).then(blockUI.stop);
+        .then(function (players) {
+            $scope.players = players;
+            $scope.playersArray = players;
+        }).catch(function (response) {
+            $log.debug('error');
+            $log.debug(response);
+            toastr.error('There was an error fetching the player data...');
+        }).then(blockUI.stop);
 
     $scope.selected = {};
     $scope.numPlayers = 0;
@@ -38,32 +45,34 @@ function NewMatchController($location, $log, $rootScope, $scope, blockUI, toastr
 
     $scope.addPlayer = function addPlayer(p) {
         p.selected = true;
-        $scope.selected['' + p.pk] = p;
-        $scope.numPlayers++;
+        $scope.selected[p.pk.toString()] = p;
+        $scope.numPlayers = $scope.numPlayers + 1;
     };
 
     $scope.removePlayer = function removePlayer(p) {
         p.selected = false;
-        delete $scope.selected["" + p.pk];
-        $scope.numPlayers--;
+        delete $scope.selected[p.pk.toString()];
+        $scope.numPlayers = $scope.numPlayers - 1;
     };
 
     $scope.createMatch = function createMatch() {
+        var playerPks = [],
+            includeCurrent = false;
+
         blockUI.start();
 
-        var playerPks = [];
-
-        var includeCurrent = false;
-
-        for (var pk in $scope.selected)
+        $.each($scope.selected, function (i, pk) {
             if (pk == player.pk) {
                 includeCurrent = true;
                 playerPks.unshift(pk);
-            } else
+            } else {
                 playerPks.push(pk);
+            }
+        });
 
-        if (!includeCurrent)
+        if (!includeCurrent) {
             playerPks.unshift(player.pk);
+        }
 
         if (playerPks.length < 4) {
             blockUI.stop();
@@ -72,15 +81,15 @@ function NewMatchController($location, $log, $rootScope, $scope, blockUI, toastr
         }
 
         dataService.createMatch(playerPks)
-        .then(function(match) {
-            $log.debug(match);
-            $location.path('/overview');
-        }).catch(function(response) {
-            $log.debug('error');
-            $log.debug(response);
-            toastr.error("There was an error when creating the match...");
-            blockUI.stop();
-        });
+            .then(function (match) {
+                $log.debug(match);
+                $location.path('/overview');
+            }).catch(function (response) {
+                $log.debug('error');
+                $log.debug(response);
+                toastr.error("There was an error when creating the match...");
+                blockUI.stop();
+            });
     }; // createMatch
 
 }); // NewMatchController
