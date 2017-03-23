@@ -157,7 +157,7 @@ dirisApp.factory('dataService', function dataService(
             return $q.resolve(matches[mPk]);
         }
 
-        return $http.get(BACKEND_URL + '/matches/' + mPk)
+        return $http.get(BACKEND_URL + '/matches/' + mPk + '/')
             .then(function (response) {
                 $log.debug('Match from server:', response.data);
                 setMatch(response.data);
@@ -223,7 +223,7 @@ dirisApp.factory('dataService', function dataService(
             return $q.resolve(players[pPk]);
         }
 
-        return $http.get(BACKEND_URL + '/players/' + pPk)
+        return $http.get(BACKEND_URL + '/players/' + pPk + '/')
             .then(function (response) {
                 setPlayer(response.data);
                 return players[pPk];
@@ -272,7 +272,7 @@ dirisApp.factory('dataService', function dataService(
             return $q.resolve(images[iPk]);
         }
 
-        return $http.get(BACKEND_URL + '/images/' + iPk)
+        return $http.get(BACKEND_URL + '/images/' + iPk + '/')
             .then(function (response) {
                 setImage(response.data);
                 return images[iPk];

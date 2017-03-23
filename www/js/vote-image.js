@@ -79,6 +79,8 @@ function VoteImageController($http, $location, $log, $q, $rootScope, $routeParam
     };
 
     $scope.submitVote = function submitVote() {
+        blockUI.start();
+
         dataService.submitVote(mPk, rNo, $scope.selectedImage.pk)
         .then(function (match) {
             $log.debug('new match:', match);
@@ -86,6 +88,7 @@ function VoteImageController($http, $location, $log, $q, $rootScope, $routeParam
         }).catch(function (response) {
             $log.debug('error');
             $log.debug(response);
+            blockUI.stop();
             toastr.error("There was an error");
         });
     };

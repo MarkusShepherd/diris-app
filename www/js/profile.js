@@ -43,11 +43,10 @@ dirisApp.controller('ProfileController', function ProfileController(
     dataService.getPlayer(pPk)
         .then(function (player) {
             $scope.player = player;
-            blockUI.stop();
             $log.debug('Player: ', $scope.player);
         }).catch(function (response) {
             $log.debug('error');
             $log.debug(response);
-        });
+        }).then(blockUI.stop);
 
 }); // ProfileController

@@ -108,6 +108,7 @@ function SubmitImageController($http, $location, $log, $q, $rootScope, $routePar
     };
 
     $scope.submitImage = function submitImage() {
+        blockUI.start();
         $q(function (resolve, reject) {
             $("#image").cropper('getCroppedCanvas', {
                 width: 1080,
@@ -123,6 +124,7 @@ function SubmitImageController($http, $location, $log, $q, $rootScope, $routePar
             $log.debug('error');
             $log.debug(response);
             toastr.error("There was an error");
+            blockUI.stop();
         });
     };
 

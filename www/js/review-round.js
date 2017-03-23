@@ -1,21 +1,30 @@
 'use strict';
 
-dirisApp.controller('ReviewRoundController',
-function ReviewRoundController($location, $log, $q, $rootScope, $routeParams, $scope, $timeout,
-                               blockUI, toastr, dataService) {
-
-    var player = dataService.getLoggedInPlayer();
+dirisApp.controller('ReviewRoundController', function ReviewRoundController(
+    $location,
+    $log,
+    $q,
+    $rootScope,
+    $routeParams,
+    $scope,
+    blockUI,
+    toastr,
+    dataService
+) {
+    var player = dataService.getLoggedInPlayer(),
+        mPk = $routeParams.mPk,
+        rNo = $routeParams.rNo,
+        matchPromise,
+        imagePromise;
 
     if (!player) {
         $location.path('/login');
         return;
     }
 
-    if (!blockUI.state().blocking)
+    if (!blockUI.state().blocking) {
         blockUI.start();
-
-    var mPk = $routeParams.mPk;
-    var rNo = $routeParams.rNo;
+    }
 
     $scope.mPk = mPk;
     $scope.rNo = rNo;
@@ -33,60 +42,68 @@ function ReviewRoundController($location, $log, $q, $rootScope, $routeParams, $s
     $rootScope.refreshPath = null;
     $rootScope.refreshReload = false;
 
-    dataService.getMatch(mPk)
-    .then(function (match) {
-        $scope.match = processMatch(match, player);
-        $scope.round = $scope.match.rounds[rNo];
-        return $scope.match;
-    }).then(function(match) {
-        if ($scope.round.status === 's' || $scope.round.status === 'o')
-            $location.path('/image/' + mPk + '/' + rNo).replace();
-        else if ($scope.round.status === 'v')
-            $location.path('/vote/' + mPk + '/' + rNo).replace();
-        else {
-            var promises = $.map(match.players, dataService.getPlayer);
-            $scope.players = {};
-            $q.all(promises)
-            .then(function (players) {
-                $.each(players, function (i, player) {
-                    $scope.players[player.pk] = player;
-                });
-                blockUI.stop();
-            });
-        }
-    }).catch(function (response) {
-        $log.debug('error');
-        $log.debug(response);
-        toastr.error("There was an error fetching the data - please try again later...");
-        blockUI.stop();
-    });
+    matchPromise = dataService.getMatch(mPk)
+        .then(function (match) {
+            $scope.match = processMatch(match, player);
+            $scope.round = $scope.match.currentRoundObj;
+            $log.debug('current round', $scope.round);
+            return $scope.match;
+        }).then(function (match) {
+            $log.debug($scope.round.status);
 
-    dataService.getImages(true, true)
-    .then(function (images) {
-        $scope.images = {};
-        $.each(images, function(k, img) {
-            $scope.images['' + img.pk] = img;
+            if ($scope.round.status === 's' || $scope.round.status === 'o') {
+                $location.path('/image/' + mPk + '/' + rNo).replace();
+                return;
+            }
+
+            if ($scope.round.status === 'v') {
+                $location.path('/vote/' + mPk + '/' + rNo).replace();
+                return;
+            }
+
+            var promises = $.map(match.players, dataService.getPlayer);
+            return $q.all(promises);
+        }).then(function (players) {
+            $scope.players = {};
+            $.each(players || [], function (i, player) {
+                $scope.players[player.pk.toString()] = player;
+            });
+        }).catch(function (response) {
+            $log.debug('error');
+            $log.debug(response);
+            toastr.error("There was an error fetching the data - please try again later...");
         });
-    }).catch(function (response) {
-        $log.debug('error');
-        $log.debug(response);
-        toastr.error("There was an error fetching the data - please try again later...");
-    });
+
+    imagePromise = dataService.getImages(true, true)
+        .then(function (images) {
+            $scope.images = {};
+            $.each(images, function (k, img) {
+                $scope.images[img.pk.toString()] = img;
+            });
+        }).catch(function (response) {
+            $log.debug('error');
+            $log.debug(response);
+            toastr.error("There was an error fetching the data - please try again later...");
+        });
+
+    $q.all([matchPromise, imagePromise]).then(blockUI.stop);
 
     $scope.filterValues = function filterValues(items, value) {
         var result = [];
-        angular.forEach(items, function (v, k) {
-            if (v == value)
+        $.each(items, function (v, k) {
+            if (v == value) {
                 result.push(k);
+            }
         });
         return result;
     };
 
     $scope.filterOutKey = function filterOutKey(items, key) {
         var result = [];
-        angular.forEach(items, function (v, k) {
-            if (k != key)
+        $.each(items, function (v, k) {
+            if (k != key) {
                 result.push(v);
+            }
         });
         return result;
     };
