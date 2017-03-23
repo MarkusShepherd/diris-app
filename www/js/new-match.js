@@ -1,80 +1,86 @@
+'use strict';
+
 dirisApp.controller('NewMatchController',
-function NewMatchController($http, $location, $log, $rootScope, $scope, $timeout,
-	                        toastr, dataService, BACKEND_URL) {
+function NewMatchController($location, $log, $rootScope, $scope, blockUI, toastr, dataService) {
 
-	var player = dataService.getLoggedInPlayer();
+    var player = dataService.getLoggedInPlayer();
 
-	if (!player) {
-		$location.path('/login');
-		return;
-	}
+    if (!player) {
+        $location.path('/login');
+        return;
+    }
 
-	$scope.currentPlayer = player;
-	$rootScope.menuItems = [{
-		link: '#/overview',
-		label: 'Overview',
-		glyphicon: 'home'
-	}];
-	$rootScope.refreshPath = null;
-	$rootScope.refreshReload = false;
+    if (!blockUI.state().blocking)
+        blockUI.start();
 
-	dataService.getPlayers()
-	.then(function (players) {
-		$scope.players = players;
-		$scope.playersArray = $.map(players, function(player) {
-			return player;
-		});
-	}).catch(function(response) {
-		$log.debug('error');
-		$log.debug(response);
-		toastr.error('There was an error fetching the player data...');
-	});
+    $scope.currentPlayer = player;
+    $rootScope.menuItems = [{
+        link: '#/overview',
+        label: 'Overview',
+        glyphicon: 'home'
+    }];
+    $rootScope.refreshPath = null;
+    $rootScope.refreshReload = false;
 
-	$scope.selected = {};
-	$scope.numPlayers = 0;
-	$scope.roundsPerPlayer = 2;
+    dataService.getPlayers()
+    .then(function (players) {
+        $scope.players = players;
+        $scope.playersArray = players;
+    }).catch(function (response) {
+        $log.debug('error');
+        $log.debug(response);
+        toastr.error('There was an error fetching the player data...');
+    }).then(blockUI.stop);
 
-	$scope.addPlayer = function(p) {
-		p.selected = true;
-		$scope.selected["" + p.pk] = p;
-		$scope.numPlayers++;
-	};
+    $scope.selected = {};
+    $scope.numPlayers = 0;
+    $scope.roundsPerPlayer = 2;
 
-	$scope.removePlayer = function(p) {
-		p.selected = false;
-		delete $scope.selected["" + p.pk];
-		$scope.numPlayers--;
-	};
+    $scope.addPlayer = function addPlayer(p) {
+        p.selected = true;
+        $scope.selected['' + p.pk] = p;
+        $scope.numPlayers++;
+    };
 
-	$scope.createMatch = function() {
-		var playerPks = [];
+    $scope.removePlayer = function removePlayer(p) {
+        p.selected = false;
+        delete $scope.selected["" + p.pk];
+        $scope.numPlayers--;
+    };
 
-		var includeCurrent = false;
+    $scope.createMatch = function createMatch() {
+        blockUI.start();
 
-		for (var pk in $scope.selected)
-			if (pk == player.pk) {
-				includeCurrent = true;
-				playerPks.unshift(pk);
-			} else
-				playerPks.push(pk);
+        var playerPks = [];
 
-		if (!includeCurrent)
-			playerPks.unshift(player.pk);
+        var includeCurrent = false;
 
-		if (playerPks.length < 4) {
-			toastr.error("Please select at least 3 players to invite to the match!");
-			return;
-		}
+        for (var pk in $scope.selected)
+            if (pk == player.pk) {
+                includeCurrent = true;
+                playerPks.unshift(pk);
+            } else
+                playerPks.push(pk);
 
-		dataService.createMatch(playerPks)
-		.then(function(match) {
-			$log.debug(match);
-			$location.path('/overview');
-		}).catch(function(response) {
-			$log.debug('error');
-			$log.debug(response);
-			toastr.error("There was an error when creating the match...");
-		});
-	}; // createMatch
+        if (!includeCurrent)
+            playerPks.unshift(player.pk);
+
+        if (playerPks.length < 4) {
+            blockUI.stop();
+            toastr.error("Please select at least 3 players to invite to the match!");
+            return;
+        }
+
+        dataService.createMatch(playerPks)
+        .then(function(match) {
+            $log.debug(match);
+            $location.path('/overview');
+        }).catch(function(response) {
+            $log.debug('error');
+            $log.debug(response);
+            toastr.error("There was an error when creating the match...");
+            blockUI.stop();
+        });
+    }; // createMatch
 
 }); // NewMatchController
