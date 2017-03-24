@@ -47,10 +47,9 @@ dirisApp.controller('MatchController', function MatchController(
             $log.debug('Round:', $scope.round);
             return $scope.match;
         }).then(function (match) {
-            var promises = $.map(match.players, dataService.getPlayer);
-            $scope.players = {};
-            return $q.all(promises);
+            return $q.all($.map(match.players, dataService.getPlayer));
         }).then(function (players) {
+            $scope.players = {};
             $.each(players, function (i, player) {
                 $scope.players[player.pk.toString()] = player;
             });

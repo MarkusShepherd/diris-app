@@ -1,25 +1,28 @@
 'use strict';
 
 function shuffle(o) {
-    for (var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x)
-        ;
+    var j, x, i;
+    for (i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x) {}
     return o;
 }
 
 function processRound(round, player) {
-    if (!round)
+    if (!round) {
         return round;
+    }
 
     // round.details = $.filter(round.player_round_details || [],
     //                       function (details) { return !!(details && details.player === player.pk); })[0];
 
-    $.each(round.player_round_details, function(i, details) {
-        if (details.player === player.pk)
+    $.each(round.player_round_details, function (i, details) {
+        if (details.player === player.pk) {
             round.details = details;
+        }
     });
 
-    if (!round.details)
+    if (!round.details) {
         return round;
+    }
 
     round.isStoryTeller = player.pk === round.storyteller;
     round.hasSubmittedImage = !!round.details.image;
@@ -29,18 +32,19 @@ function processRound(round, player) {
     round.readyForOtherImage = false;
     round.readyForVote = false;
 
-    if (round.status === 's' && round.isStoryTeller)
+    if (round.status === 's' && round.isStoryTeller) {
         round.readyForStoryImage = true;
-    else if (round.status === 'o' && !round.isStoryTeller && !round.hasSubmittedImage)
+    } else if (round.status === 'o' && !round.isStoryTeller && !round.hasSubmittedImage) {
         round.readyForOtherImage = true;
-    else if (round.status === 'v' && !round.isStoryTeller && !round.hasVoted)
+    } else if (round.status === 'v' && !round.isStoryTeller && !round.hasVoted) {
         round.readyForVote = true;
+    }
 
     round.hasAction = round.readyForStoryImage || round.readyForOtherImage || round.readyForVote;
 
     round.scores = {};
-    round.scoresArray = $.map(round.player_round_details, function(details) {
-        round.scores['' + details.player] = details.score;
+    round.scoresArray = $.map(round.player_round_details, function (details) {
+        round.scores[details.player.toString()] = details.score;
         return {
             playerPk: details.player,
             score: details.score
@@ -51,7 +55,7 @@ function processRound(round, player) {
 }
 
 function processMatch(match, player) {
-    match.rounds = $.map(match.rounds, function(round) {
+    match.rounds = $.map(match.rounds, function (round) {
         return processRound(round, player);
     });
     match.currentRoundObj = match.rounds[(match.current_round || 1) - 1];
@@ -60,16 +64,19 @@ function processMatch(match, player) {
     //                       function (details) { return !!(details && details.player === player.pk); })[0];
     match.accepted = {};
     $.each(match.player_match_details, function (i, details) {
-        match.accepted['' + details.player] = details.invitation_status === 'a';
-        if (details.player === player.pk)
+        match.accepted[details.player.toString()] = details.invitation_status === 'a';
+        if (details.player === player.pk) {
             match.details = details;
+        }
     });
 
-    var score = match.details ? match.details.score : 0;
-    var pos = 1;
-    $.each(match.player_match_details, function(i, details) {
-        if (details.score > score)
+    var score = match.details ? match.details.score : 0,
+        pos = 1;
+
+    $.each(match.player_match_details, function (i, details) {
+        if (details.score > score) {
             pos++;
+        }
     });
 
     match.playerPosition = pos;
@@ -77,7 +84,7 @@ function processMatch(match, player) {
 
     match.scores = {};
     match.standingsArray = $.map(match.player_match_details, function (details) {
-        match.scores['' + details.player] = details.score;
+        match.scores[details.player.toString()] = details.score;
         return {
             playerPk: details.player,
             score: details.score
@@ -93,9 +100,9 @@ function processMatch(match, player) {
 }
 
 function getOrdinal(n) {
-   var s=["th","st","nd","rd"],
-       v=n%100;
-   return n+(s[(v-20)%10]||s[v]||s[0]);
+    var s = ['th', 'st', 'nd', 'rd'],
+        v = n % 100;
+    return n + (s[(v - 20) % 10] || s[v] || s[0]);
 }
 
 function isBrowser() {

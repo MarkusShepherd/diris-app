@@ -61,8 +61,7 @@ dirisApp.controller('ReviewRoundController', function ReviewRoundController(
                 return;
             }
 
-            var promises = $.map(match.players, dataService.getPlayer);
-            return $q.all(promises);
+            return $q.all($.map(match.players, dataService.getPlayer));
         }).then(function (players) {
             $scope.players = {};
             $.each(players || [], function (i, player) {
