@@ -3,8 +3,14 @@
 var testUrl = 'http://localhost:8000';
 var liveUrl = 'http://diris-app.appspot.com';
 
-var dirisApp = angular.module('dirisApp', ['angular-jwt', 'blockUI', 'ngAnimate',
-                                           'ngRoute', 'ngStorage', 'toastr']);
+var dirisApp = angular.module('dirisApp', [
+    'angular-jwt',
+    'blockUI',
+    'ngAnimate',
+    'ngRoute',
+    'ngStorage',
+    'toastr'
+]);
 
 dirisApp.constant('BACKEND_URL', testUrl);
 
@@ -29,61 +35,61 @@ dirisApp.config(function (
     $httpProvider.interceptors.push('jwtInterceptor');
 
     $routeProvider.when('/login', {
-        templateUrl : 'partials/login.html',
-        controller : 'LoginController'
+        templateUrl: 'partials/login.html',
+        controller: 'LoginController'
     }).when('/register', {
-        templateUrl : 'partials/registration.html',
-        controller : 'RegistrationController'
+        templateUrl: 'partials/registration.html',
+        controller: 'RegistrationController'
     }).when('/overview', {
-        templateUrl : 'partials/overview.html',
-        controller : 'OverviewController',
+        templateUrl: 'partials/overview.html',
+        controller: 'OverviewController',
         requiresLogin: true
     }).when('/overview/:action', {
-        templateUrl : 'partials/overview.html',
-        controller : 'OverviewController',
+        templateUrl: 'partials/overview.html',
+        controller: 'OverviewController',
         requiresLogin: true
     }).when('/newmatch', {
-        templateUrl : 'partials/new-match.html',
-        controller : 'NewMatchController',
+        templateUrl: 'partials/new-match.html',
+        controller: 'NewMatchController',
         requiresLogin: true
     }).when('/accept/:mPk', {
-        templateUrl : 'partials/accept.html',
-        controller : 'AcceptController',
+        templateUrl: 'partials/accept.html',
+        controller: 'AcceptController',
         requiresLogin: true
     }).when('/match/:mPk', {
-        templateUrl : 'partials/match.html',
-        controller : 'MatchController',
+        templateUrl: 'partials/match.html',
+        controller: 'MatchController',
         requiresLogin: true
     }).when('/match/:mPk/:action', {
-        templateUrl : 'partials/match.html',
-        controller : 'MatchController',
+        templateUrl: 'partials/match.html',
+        controller: 'MatchController',
         requiresLogin: true
     }).when('/image/:mPk/:rNo', {
-        templateUrl : 'partials/submit-image.html',
-        controller : 'SubmitImageController',
+        templateUrl: 'partials/submit-image.html',
+        controller: 'SubmitImageController',
         requiresLogin: true
     }).when('/vote/:mPk/:rNo', {
-        templateUrl : 'partials/vote-image.html',
-        controller : 'VoteImageController',
+        templateUrl: 'partials/vote-image.html',
+        controller: 'VoteImageController',
         requiresLogin: true
     }).when('/review/:mPk/:rNo', {
-        templateUrl : 'partials/review-round.html',
-        controller : 'ReviewRoundController',
+        templateUrl: 'partials/review-round.html',
+        controller: 'ReviewRoundController',
         requiresLogin: true
     }).when('/profile', {
-        templateUrl : 'partials/profile.html',
-        controller : 'ProfileController',
+        templateUrl: 'partials/profile.html',
+        controller: 'ProfileController',
         requiresLogin: true
     }).when('/profile/:pPk', {
-        templateUrl : 'partials/profile.html',
-        controller : 'ProfileController',
+        templateUrl: 'partials/profile.html',
+        controller: 'ProfileController',
         requiresLogin: true
     }).when('/profile/:pPk/:action', {
-        templateUrl : 'partials/profile.html',
-        controller : 'ProfileController',
+        templateUrl: 'partials/profile.html',
+        controller: 'ProfileController',
         requiresLogin: true
     }).otherwise({
-        redirectTo : '/login'
+        redirectTo: '/login'
     });
 
     $localStorageProvider.setKeyPrefix('dirisApp_');
@@ -128,8 +134,8 @@ dirisApp.run(function ($log, authManager, toastr, dataService) {
             $log.debug(data.registrationId);
 
             var player = dataService.getLoggedInPlayer();
-            if (player && player.key && player.key.id) {
-                dataService.updatePlayer(player.key.id, {
+            if (player && player.pk) {
+                dataService.updatePlayer(player.pk, {
                     gcmRegistrationID: data.registrationId
                 });
             } else {

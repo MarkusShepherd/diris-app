@@ -46,13 +46,11 @@ dirisApp.controller('AcceptController', function AcceptController(
             $.each(players, function (i, player) {
                 $scope.players[player.pk] = player;
             });
-            blockUI.stop();
         }).catch(function (response) {
             $log.debug('error');
             $log.debug(response);
             toastr.error('There was an error fetching the data - please try again later...');
-            blockUI.stop();
-        });
+        }).then(blockUI.stop);
 
     $scope.accept = function accept() {
         blockUI.start();

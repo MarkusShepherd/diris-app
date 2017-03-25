@@ -15,6 +15,8 @@ dirisApp.controller('LoginController', function LoginController(
         return;
     }
 
+    blockUI.stop();
+
     $rootScope.menuItems = [];
     $rootScope.refreshPath = null;
     $rootScope.refreshReload = false;
