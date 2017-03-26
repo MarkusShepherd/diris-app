@@ -92,6 +92,8 @@ dirisApp.factory('dataService', function dataService(
         return loggedInPlayer;
     };
 
+    // TODO apply processMatch() when loading
+
     function setMatch(match) {
         $localStorage['match_' + match.pk] = match;
         matches[match.pk] = match;

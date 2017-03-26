@@ -14,8 +14,16 @@ function processRound(round, player) {
     // round.details = $.filter(round.player_round_details || [],
     //                       function (details) { return !!(details && details.player === player.pk); })[0];
 
+    round.detailsPlayers = {};
+    round.votes = {};
     $.each(round.player_round_details, function (i, details) {
-        if (details.player === player.pk) {
+        round.detailsPlayers[details.player.toString()] = details;
+        if (details.vote_player) {
+            round.votes[details.vote_player] = round.votes[details.vote_player] || [];
+            round.votes[details.vote_player].push(details.player.toString());
+        }
+
+        if (details.player == player.pk) {
             round.details = details;
         }
     });
@@ -24,7 +32,7 @@ function processRound(round, player) {
         return round;
     }
 
-    round.isStoryTeller = player.pk === round.storyteller;
+    round.isStoryTeller = player.pk == round.storyteller;
     round.hasSubmittedImage = !!round.details.image;
     round.hasVoted = !!round.details.vote;
 
@@ -65,7 +73,7 @@ function processMatch(match, player) {
     match.accepted = {};
     $.each(match.player_match_details, function (i, details) {
         match.accepted[details.player.toString()] = details.invitation_status === 'a';
-        if (details.player === player.pk) {
+        if (details.player == player.pk) {
             match.details = details;
         }
     });

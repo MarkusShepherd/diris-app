@@ -7,10 +7,9 @@
 			ng-href="#/profile/{{ item.playerPk }}"
 			class="list-group-item">
 			<span class="badge">{{ item.score }}</span>
-			<img ng-show="players['' + item.playerPk].avatarURL" ng-src="{{ players['' + item.playerPk].avatarURL }}" class="img-circle player-icon-standings" />
-			<span ng-hide="players['' + item.playerPk].avatarURL" class="btn btn-primary btn-circle player-icon-standings">
-				{{ players['' + item.playerPk].user.username.substr(0,1).toUpperCase() }}
-			</span>
+			<player-icon player="players[item.playerPk]"
+				class-icon="player-icon-standings"
+				class-btn="btn-primary"></player-icon>
 			{{ players['' + item.playerPk].user.username }}
 		</a>
 	</section>

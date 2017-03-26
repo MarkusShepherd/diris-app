@@ -110,6 +110,19 @@ dirisApp.config(function (
     });
 });
 
+dirisApp.directive('playerIcon', function () {
+    return {
+        restrict: 'E',
+        templateUrl: 'partials/widgets/player-icon.html',
+        scope: {
+            player: '=',
+            classIcon: '@',
+            classImg: '@',
+            classBtn: '@'
+        }
+    };
+});
+
 dirisApp.run(function ($log, authManager, toastr, dataService) {
     authManager.checkAuthOnRefresh();
 

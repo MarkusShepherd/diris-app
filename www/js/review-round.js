@@ -45,7 +45,7 @@ dirisApp.controller('ReviewRoundController', function ReviewRoundController(
     matchPromise = dataService.getMatch(mPk)
         .then(function (match) {
             $scope.match = processMatch(match, player);
-            $scope.round = $scope.match.currentRoundObj;
+            $scope.round = $scope.match.rounds[rNo - 1];
             $log.debug('current round', $scope.round);
             return $scope.match;
         }).then(function (match) {
@@ -67,6 +67,7 @@ dirisApp.controller('ReviewRoundController', function ReviewRoundController(
             $.each(players || [], function (i, player) {
                 $scope.players[player.pk.toString()] = player;
             });
+            $log.debug('players in match:', $scope.players);
         }).catch(function (response) {
             $log.debug('error');
             $log.debug(response);
@@ -99,7 +100,7 @@ dirisApp.controller('ReviewRoundController', function ReviewRoundController(
 
     $scope.filterOutKey = function filterOutKey(items, key) {
         var result = [];
-        $.each(items, function (v, k) {
+        $.each(items, function (k, v) {
             if (k != key) {
                 result.push(v);
             }
