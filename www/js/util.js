@@ -33,7 +33,7 @@ function processRound(round, player) {
     }
 
     round.isStoryTeller = player.pk == round.storyteller;
-    round.hasSubmittedImage = !!round.details.image;
+    round.hasSubmittedImage = !!round.details.image && (!round.isStoryTeller || !!round.story);
     round.hasVoted = !!round.details.vote;
 
     round.readyForStoryImage = false;
