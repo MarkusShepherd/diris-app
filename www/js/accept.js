@@ -56,7 +56,7 @@ dirisApp.controller('AcceptController', function AcceptController(
         blockUI.start();
         dataService.respondToInvitation(mPk, true)
             .then(function () {
-                $location.path('/overview/refresh');
+                $location.path('/overview');
             }).catch(function (response) {
                 $log.debug('error');
                 $log.debug(response);

@@ -282,7 +282,7 @@ dirisApp.factory('dataService', function dataService(
     };
 
     factory.submitImage = function submitImage(mPk, rNo, image, story) {
-        return $http.post(BACKEND_URL + '/matches/' + mPk + '/' + rNo + '/image/filename',
+        return $http.post(BACKEND_URL + '/matches/' + mPk + '/' + rNo + '/image/filename.jpeg',
             image, {params: {story: story}})
             .then(function (response) {
                 var match = response.data;
