@@ -17,6 +17,14 @@ dirisApp.factory('dataService', function dataService(
         loggedInPlayer = null;
         // gcmRegistrationID = null;
 
+    factory.logout = function logout() {
+        factory.setToken(null);
+        matches = {};
+        players = {};
+        images = {};
+        $localStorage.$reset();
+    };
+
     factory.setToken = function setToken(newToken) {
         if (newToken && !jwtHelper.isTokenExpired(newToken)) {
             token = newToken;
@@ -47,7 +55,7 @@ dirisApp.factory('dataService', function dataService(
                 factory.setToken(response.data.token);
                 return token;
             }).catch(function (response) {
-                factory.setToken(null);
+                factory.logout();
                 throw new Error(response);
             });
     };
@@ -74,7 +82,7 @@ dirisApp.factory('dataService', function dataService(
                 $log.debug('error');
                 $log.debug(response);
 
-                factory.setToken(null);
+                factory.logout();
 
                 throw new Error(response);
             });
