@@ -12,7 +12,7 @@ var dirisApp = angular.module('dirisApp', [
     'toastr'
 ]);
 
-dirisApp.constant('BACKEND_URL', liveUrl);
+dirisApp.constant('BACKEND_URL', testUrl);
 
 dirisApp.config(function (
     $httpProvider,
@@ -94,7 +94,7 @@ dirisApp.config(function (
 
     $localStorageProvider.setKeyPrefix('dirisApp_');
 
-    $logProvider.debugEnabled(false);
+    $logProvider.debugEnabled(true);
 
     blockUIConfig.autoBlock = false;
 

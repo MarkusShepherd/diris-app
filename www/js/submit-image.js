@@ -91,21 +91,21 @@ dirisApp.controller('SubmitImageController', function SubmitImageController(
             $log.debug('error');
             $log.debug(response);
             toastr.error("There was an error fetching the data - please try again later...");
-        });
+        }).then(blockUI.stop);
 
-    imagePromise = dataService.getImages()
-        .then(function (images) {
-            $scope.images = {};
-            $.each(images, function (k, img) {
-                $scope.images[img.pk.toString()] = img;
-            });
-        }).catch(function (response) {
-            $log.debug('error');
-            $log.debug(response);
-            toastr.error("There was an error fetching the data - please try again later...");
-        });
+    // imagePromise = dataService.getImages()
+    //     .then(function (images) {
+    //         $scope.images = {};
+    //         $.each(images, function (k, img) {
+    //             $scope.images[img.pk.toString()] = img;
+    //         });
+    //     }).catch(function (response) {
+    //         $log.debug('error');
+    //         $log.debug(response);
+    //         toastr.error("There was an error fetching the data - please try again later...");
+    //     });
 
-    $q.all([matchPromise, imagePromise]).then(blockUI.stop);
+    // $q.all([matchPromise, imagePromise]).then(blockUI.stop);
 
     $scope.hasCamera = !isBrowser();
 

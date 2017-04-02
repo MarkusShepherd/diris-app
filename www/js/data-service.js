@@ -126,7 +126,7 @@ dirisApp.factory('dataService', function dataService(
             return $q.resolve(matches);
         }
 
-        return $http.get(BACKEND_URL + '/matches/')
+        return $http.get(BACKEND_URL + '/matches/?prof')
             .then(function (response) {
                 $log.debug('Matches from server:', response.data.results);
                 matches = {};
@@ -237,7 +237,37 @@ dirisApp.factory('dataService', function dataService(
         images[image.pk] = image;
     }
 
-    factory.getImages = function getImages(forceRefresh, fallback) {
+    factory.getImages = function getImages(mPk, forceRefresh, fallback) {
+        if (mPk) {
+            if (forceRefresh) {
+                return $http.get(BACKEND_URL + '/matches/' + mPk + '/images/')
+                    .then(function (response) {
+                        $.each(response.data, function (k, image) {
+                            setImage(image);
+                        });
+                        return response.data;
+                    }).catch(function (response) {
+                        $log.debug('There has been an error', response);
+                        if (fallback) {
+                            return factory.getImages(mPk, false, false);
+                        }
+
+                        throw new Error(response);
+                    });
+            }
+
+            return factory.getMatch(mPk)
+                .then(function (match) {
+                    var promises = _.flatMap(match.rounds || [], function (round) {
+                        return _.map(round.images || [], factory.getImage);
+                    });
+                    return $q.all(promises);
+                }).catch(function (response) {
+                    $log.debug('There has been an error', response);
+                    return $q.resolve(images);
+                });
+        }
+
         if (!forceRefresh) {
             return $q.resolve(images);
         }
