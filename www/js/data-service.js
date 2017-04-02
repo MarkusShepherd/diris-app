@@ -134,7 +134,7 @@ dirisApp.factory('dataService', function dataService(
             return $q.resolve(matches);
         }
 
-        return $http.get(BACKEND_URL + '/matches/?prof')
+        return $http.get(BACKEND_URL + '/matches/')
             .then(function (response) {
                 $log.debug('Matches from server:', response.data.results);
                 matches = {};
