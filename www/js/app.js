@@ -97,7 +97,7 @@ dirisApp.config(function (
 
     $localStorageProvider.setKeyPrefix('dirisApp_');
 
-    $logProvider.debugEnabled(true);
+    $logProvider.debugEnabled(false);
 
     blockUIConfig.autoBlock = false;
 
