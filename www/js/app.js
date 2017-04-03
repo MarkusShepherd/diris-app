@@ -18,6 +18,7 @@ dirisApp.config(function (
     $httpProvider,
     $routeProvider,
     $localStorageProvider,
+    $locationProvider,
     $logProvider,
     blockUIConfig,
     jwtOptionsProvider,
@@ -92,9 +93,11 @@ dirisApp.config(function (
         redirectTo: '/login'
     });
 
+    $locationProvider.hashPrefix('');
+
     $localStorageProvider.setKeyPrefix('dirisApp_');
 
-    $logProvider.debugEnabled(false);
+    $logProvider.debugEnabled(true);
 
     blockUIConfig.autoBlock = false;
 
