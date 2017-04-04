@@ -80,10 +80,13 @@ dirisApp.controller('SubmitImageController', function SubmitImageController(
                 return;
             }
 
-            return $q.all($.map($scope.match.players, dataService.getPlayer));
+            return $q.all(_.map($scope.match.players, function (pk) {
+                return dataService.getPlayer(pk, false);
+            }));
         }).then(function (players) {
             $scope.players = {};
-            $.each(players || [], function (i, player) {
+
+            _.forEach(players || [], function (player) {
                 $scope.players[player.pk] = player;
             });
 

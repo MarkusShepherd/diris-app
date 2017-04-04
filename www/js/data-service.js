@@ -138,14 +138,14 @@ dirisApp.factory('dataService', function dataService(
             .then(function (response) {
                 $log.debug('Matches from server:', response.data.results);
                 matches = {};
-                $.each(response.data.results, function (k, match) {
+                _.forEach(response.data.results, function (match) {
                     setMatch(match);
                 });
                 return matches;
             }).catch(function (response) {
                 if (forceRefresh && fallback) {
                     // TODO add message
-                    $.each($localStorage, function (key, match) {
+                    _.forEach($localStorage, function (match, key) {
                         if (key.substr(0, 6) === 'match_') {
                             matches[key.substr(6)] = match;
                         }
@@ -204,14 +204,14 @@ dirisApp.factory('dataService', function dataService(
         return $http.get(BACKEND_URL + '/players/')
             .then(function (response) {
                 players = {};
-                $.each(response.data.results, function (k, player) {
+                _.forEach(response.data.results, function (player) {
                     setPlayer(player);
                 });
                 return players;
             }).catch(function (response) {
                 if (forceRefresh && fallback) {
                     // TODO add message
-                    $.each($localStorage, function (key, player) {
+                    _.forEach($localStorage, function (player, key) {
                         if (key.substr(0, 7) === 'player_') {
                             players[key.substr(7)] = player;
                         }
@@ -250,7 +250,7 @@ dirisApp.factory('dataService', function dataService(
             if (forceRefresh) {
                 return $http.get(BACKEND_URL + '/matches/' + mPk + '/images/')
                     .then(function (response) {
-                        $.each(response.data, function (k, image) {
+                        _.forEach(response.data, function (image) {
                             setImage(image);
                         });
                         return response.data;
@@ -283,14 +283,14 @@ dirisApp.factory('dataService', function dataService(
         return $http.get(BACKEND_URL + '/images/')
             .then(function (response) {
                 images = {};
-                $.each(response.data.results, function (k, image) {
+                _.forEach(response.data.results, function (image) {
                     setImage(image);
                 });
                 return images;
             }).catch(function (response) {
                 if (forceRefresh && fallback) {
                     // TODO add message
-                    $.each($localStorage, function (key, image) {
+                    _.forEach($localStorage, function (image, key) {
                         if (key.substr(0, 6) === 'image_') {
                             images[key.substr(6)] = image;
                         }

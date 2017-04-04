@@ -63,7 +63,7 @@ dirisApp.controller('ReviewRoundController', function ReviewRoundController(
             }));
         }).then(function (players) {
             $scope.players = {};
-            $.each(players || [], function (i, player) {
+            _.forEach(players || [], function (player) {
                 $scope.players[player.pk.toString()] = player;
             });
             $log.debug('players in match:', $scope.players);
@@ -76,7 +76,7 @@ dirisApp.controller('ReviewRoundController', function ReviewRoundController(
     imagePromise = dataService.getImages(mPk, true, true)
         .then(function (images) {
             $scope.images = {};
-            $.each(images, function (k, img) {
+            _.forEach(images, function (img) {
                 $scope.images[img.pk.toString()] = img;
             });
         }).catch(function (response) {
@@ -89,7 +89,7 @@ dirisApp.controller('ReviewRoundController', function ReviewRoundController(
 
     $scope.filterValues = function filterValues(items, value) {
         var result = [];
-        $.each(items, function (v, k) {
+        _.forEach(items, function (v, k) {
             if (v == value) {
                 result.push(k);
             }
@@ -99,7 +99,7 @@ dirisApp.controller('ReviewRoundController', function ReviewRoundController(
 
     $scope.filterOutKey = function filterOutKey(items, key) {
         var result = [];
-        $.each(items, function (k, v) {
+        _.forEach(items, function (v, k) {
             if (k != key) {
                 result.push(v);
             }

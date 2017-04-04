@@ -50,7 +50,7 @@ dirisApp.controller('MatchController', function MatchController(
             }));
         }).then(function (players) {
             $scope.players = {};
-            $.each(players, function (i, player) {
+            _.forEach(players, function (player) {
                 $scope.players[player.pk.toString()] = player;
             });
         }).catch(function (response) {
@@ -62,7 +62,7 @@ dirisApp.controller('MatchController', function MatchController(
     imagePromise = dataService.getImages(mPk, action === 'refresh', true)
         .then(function (images) {
             $scope.images = {};
-            $.each(images, function (k, img) {
+            _.forEach(images, function (img) {
                 $scope.images[img.pk.toString()] = img;
             });
             $log.debug('Images:', $scope.images);
