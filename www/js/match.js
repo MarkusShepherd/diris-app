@@ -41,11 +41,10 @@ dirisApp.controller('MatchController', function MatchController(
     matchPromise = dataService.getMatch(mPk, action === 'refresh')
         .then(function (match) {
             $log.debug('Match:', match);
-            $scope.match = processMatch(match, player);
-            $scope.round = $scope.match.currentRoundObj;
-            $log.debug('Match processed:', $scope.match);
+            $scope.match = match;
+            $scope.round = match.currentRoundObj;
             $log.debug('Round:', $scope.round);
-            return $q.all(_.map($scope.match.players, function (pk) {
+            return $q.all(_.map(match.players, function (pk) {
                 return dataService.getPlayer(pk, false);
             }));
         }).then(function (players) {

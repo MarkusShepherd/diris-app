@@ -44,8 +44,8 @@ dirisApp.controller('VoteImageController', function VoteImageController(
 
     matchPromise = dataService.getMatch(mPk)
         .then(function (match) {
-            $scope.match = processMatch(match, player);
-            $scope.round = $scope.match.currentRoundObj;
+            $scope.match = match;
+            $scope.round = match.currentRoundObj;
 
             if ($scope.round.status === 's' || $scope.round.status === 'o') {
                 $location.path('/image/' + mPk + '/' + rNo).replace();
@@ -57,7 +57,7 @@ dirisApp.controller('VoteImageController', function VoteImageController(
                 return;
             }
 
-            return $q.all(_.map($scope.match.players, function (pk) {
+            return $q.all(_.map(match.players, function (pk) {
                 return dataService.getPlayer(pk, false);
             }));
         }).then(function (players) {

@@ -67,8 +67,8 @@ dirisApp.controller('SubmitImageController', function SubmitImageController(
 
     matchPromise = dataService.getMatch(mPk)
         .then(function (match) {
-            $scope.match = processMatch(match, player);
-            $scope.round = $scope.match.currentRoundObj;
+            $scope.match = match;
+            $scope.round = match.currentRoundObj;
 
             if ($scope.round.status === 'v') {
                 $location.path('/vote/' + mPk + '/' + rNo).replace();
@@ -80,7 +80,7 @@ dirisApp.controller('SubmitImageController', function SubmitImageController(
                 return;
             }
 
-            return $q.all(_.map($scope.match.players, function (pk) {
+            return $q.all(_.map(match.players, function (pk) {
                 return dataService.getPlayer(pk, false);
             }));
         }).then(function (players) {

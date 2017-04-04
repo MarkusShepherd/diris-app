@@ -100,9 +100,8 @@ dirisApp.factory('dataService', function dataService(
         return loggedInPlayer;
     };
 
-    // TODO apply processMatch() when loading
-
     function setMatch(match) {
+        match = processMatch(match, loggedInPlayer);
         $localStorage['match_' + match.pk] = match;
         matches[match.pk] = match;
     }
@@ -138,16 +137,14 @@ dirisApp.factory('dataService', function dataService(
             .then(function (response) {
                 $log.debug('Matches from server:', response.data.results);
                 matches = {};
-                _.forEach(response.data.results, function (match) {
-                    setMatch(match);
-                });
+                _.forEach(response.data.results, setMatch);
                 return matches;
             }).catch(function (response) {
                 if (forceRefresh && fallback) {
                     // TODO add message
                     _.forEach($localStorage, function (match, key) {
                         if (key.substr(0, 6) === 'match_') {
-                            matches[key.substr(6)] = match;
+                            setMatch(match);
                         }
                     });
                     return matches;
@@ -163,7 +160,7 @@ dirisApp.factory('dataService', function dataService(
         }
 
         if (!forceRefresh && $localStorage['match_' + mPk]) {
-            matches[mPk] = $localStorage['match_' + mPk];
+            setMatch($localStorage['match_' + mPk]);
             return $q.resolve(matches[mPk]);
         }
 
