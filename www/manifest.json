@@ -8,6 +8,7 @@
     "display": "standalone",
     "orientation": "portrait",
     "theme_color": "silver",
+    "gcm_sender_id": "85075801930",
     "icons": [{
         "src": "img/logo.png",
         "sizes": "96x96",
