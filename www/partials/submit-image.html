@@ -31,6 +31,27 @@
 			<img ng-src="{{ image.file }}" id="image-uploaded" alt="Image" class="img-responsive image-upload" />
 		</div>
 
+		<div ng-show="(round.readyForStoryImage || round.readyForOtherImage) &amp;&amp; randomImages" class="wrap">
+			<div class="scrollbar">
+				<div class="handle">
+					<div class="mousearea"></div>
+				</div>
+			</div>
+
+			<div class="frame" id="centered">
+				<ul class="slidee clearfix">
+					<li ng-repeat="image in randomImages" style="height: 200px;  width: 200px; display: inline-block;">
+						<img ng-src="{{ image.file }}" alt="Image" class="img-responsive" style="height: 200px; width: auto;" />
+					</li>
+				</ul>
+			</div>
+
+			<div class="controls center">
+				<button class="btn btn-primary prev"><span class="glyphicon glyphicon-chevron-left"></span> prev</button>
+				<button class="btn btn-primary next">next <span class="glyphicon glyphicon-chevron-right"></span></button>
+			</div>
+		</div>
+
 		<div ng-hide="round.hasSubmittedImage" class="image-edit-wrapper">
 			<div class="btn-group btn-group-lg btn-group-image-edit">
 				<button ng-click="zoom(-0.1)" type="button" class="btn btn-primary" title="Zoom Out">

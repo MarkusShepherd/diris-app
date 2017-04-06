@@ -31,7 +31,8 @@
     "canvas-to-blob": "^3.7.0",
     "cropper": "^2.3.4",
     "moment": "^2.18.1",
-    "lodash": "^4.17.4"
+    "lodash": "^4.17.4",
+    "sly": "^1.6.1"
   },
   "resolutions": {
     "angular": "1.6.4"
