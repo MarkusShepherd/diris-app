@@ -101,14 +101,14 @@ dirisApp.controller('SubmitImageController', function SubmitImageController(
                 $scope.image = image;
                 return [];
             } else {
-                return dataService.getRandomImages(5);
+                return dataService.getRandomImages(10);
             }
         }).then(function (images) {
-            if (!images) {
+            $scope.randomImages = images;
+        }).then(function () {
+            if (!$scope.randomImages) {
                 return;
             }
-
-            $scope.randomImages = images;
 
             var $frame = $('#centered'),
                 $wrap  = $frame.parent();
@@ -139,9 +139,9 @@ dirisApp.controller('SubmitImageController', function SubmitImageController(
             // TODO hacky - there must be a better way!
             $timeout(function () {
                 $frame.sly('reload');
-            });
+            }, 1000);
 
-            $(window).resize(function() {
+            $(window).resize(function () {
                 $frame.sly('reload');
             });
         }).catch(function (response) {
@@ -153,7 +153,6 @@ dirisApp.controller('SubmitImageController', function SubmitImageController(
     $scope.hasCamera = !isBrowser();
 
     $scope.setGalleryImage = function setGalleryImage(image) {
-        $log.debug(image);
         // setImage(image.file, true);
         $scope.imageData = image.file;
         $scope.selectedImage = true;

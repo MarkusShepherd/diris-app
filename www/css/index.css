@@ -180,29 +180,33 @@ img.player-icon-standings {
 
 /* Frame */
 .frame {
-    height: 200px;
-    line-height: 200px;
+    height: 150px;
+    line-height: 150px;
     overflow: hidden;
 }
 
-.frame ul {
+.frame div {
+    display: inline-block;
     list-style: none;
     margin: 0;
     padding: 0;
-    height: 100%;
+    height: 150px;
 }
 
-.frame ul li {
+.frame div img {
     float: left;
-    height: 100%;
+    height: 150px;
+    max-height: 150px;
+    width: auto;
+    max-width: none;
     margin: 0;
     padding: 0;
     cursor: pointer;
 }
 
-.frame ul li.active {
-    color: #fff;
-    background: #a03232;
+.frame div img.active {
+    /* color: #fff; */
+    /* background: #a03232; */
 }
 
 /* Scrollbar */
