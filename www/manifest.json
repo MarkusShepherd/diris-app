@@ -7,7 +7,7 @@
     "dir": "ltr",
     "display": "standalone",
     "orientation": "portrait",
-    "theme_color": "silver",
+    "theme_color": "#222",
     "gcm_sender_id": "85075801930",
     "icons": [{
         "src": "/static/img/android-icon-36x36.png",
