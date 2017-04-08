@@ -38,6 +38,7 @@ dirisApp.controller('SubmitImageController', function SubmitImageController(
     var player = dataService.getLoggedInPlayer(),
         mPk = $routeParams.mPk,
         rNo = $routeParams.rNo,
+        sliderBlock = blockUI.instances.get('useSlider'),
         matchPromise,
         imagePromise;
 
@@ -97,16 +98,24 @@ dirisApp.controller('SubmitImageController', function SubmitImageController(
         }).then(function (image) {
             blockUI.stop();
 
-            if (image) {
+            $scope.useSlider = !image;
+
+            if ($scope.useSlider) {
+                if (!sliderBlock.state().blocking) {
+                    sliderBlock.start();
+                }
+                return dataService.getRandomImages(10);
+            } else {
                 $scope.image = image;
                 return [];
-            } else {
-                return dataService.getRandomImages(10);
             }
         }).then(function (images) {
             $scope.randomImages = images;
         }).then(function () {
+            sliderBlock.stop();
+
             if (!$scope.randomImages) {
+                $scope.useSlider = false;
                 return;
             }
 
@@ -115,7 +124,7 @@ dirisApp.controller('SubmitImageController', function SubmitImageController(
 
             $frame.sly({
                 horizontal: 1,
-                itemNav: 'centered',
+                itemNav: 'basic',
                 smart: 1,
                 activateOn: 'click',
                 mouseDragging: 1,
@@ -174,7 +183,10 @@ dirisApp.controller('SubmitImageController', function SubmitImageController(
     };
 
     $scope.submitImage = function submitImage() {
-        blockUI.start();
+        if (!blockUI.state().blocking) {
+            blockUI.start();
+        }
+
         $q(function (resolve) {
             $("#image").cropper('getCroppedCanvas', {
                 width: 1080,

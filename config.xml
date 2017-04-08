@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="info.riemannhypothesis.dixit.client" version="0.3.2" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0">
+<widget id="com.appspot.diris-app" version="0.3.2" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0">
     <name>Diris</name>
     <description>
 		Diris image guessing game.
 	</description>
-    <author email="mk.schepke@gmail.com" href="http://www.riemannhypothesis.info">
-		Markus Schepke
+    <author email="markus.r.shepherd@gmail.com" href="https://diris-app.appspot.com">
+		Markus Shepherd
 	</author>
     <content src="index.html" />
     <preference name="permissions" value="none" />
