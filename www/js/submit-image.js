@@ -91,8 +91,8 @@ dirisApp.controller('SubmitImageController', function SubmitImageController(
                 $scope.players[player.pk] = player;
             });
 
-            if ($scope.round.details.image) {
-                return dataService.getImage($scope.round.details.image);
+            if ($scope.round.playerDetails.image) {
+                return dataService.getImage($scope.round.playerDetails.image);
             }
         }).then(function (image) {
             blockUI.stop();
@@ -110,11 +110,11 @@ dirisApp.controller('SubmitImageController', function SubmitImageController(
             }
         }).then(function (images) {
             $scope.randomImages = images;
+            $scope.useSlider = !_.isEmpty(images);
         }).then(function () {
             sliderBlock.stop();
 
-            if (!$scope.randomImages) {
-                $scope.useSlider = false;
+            if (!$scope.useSlider) {
                 return;
             }
 
