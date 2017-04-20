@@ -111,9 +111,9 @@ dirisApp.factory('dataService', function dataService(
 
         return $http.post(BACKEND_URL + '/matches/', {
             players: playerPks,
-            inviting_player: player.pk,
-            total_rounds: totalRounds || 0,
-            timeout: timeout || 0
+            inviting_player: player.pk
+            // total_rounds: totalRounds || 0,
+            // timeout: timeout || 0
         })
             .then(function (response) {
                 var match = response.data;
