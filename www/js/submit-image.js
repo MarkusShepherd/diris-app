@@ -1,192 +1,242 @@
-dixitApp.controller('SubmitImageController',
-function($http, $location, $log, $rootScope, $routeParams, $scope, $timeout, blockUI, toastr, dataService, BACKEND_URL) {
+'use strict';
 
-	var player = dataService.getLoggedInPlayer();
+dirisApp.controller('SubmitImageController', function SubmitImageController(
+    $location,
+    $log,
+    $q,
+    $rootScope,
+    $routeParams,
+    $scope,
+    $timeout,
+    blockUI,
+    toastr,
+    dataService
+) {
+    function setImage(url) {
+        $scope.imageData = url;
+        $scope.selectedImage = true;
+        $("#image")
+            .cropper('replace', url)
+            .cropper('enable');
+    }
 
-	if (!player) {
-		$location.path('/login');
-		return;
-	}
+    function getImage(srcType) {
+        return $q(function (resolve, reject) {
+            navigator.camera.getPicture(resolve, reject, {
+                quality: 100,
+                destinationType: Camera.DestinationType.DATA_URL,
+                sourceType: srcType,
+                encodingType: 0
+            });
+        }).then(function (imageData) {
+            setImage('data:image/jpeg;base64,' + imageData);
+        }).catch(function (response) {
+            $log.debug(response);
+            toastr.error(response);
+        });
+    }
 
-	if (!blockUI.state().blocking)
-		blockUI.start();
+    var player = dataService.getLoggedInPlayer(),
+        mPk = $routeParams.mPk,
+        rNo = $routeParams.rNo,
+        sliderBlock = blockUI.instances.get('useSlider');
 
-	var mId = $routeParams.mId;
-	var rNo = $routeParams.rNo;
+    if (!player) {
+        $location.path('/login');
+        return;
+    }
 
-	$scope.mId = mId;
-	$scope.rNo = rNo;
+    if (!blockUI.state().blocking) {
+        blockUI.start();
+    }
 
-	$scope.currentPlayer = player;
-	$rootScope.menuItems = [{
-		link: '#/overview',
-		label: 'Overview',
-		glyphicon: 'home'
-	}, {
-		link: '#/match/' + mId,
-		label: 'Match',
-		glyphicon: 'knight'
-	}];
-	$rootScope.refreshPath = null;
-	$rootScope.refreshReload = false;
+    $scope.mPk = mPk;
+    $scope.rNo = rNo;
 
-	dataService.getMatch(mId)
-	.then(function(match) {
-		$scope.$apply(function() {
-			$scope.match = processMatch(match, player);
-			$scope.round = $scope.match.rounds[rNo];
-		});
-		return $scope.match;
-	}).then(function(match) {
-		if ($scope.round.status === 'SUBMIT_VOTES')
-			$timeout(function() { $location.path('/vote/' + mId + '/' + rNo).replace(); });
-		else if ($scope.round.status === 'FINISHED')
-			$timeout(function() { $location.path('/review/' + mId + '/' + rNo).replace(); });
-		else {
-			var promises = $.map(match.playerKeys, function(key) {
-				return dataService.getPlayer(key.id);
-			});
-			$scope.players = {};
-			Promise.all(promises)
-			.then(function(players) {
-				$scope.$apply(function() {
-					$.each(players, function(i, player) {
-						$scope.players[player.key.id] = player;
-					});
-					blockUI.stop();
-				});
-			});
-		}
-	}).catch(function(response) {
-		$log.debug('error');
-		$log.debug(response);
-		$scope.$apply(function() {
-			toastr.error("There was an error fetching the data - please try again later...");
-			blockUI.stop();
-		});
-	});
+    $scope.currentPlayer = player;
+    $rootScope.menuItems = [{
+        link: '#/overview',
+        label: 'Overview',
+        glyphicon: 'home'
+    }, {
+        link: '#/match/' + mPk,
+        label: 'Match',
+        glyphicon: 'knight'
+    }];
+    $rootScope.refreshPath = null;
+    $rootScope.refreshReload = false;
 
-	dataService.getImages(mId, rNo, true, true)
-	.then(function(images) {
-		$scope.$apply(function() {
-			$scope.images = {};
-			$.each(images, function(k, img) {
-				$scope.images['' + img.key.id] = img;
-			});
-		});
-	}).catch(function(response) {
-		$log.debug('error');
-		$log.debug(response);
-		$scope.$apply(function() {
-			toastr.error("There was an error fetching the data - please try again later...");
-		});
-	});
+    dataService.getMatch(mPk)
+        .then(function (match) {
+            var round = match.rounds[rNo - 1],
+                action = roundAction(round);
 
-	function getImage(srcType) {
-		navigator.camera.getPicture(setImage, function(message) {
-			$scope.$apply(function () {
-				toastr.error(message);
-			});
-		}, {
-			quality : 100,
-			destinationType : Camera.DestinationType.DATA_URL,
-			sourceType : srcType,
-			encodingType: 0
-		});
-	}
+            if (action !== 'image') {
+                $location.path('/' + action + '/' + mPk + '/' + rNo).replace();
+                return;
+            }
 
-	function setImage(imageData) {
-		$scope.$apply(function () {
-			$scope.imageData = imageData;
-			$scope.selectedImage = true;
-			$("#image")
-				.cropper('replace', "data:image/jpeg;base64," + imageData)
-				.cropper('enable');
-		});
-	}
+            $scope.match = match;
+            $scope.round = round;
 
-	$scope.getImageFromCamera = function() {
-		getImage(Camera.PictureSourceType.CAMERA);
-	};
+            return $q.all(_.map(match.players, function (pk) {
+                return dataService.getPlayer(pk, false);
+            }));
+        }).then(function (players) {
+            $scope.players = {};
 
-	$scope.getImageFromLibrary = function() {
-		if (isBrowser())
-			$('#file-input').trigger('click');
-		else
-			getImage(Camera.PictureSourceType.PHOTOLIBRARY);
-	};
+            _.forEach(players || [], function (player) {
+                $scope.players[player.pk] = player;
+            });
 
-	$scope.submitImage = function() {
-		var croppedImage = $("#image").cropper('getCroppedCanvas', {
-			width: 1080,
-			height: 1080
-		}).toDataURL("image/jpeg", 0.5);
-		croppedImage = croppedImage.substr(croppedImage.indexOf(",") + 1);
+            if ($scope.round.playerDetails.image) {
+                return dataService.getImage($scope.round.playerDetails.image);
+            }
+        }).then(function (image) {
+            blockUI.stop();
 
-		var fd = new FormData();
+            $scope.useSlider = !image;
 
-		fd.append("image", croppedImage);
-		fd.append("player", player.key.id);
-		fd.append("match", mId);
-		fd.append("round", $scope.rNo);
-		if ($scope.round.story)
-			fd.append("story", $scope.round.story);
+            if ($scope.useSlider) {
+                if (!sliderBlock.state().blocking) {
+                    sliderBlock.start();
+                }
+                return dataService.getRandomImages(10);
+            } else {
+                $scope.image = image;
+                return [];
+            }
+        }).then(function (images) {
+            $scope.randomImages = images;
+            $scope.useSlider = !_.isEmpty(images);
+        }).then(function () {
+            sliderBlock.stop();
 
-		$http.post(BACKEND_URL + '/image', fd, {
-        	headers: { 'Content-Type': undefined },
-        	transformRequest: angular.identity
-    	}).then(function(response) {
-			$log.debug(response);
-			$timeout(function() {
-				$location.path('/match/' + mId + '/refresh').replace();
-			});
-		}).catch(function(response) {
-			$log.debug('error');
-			$log.debug(response);
-			$scope.$apply(function() {
-				toastr.error("There was an error");
-			});
-		});
-	};
+            if (!$scope.useSlider) {
+                return;
+            }
 
-	$scope.zoom = function(ratio) {
-		$('#image').cropper('zoom', ratio);
-	};
+            var $frame = $('#centered'),
+                $wrap  = $frame.parent();
 
-	$scope.rotate = function(angle) {
-		$('#image').cropper('rotate', angle);
-	};
+            $frame.sly({
+                horizontal: 1,
+                itemNav: 'centered',
+                smart: 1,
+                activateOn: 'click',
+                mouseDragging: 1,
+                touchDragging: 1,
+                releaseSwing: 1,
+                startAt: 0,
+                scrollBar: $wrap.find('.scrollbar'),
+                scrollBy: 1,
+                speed: 300,
+                elasticBounds: 1,
+                // easing: 'easeOutExpo',
+                dragHandle: 1,
+                dynamicHandle: 1,
+                clickBar: 1,
+                prev: $wrap.find('.prev'),
+                next: $wrap.find('.next')
+            });
 
-	$scope.flip = function(axis) {
-		var  img = $('#image');
-		img.cropper('scale' + axis, -img.cropper('getData')['scale' + axis]);
-	};
+            $frame.sly('reload');
 
-	$("#image").cropper({ 
-		viewMode: 3,
-		aspectRatio: 1,
-		dragMode: 'move',
-		modal: false,
-		guides: false,
-		center: false,
-		highlight: false,
-		autoCropArea: 1,
-		cropBoxMovable: false,
-		cropBoxResizable: false,
-		toggleDragModeOnDblclick: false
-	}).cropper('disable');
+            // TODO hacky - there must be a better way!
+            $timeout(function () {
+                $frame.sly('reload');
+            }, 1000);
 
-	$("#file-input").change(function() {
+            $(window).resize(function () {
+                $frame.sly('reload');
+            });
+        }).catch(function (response) {
+            $log.debug('error');
+            $log.debug(response);
+            toastr.error("There was an error fetching the data - please try again later...");
+        }).then(blockUI.stop);
+
+    $scope.hasCamera = !!(!isBrowser() && navigator.camera && navigator.camera.getPicture);
+
+    $scope.setImage = setImage;
+
+    $scope.getImageFromCamera = function getImageFromCamera() {
+        getImage(Camera.PictureSourceType.CAMERA);
+    };
+
+    $scope.getImageFromLibrary = function getImageFromLibrary() {
+        if (isBrowser()) {
+            $('#file-input').trigger('click');
+        } else {
+            getImage(Camera.PictureSourceType.PHOTOLIBRARY);
+        }
+    };
+
+    $scope.submitImage = function submitImage() {
+        if (!blockUI.state().blocking) {
+            blockUI.start();
+        }
+
+        $q(function (resolve) {
+            $("#image").cropper('getCroppedCanvas', {
+                width: 1080,
+                height: 1080
+            }).toBlob(resolve, 'image/jpeg', 0.5);
+        }).then(function (image) {
+            $log.debug(image);
+            return dataService.submitImage(mPk, rNo, image, $scope.round.story);
+        }).then(function (match) {
+            $log.debug(match);
+            if (match.rounds[rNo - 1].status === 'v') {
+                $location.path('/vote/' + mPk + '/' + rNo).replace();
+            } else {
+                $location.path('/match/' + mPk).replace();
+            }
+        }).catch(function (response) {
+            $log.debug('error');
+            $log.debug(response);
+            blockUI.stop();
+            toastr.error("There was an error");
+        });
+    };
+
+    $scope.zoom = function zoom(ratio) {
+        $('#image').cropper('zoom', ratio);
+    };
+
+    $scope.rotate = function rotate(angle) {
+        $('#image').cropper('rotate', angle);
+    };
+
+    $scope.flip = function flip(axis) {
+        var  img = $('#image');
+        img.cropper('scale' + axis, -img.cropper('getData')['scale' + axis]);
+    };
+
+    $("#image").cropper({
+        viewMode: 3,
+        aspectRatio: 1,
+        dragMode: 'move',
+        modal: false,
+        guides: false,
+        center: false,
+        highlight: false,
+        autoCropArea: 1,
+        cropBoxMovable: false,
+        cropBoxResizable: false,
+        toggleDragModeOnDblclick: false
+    }).cropper('disable');
+
+    $("#file-input").change(function () {
         if (this.files && this.files[0]) {
             var reader = new FileReader();
-            
+
             reader.onload = function (e) {
-            	var d = e.target.result;
-            	setImage(d.substr(d.indexOf(",") + 1));
+                setImage(e.target.result);
             };
-            
+
             reader.readAsDataURL(this.files[0]);
         }
-	});
+    });
 
 });
