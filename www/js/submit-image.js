@@ -68,18 +68,16 @@ dirisApp.controller('SubmitImageController', function SubmitImageController(
 
     dataService.getMatch(mPk)
         .then(function (match) {
+            var round = match.rounds[rNo - 1],
+                action = roundAction(round);
+
+            if (action !== 'image') {
+                $location.path('/' + action + '/' + mPk + '/' + rNo).replace();
+                return;
+            }
+
             $scope.match = match;
-            $scope.round = match.rounds[rNo - 1];
-
-            if ($scope.round.status === 'v') {
-                $location.path('/vote/' + mPk + '/' + rNo).replace();
-                return;
-            }
-
-            if ($scope.round.status === 'f') {
-                $location.path('/review/' + mPk + '/' + rNo).replace();
-                return;
-            }
+            $scope.round = round;
 
             return $q.all(_.map(match.players, function (pk) {
                 return dataService.getPlayer(pk, false);

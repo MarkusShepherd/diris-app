@@ -328,21 +328,20 @@ dirisApp.factory('dataService', function dataService(
     };
 
     factory.submitImage = function submitImage(mPk, rNo, image, story) {
-        return $http.post(BACKEND_URL + '/matches/' + mPk + '/' + rNo + '/image/filename.jpeg',
-            image, {
-                headers: {'Content-Type': 'image/jpeg'},
-                params: {story: story},
-            }).then(function (response) {
-                var match = response.data;
+        return $http.post(BACKEND_URL + '/matches/' + mPk + '/' + rNo + '/image/filename.jpeg', image, {
+            headers: {'Content-Type': 'image/jpeg'},
+            params: {story: story},
+        }).then(function (response) {
+            var match = response.data;
 
-                if (!match) {
-                    throw new Error(response);
-                }
+            if (!match) {
+                throw new Error(response);
+            }
 
-                setMatch(match);
+            setMatch(match);
 
-                return match;
-            });
+            return match;
+        });
     };
 
     factory.submitVote = function submitVote(mPk, rNo, iPk) {

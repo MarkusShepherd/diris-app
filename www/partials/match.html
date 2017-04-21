@@ -15,7 +15,7 @@
 	</section>
 	<section class="list-group">
 		<a ng-repeat="round in match.rounds"
-			ng-href="#/{{ round.status == 'f' ? 'review' : round.status == 'v' ? 'vote' : 'image' }}/{{ mPk }}/{{ round.number }}"
+			ng-href="#/{{ action(round) }}/{{ mPk }}/{{ round.number }}"
 			class="list-group-item
 				{{ round.hasAction ? 'list-group-item-info' : '' }}
 				{{ round.status == 'w' || (round.status == 's' &amp;&amp; !round.isStoryTeller) ? 'disabled' : '' }}">

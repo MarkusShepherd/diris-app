@@ -118,3 +118,15 @@ function isBrowser() {
         return true;
     }
 }
+
+function roundAction(round) {
+    if (round.status === 'f' || round.hasVoted || (round.isStoryTeller && round.hasSubmittedImage)) {
+        return 'review';
+    }
+
+    if (round.status === 'v') {
+        return 'vote';
+    }
+
+    return 'image';
+}
