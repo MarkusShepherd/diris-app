@@ -187,7 +187,11 @@ dirisApp.controller('SubmitImageController', function SubmitImageController(
             return dataService.submitImage(mPk, rNo, image, $scope.round.story);
         }).then(function (match) {
             $log.debug(match);
-            $location.path('/match/' + mPk + '/refresh').replace();
+            if (match.rounds[rNo - 1].status === 'v') {
+                $location.path('/vote/' + mPk + '/' + rNo).replace();
+            } else {
+                $location.path('/match/' + mPk).replace();
+            }
         }).catch(function (response) {
             $log.debug('error');
             $log.debug(response);
