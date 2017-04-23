@@ -51,10 +51,17 @@
 		</div>
 
 		<div ng-hide="round.hasSubmittedImage" class="image-upload-wrapper">
-			<img src="default-placeholder.png" id="image" alt="Image" class="img-responsive image-upload" />
+			<img src="default-placeholder.png"
+				id="image"
+				alt="Image"
+				class="img-responsive image-upload" />
 		</div>
 		<div ng-show="round.hasSubmittedImage" class="image-upload-wrapper">
-			<img ng-src="{{ image.url }}" id="image-uploaded" alt="Image" class="img-responsive image-upload" />
+			<img src="default-placeholder.png"
+				ng-src="{{ image.url }}"
+				id="image-uploaded"
+				alt="Image"
+				class="img-responsive image-upload" />
 		</div>
 
 		<div ng-hide="round.hasSubmittedImage" class="image-edit-wrapper">
