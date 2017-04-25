@@ -61,16 +61,17 @@ dirisApp.controller('AcceptController', function AcceptController(
 
         $q(function (resolve) {
             if (accept) {
-                resolve(2);
+                resolve(1);
             } else {
-                navigator.notification.confirm(
+                window.navigator.notification.confirm(
                     'Are you sure you want to decline the invitation?',
                     resolve,
                     'Decline invitation',
-                    ['Cancel', 'Decline']);
+                    ['Decline', 'Cancel']
+                );
             }
         }).then(function (buttonIndex) {
-            if (buttonIndex === 2) {
+            if (buttonIndex === 1) {
                 return dataService.respondToInvitation(mPk, accept);
             } else {
                 return false;
