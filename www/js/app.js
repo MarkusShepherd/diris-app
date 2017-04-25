@@ -138,53 +138,52 @@ dirisApp.directive('playerIcon', function () {
 dirisApp.run(function ($log, authManager, toastr, dataService) {
     authManager.checkAuthOnRefresh();
 
-    if (utils.isBrowser()) {
-        $log.debug('No notifications on browser');
-    } else {
-        var push = PushNotification.init({
-            android: {
-                senderID: 879361060795
-            },
-            ios: {
-                alert: true,
-                badge: true,
-                sound: true
-            },
-            windows: {}
-        });
+    var push = PushNotification.init({
+        android: {
+            senderID: 696693451234
+        },
+        browser: {},
+        ios: {
+            alert: true,
+            badge: true,
+            sound: true,
+            vibration: true
+        },
+        windows: {}
+    });
 
-        push.on('registration', function (data) {
-            $log.debug("Registered push");
-            $log.debug(data);
-            $log.debug(data.registrationId);
+    push.on('registration', function (data) {
+        $log.debug('registration event:', data.registrationId);
 
-            var player = dataService.getLoggedInPlayer();
-            if (player && player.pk) {
-                dataService.updatePlayer(player.pk, {
-                    gcmRegistrationID: data.registrationId
-                });
-            } else {
-                dataService.setGcmRegistrationId(data.registrationId);
-            }
-        });
+        var player = dataService.getLoggedInPlayer(),
+            oldId = player && player.gcm_registration_id;
+        $log.debug('old ID:', oldId);
 
-        push.on('notification', function (data) {
-            $log.debug("Received notification");
-            $log.debug(data);
-            $log.debug(data.message);
-            $log.debug(data.title);
-            $log.debug(data.count);
-            $log.debug(data.sound);
-            $log.debug(data.image);
-            $log.debug(data.additionalData);
-            toastr.info(data.message, data.title);
-        });
+        if (oldId && oldId !== data.registrationId) {
+            dataService.updatePlayer(player.pk, {
+                gcm_registration_id: data.registrationId
+            })
+                .then($log.debug)
+                .catch($log.debug);
+        }
+    });
 
-        push.on('error', function (e) {
-            $log.debug("Error in notifications");
-            $log.debug(e);
-            $log.debug(e.message);
-            toastr.error(e.message);
-        });
-    }
+    push.on('notification', function (data) {
+        $log.debug("Received notification");
+        $log.debug(data);
+        $log.debug(data.message);
+        $log.debug(data.title);
+        $log.debug(data.count);
+        $log.debug(data.sound);
+        $log.debug(data.image);
+        $log.debug(data.additionalData);
+        toastr.info(data.message, data.title);
+    });
+
+    push.on('error', function (e) {
+        $log.debug("Error in notifications");
+        $log.debug(e);
+        $log.debug(e.message);
+        toastr.error(e.message);
+    });
 });

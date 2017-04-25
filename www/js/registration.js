@@ -21,7 +21,7 @@ dirisApp.controller('RegistrationController', function RegistrationController(
 
         $log.debug($scope.player);
 
-        dataService.registerPlayer($scope.player)
+        dataService.createPlayer($scope.player)
             .then(function () {
                 $location.path('/overview/refresh');
             }).catch(function () {
