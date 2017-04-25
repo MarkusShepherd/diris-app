@@ -1,5 +1,8 @@
 'use strict';
 
+/*jslint browser: true, nomen: true */
+/*global angular, $, _, moment, device, navigator, utils, dirisApp */
+
 dirisApp.controller('AcceptController', function AcceptController(
     $location,
     $log,
@@ -63,7 +66,7 @@ dirisApp.controller('AcceptController', function AcceptController(
             if (accept) {
                 resolve(1);
             } else {
-                window.navigator.notification.confirm(
+                navigator.notification.confirm(
                     'Are you sure you want to decline the invitation?',
                     resolve,
                     'Decline invitation',
