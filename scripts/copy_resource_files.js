@@ -3,6 +3,7 @@
 // each object in the array consists of a key which refers to the source and
 // the value which is the destination.
 var filestocopy = [
+    {'www/manifest.json': 'platforms/browser/www/manifest.json'},
     // {"resources/android/images/logo.png": "platforms/android/res/drawable/logo.png"},
     // {"resources/android/sounds/ring.mp3": "platforms/android/res/raw/ring.mp3"},
     // {"resources/ios/sounds/ring.caf": "platforms/ios/YourAppName/ring.caf"}

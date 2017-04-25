@@ -55,26 +55,40 @@ dirisApp.controller('AcceptController', function AcceptController(
     $scope.respond = function respond(accept) {
         accept = !!accept;
 
-        if (!accept && !confirm('Are you sure you want to decline the invitation?')) {
-            return;
-        }
-
         if (!blockUI.state().blocking) {
             blockUI.start();
         }
 
-        dataService.respondToInvitation(mPk, accept)
-            .then(function () {
-                if (accept) {
-                    $location.path('/overview');
-                } else {
-                    $location.path('/overview/refresh');
-                }
-            }).catch(function (response) {
-                $log.debug('error');
-                $log.debug(response);
+        $q(function (resolve) {
+            if (accept) {
+                resolve(2);
+            } else {
+                navigator.notification.confirm(
+                    'Are you sure you want to decline the invitation?',
+                    resolve,
+                    'Decline invitation',
+                    ['Cancel', 'Decline']);
+            }
+        }).then(function (buttonIndex) {
+            if (buttonIndex === 2) {
+                return dataService.respondToInvitation(mPk, accept);
+            } else {
+                return false;
+            }
+        }).then(function (response) {
+            if (!response) {
+                $log.debug('canceled declining invitation');
                 blockUI.stop();
-                toastr.error('There was an error...');
-            });
+            } else if (accept) {
+                $location.path('/overview');
+            } else {
+                $location.path('/overview/refresh');
+            }
+        }).catch(function (response) {
+            $log.debug('error');
+            $log.debug(response);
+            blockUI.stop();
+            toastr.error('There was an error...');
+        });
     };
 }); // AcceptController
