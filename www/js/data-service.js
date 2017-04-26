@@ -1,7 +1,7 @@
 'use strict';
 
-/*jslint browser: true, nomen: true */
-/*global _, utils, dirisApp */
+/*jslint browser: true, nomen: true, stupid: true, todo: true */
+/*global _, dirisApp, utils */
 
 dirisApp.factory('dataService', function dataService(
     $localStorage,

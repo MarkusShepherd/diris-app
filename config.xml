@@ -36,4 +36,5 @@
         <variable name="SENDER_ID" value="696693451234" />
     </plugin>
     <hook src="scripts/copy_resource_files.js" type="before_build" />
+    <hook src="scripts/copy_manifest.js" type="after_build" />
 </widget>

@@ -1,6 +1,6 @@
 'use strict';
 
-/*jslint browser: true */
+/*jslint browser: true, stupid: true, todo: true */
 /*global angular, PushNotification */
 
 var testUrl = 'http://localhost:8000';

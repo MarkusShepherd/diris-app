@@ -1,7 +1,7 @@
 'use strict';
 
 /*jslint browser: true */
-/*global console, document, angular */
+/*global angular, console */
 
 var app = {
     initialize: function initialize() {
