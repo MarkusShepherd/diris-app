@@ -1,7 +1,7 @@
 'use strict';
 
 /*jslint browser: true, nomen: true */
-/*global angular, $, _, moment, device, navigator, utils, dirisApp */
+/*global _, utils, dirisApp */
 
 dirisApp.factory('dataService', function dataService(
     $localStorage,
@@ -18,8 +18,8 @@ dirisApp.factory('dataService', function dataService(
         players = {},
         images = {},
         token = null,
-        loggedInPlayer = null;
-        // gcmRegistrationID = null;
+        loggedInPlayer = null,
+        gcmRegistrationID = null;
 
     factory.logout = function logout() {
         factory.setToken(null);
@@ -70,6 +70,10 @@ dirisApp.factory('dataService', function dataService(
         return (token && !jwtHelper.isTokenExpired(token)) ? token : undefined;
     };
 
+    factory.setGcmRegistrationID = function setGcmRegistrationID(gri) {
+        gcmRegistrationID = gri || gcmRegistrationID;
+    };
+
     factory.getLoggedInPlayer = function getLoggedInPlayer() {
         token = token || $localStorage.token;
 
@@ -79,6 +83,20 @@ dirisApp.factory('dataService', function dataService(
         }
 
         loggedInPlayer = loggedInPlayer || $localStorage.loggedInPlayer;
+
+        if (loggedInPlayer && gcmRegistrationID &&
+                gcmRegistrationID !== loggedInPlayer.gcm_registration_id) {
+            var gri = gcmRegistrationID;
+            gcmRegistrationID = null;
+            $log.debug('old GCM registration ID:', loggedInPlayer.gcm_registration_id);
+            $log.debug('new GCM registration ID:', gri);
+            factory.updatePlayer(loggedInPlayer.pk, {
+                gcm_registration_id: gri
+            })
+                .then($log.debug)
+                .catch($log.debug);
+        }
+
         return loggedInPlayer;
     };
 
@@ -182,12 +200,8 @@ dirisApp.factory('dataService', function dataService(
         players[player.pk] = player;
 
         if (player && loggedInPlayer && loggedInPlayer.pk === player.pk) {
-            $log.debug('updated loggedInPlayer');
-            $log.debug(loggedInPlayer);
-            $log.debug(player);
             loggedInPlayer = _.merge(loggedInPlayer, player);
             $localStorage.loggedInPlayer = loggedInPlayer;
-            $log.debug(loggedInPlayer);
         }
     }
 

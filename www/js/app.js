@@ -1,7 +1,7 @@
 'use strict';
 
-/*jslint browser: true, nomen: true */
-/*global angular, $, _, moment, device, navigator, PushNotification, utils */
+/*jslint browser: true */
+/*global angular, PushNotification */
 
 var testUrl = 'http://localhost:8000';
 var liveUrl = 'https://diris-app.appspot.com';
@@ -20,6 +20,7 @@ dirisApp.constant('BACKEND_URL', liveUrl)
     .constant('MINIMUM_PLAYER', 4)
     .constant('MAXIMUM_PLAYER', 10)
     .constant('STANDARD_TIMEOUT', 60 * 60 * 36)
+    .constant('GCM_SENDER_ID', 696693451234)
     .constant('DEVELOPER_MODE', false);
 
 dirisApp.config(function (
@@ -110,6 +111,7 @@ dirisApp.config(function (
 
     blockUIConfig.autoBlock = false;
 
+    // TODO replace with _ function
     angular.extend(toastrConfig, {
         autoDismiss: false,
         newestOnTop: false,
@@ -135,12 +137,12 @@ dirisApp.directive('playerIcon', function () {
     };
 });
 
-dirisApp.run(function ($log, authManager, toastr, dataService) {
+dirisApp.run(function ($log, authManager, toastr, dataService, GCM_SENDER_ID) {
     authManager.checkAuthOnRefresh();
 
     var push = PushNotification.init({
         android: {
-            senderID: 696693451234
+            senderID: GCM_SENDER_ID
         },
         browser: {},
         ios: {
@@ -154,18 +156,7 @@ dirisApp.run(function ($log, authManager, toastr, dataService) {
 
     push.on('registration', function (data) {
         $log.debug('registration event:', data.registrationId);
-
-        var player = dataService.getLoggedInPlayer(),
-            oldId = player && player.gcm_registration_id;
-        $log.debug('old ID:', oldId);
-
-        if (oldId && oldId !== data.registrationId) {
-            dataService.updatePlayer(player.pk, {
-                gcm_registration_id: data.registrationId
-            })
-                .then($log.debug)
-                .catch($log.debug);
-        }
+        dataService.setGcmRegistrationID(data.registrationId);
     });
 
     push.on('notification', function (data) {
