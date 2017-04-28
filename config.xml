@@ -24,7 +24,7 @@
     <preference name="android-minSdkVersion" value="14" />
     <preference name="android-installLocation" value="auto" />
     <access origin="*" />
-    <engine name="android" spec="~6.1.2" />
+    <engine name="android" spec="~6.2.1" />
     <engine name="browser" spec="~4.1.0" />
     <engine name="ios" spec="~4.3.1" />
     <plugin name="cordova-plugin-camera" spec="~2.4.0" />
