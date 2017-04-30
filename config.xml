@@ -8,21 +8,6 @@
 		Markus Shepherd
 	</author>
     <content src="index.html" />
-    <preference name="permissions" value="none" />
-    <preference name="orientation" value="default" />
-    <preference name="target-device" value="universal" />
-    <preference name="fullscreen" value="false" />
-    <preference name="webviewbounce" value="false" />
-    <preference name="prerendered-icon" value="true" />
-    <preference name="stay-in-webview" value="false" />
-    <preference name="ios-statusbarstyle" value="black-opaque" />
-    <preference name="detect-data-types" value="true" />
-    <preference name="exit-on-suspend" value="false" />
-    <preference name="show-splash-screen-spinner" value="true" />
-    <preference name="auto-hide-splash-screen" value="true" />
-    <preference name="disable-cursor" value="false" />
-    <preference name="android-minSdkVersion" value="14" />
-    <preference name="android-installLocation" value="auto" />
     <access origin="*" />
     <engine name="android" spec="~6.2.1" />
     <engine name="browser" spec="~4.1.0" />
@@ -35,6 +20,29 @@
     <plugin name="phonegap-plugin-push" spec="~1.10.1">
         <variable name="SENDER_ID" value="696693451234" />
     </plugin>
+    <preference name="BackgroundColor" value="0xfff0f0f0" />
+    <preference name="DisallowOverscroll" value="true" />
+    <preference name="Fullscreen" value="false" />
+    <preference name="Orientation" value="portrait" />
+    <platform name="android">
+        <icon src="www/img/android-icon-36x36.png" density="ldpi" />
+        <icon src="www/img/android-icon-48x48.png" density="mdpi" />
+        <icon src="www/img/android-icon-72x72.png" density="hdpi" />
+        <icon src="www/img/android-icon-96x96.png" density="xhdpi" />
+        <icon src="www/img/android-icon-144x144.png" density="xxhdpi" />
+        <icon src="www/img/android-icon-192x192.png" density="xxxhdpi" />
+    </platform>
+    <platform name="ios">
+        <icon src="www/img/apple-icon-57x57.png" width="57" height="57" />
+        <icon src="www/img/apple-icon-60x60.png" width="60" height="60" />
+        <icon src="www/img/apple-icon-72x72.png" width="72" height="72" />
+        <icon src="www/img/apple-icon-76x76.png" width="76" height="76" />
+        <icon src="www/img/apple-icon-114x114.png" width="114" height="114" />
+        <icon src="www/img/apple-icon-120x120.png" width="120" height="120" />
+        <icon src="www/img/apple-icon-144x144.png" width="144" height="144" />
+        <icon src="www/img/apple-icon-152x152.png" width="152" height="152" />
+        <icon src="www/img/apple-icon-180x180.png" width="180" height="180" />
+    </platform>
     <hook src="scripts/copy_resource_files.js" type="before_build" />
     <hook src="scripts/copy_manifest.js" type="after_build" />
 </widget>
