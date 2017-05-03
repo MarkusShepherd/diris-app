@@ -1,7 +1,15 @@
-# Dixit #
+# Diris #
 
-This app lets players submit stories and images for the popular game Dixit.
+A mobile adaptation of the popular board game [Dixit](https://en.wikipedia.org/wiki/Dixit_(card_game)). Players submit photos either from their camera, from their gallery, or from a selection of publicly available images.
 
 ## Setup ##
 
-First, install Phonegap. Pull the repo, `cd` into that folder, and run `phonegap run browser` and you should be able to test the app in the browser.
+First, install [Phonegap](http://phonegap.com/). Then:
+
+```bash
+git clone git@bitbucket.org:MarkusShepherd/diris-app.git
+cd diris-app
+phonegap prepare
+phonegap serve
+```
+In the terminal you should see a URL. Navigate to that URL in the browser, or use it in the Phonegap developer app.
