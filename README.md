@@ -12,4 +12,4 @@ cd diris-app
 phonegap prepare
 phonegap serve
 ```
-In the terminal you should see a URL. Navigate to that URL in the browser, or use it in the Phonegap developer app.
+In the terminal you should see a URL. Navigate to that URL in the browser, or use it in the [Phonegap developer app](http://docs.phonegap.com/references/developer-app/).
