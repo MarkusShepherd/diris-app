@@ -17,12 +17,13 @@ var dirisApp = angular.module('dirisApp', [
 ]);
 
 dirisApp.constant('BACKEND_URL', liveUrl)
+    .constant('DEVELOPER_MODE', true)
     .constant('MINIMUM_STORY_LENGTH', 3)
     .constant('MINIMUM_PLAYER', 4)
     .constant('MAXIMUM_PLAYER', 10)
     .constant('STANDARD_TIMEOUT', 60 * 60 * 36)
-    .constant('GCM_SENDER_ID', 696693451234)
-    .constant('DEVELOPER_MODE', false);
+    .constant('CACHE_TIMEOUT', 60 * 60)
+    .constant('GCM_SENDER_ID', 696693451234);
 
 dirisApp.config(function (
     $httpProvider,
@@ -161,20 +162,21 @@ dirisApp.run(function ($log, authManager, toastr, dataService, GCM_SENDER_ID) {
     });
 
     push.on('notification', function (data) {
-        $log.debug("Received notification");
-        $log.debug(data);
-        $log.debug(data.message);
-        $log.debug(data.title);
-        $log.debug(data.count);
-        $log.debug(data.sound);
-        $log.debug(data.image);
-        $log.debug(data.additionalData);
+        $log.debug('received notification:', data);
+        $log.debug(data.additionalData.match_pk);
         toastr.info(data.message, data.title);
+
+        if (data.additionalData.match_pk === '_new') {
+            dataService.setNextUpdate();
+        } else if (data.additionalData.match_pk) {
+            dataService.getMatch(data.additionalData.match_pk, true)
+                .then($log.debug)
+                .catch($log.debug);
+        }
     });
 
     push.on('error', function (e) {
-        $log.debug("Error in notifications");
-        $log.debug(e);
+        $log.debug('error in notifications:', e);
         $log.debug(e.message);
         toastr.error(e.message);
     });

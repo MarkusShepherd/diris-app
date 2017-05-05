@@ -11,7 +11,8 @@ dirisApp.factory('dataService', function dataService(
     $q,
     authManager,
     jwtHelper,
-    BACKEND_URL
+    BACKEND_URL,
+    CACHE_TIMEOUT
 ) {
     var factory = {},
         matches = {},
@@ -19,7 +20,8 @@ dirisApp.factory('dataService', function dataService(
         images = {},
         token = null,
         loggedInPlayer = null,
-        gcmRegistrationID = null;
+        gcmRegistrationID = null,
+        nextUpdate = null;
 
     factory.logout = function logout() {
         factory.setToken(null);
@@ -27,6 +29,18 @@ dirisApp.factory('dataService', function dataService(
         players = {};
         images = {};
         $localStorage.$reset();
+    };
+
+    factory.setNextUpdate = function setNextUpdate(nxt) {
+        nextUpdate = nxt || _.now() - 1;
+        $localStorage.nextUpdate = nextUpdate;
+        return nextUpdate;
+    };
+
+    factory.getNextUpdate = function getNextUpdate() {
+        nextUpdate = nextUpdate || $localStorage.nextUpdate || _.now() - 1;
+        $localStorage.nextUpdate = nextUpdate;
+        return nextUpdate;
     };
 
     factory.setToken = function setToken(newToken) {
@@ -140,6 +154,8 @@ dirisApp.factory('dataService', function dataService(
             return $q.resolve(matches);
         }
 
+        factory.setNextUpdate(_.now() + CACHE_TIMEOUT);
+
         return $http.get(BACKEND_URL + '/matches/')
             .then(function (response) {
                 $log.debug('Matches from server:', response.data.results);
@@ -248,6 +264,8 @@ dirisApp.factory('dataService', function dataService(
             return $q.resolve(players);
         }
 
+        factory.setNextUpdate(_.now() + CACHE_TIMEOUT);
+
         return $http.get(BACKEND_URL + '/players/')
             .then(function (response) {
                 players = {};
@@ -332,6 +350,8 @@ dirisApp.factory('dataService', function dataService(
         if (!forceRefresh) {
             return $q.resolve(images);
         }
+
+        factory.setNextUpdate(_.now() + CACHE_TIMEOUT);
 
         return $http.get(BACKEND_URL + '/images/')
             .then(function (response) {
