@@ -25,6 +25,7 @@ dirisApp.factory('dataService', function dataService(
 
     factory.logout = function logout() {
         factory.setToken(null);
+        factory.setNextUpdate();
         matches = {};
         players = {};
         images = {};
@@ -32,7 +33,7 @@ dirisApp.factory('dataService', function dataService(
     };
 
     factory.setNextUpdate = function setNextUpdate(nxt) {
-        nextUpdate = nxt || _.now() - 1;
+        nextUpdate = nxt === '_renew' ? _.now() + CACHE_TIMEOUT : nxt || _.now() - 1;
         $localStorage.nextUpdate = nextUpdate;
         return nextUpdate;
     };
@@ -120,6 +121,11 @@ dirisApp.factory('dataService', function dataService(
         matches[match.pk] = match;
     }
 
+    factory.removeMatch = function removeMatch(matchPk) {
+        delete $localStorage['match_' + matchPk];
+        delete matches[matchPk];
+    };
+
     factory.createMatch = function createMatch(playerPks, totalRounds, timeout) {
         var player = factory.getLoggedInPlayer(),
             options = {
@@ -154,7 +160,7 @@ dirisApp.factory('dataService', function dataService(
             return $q.resolve(matches);
         }
 
-        factory.setNextUpdate(_.now() + CACHE_TIMEOUT);
+        factory.setNextUpdate('_renew');
 
         return $http.get(BACKEND_URL + '/matches/')
             .then(function (response) {
@@ -264,7 +270,7 @@ dirisApp.factory('dataService', function dataService(
             return $q.resolve(players);
         }
 
-        factory.setNextUpdate(_.now() + CACHE_TIMEOUT);
+        factory.setNextUpdate('_renew');
 
         return $http.get(BACKEND_URL + '/players/')
             .then(function (response) {
@@ -351,7 +357,7 @@ dirisApp.factory('dataService', function dataService(
             return $q.resolve(images);
         }
 
-        factory.setNextUpdate(_.now() + CACHE_TIMEOUT);
+        factory.setNextUpdate('_renew');
 
         return $http.get(BACKEND_URL + '/images/')
             .then(function (response) {

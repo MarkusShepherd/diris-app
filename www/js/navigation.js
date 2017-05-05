@@ -5,7 +5,6 @@
 
 dirisApp.controller('NavigationController', function NavigationController(
     $location,
-    $rootScope,
     $route,
     $scope,
     dataService
@@ -21,11 +20,6 @@ dirisApp.controller('NavigationController', function NavigationController(
 
     $scope.refresh = function refresh() {
         dataService.setNextUpdate();
-
-        if ($rootScope.refreshReload) {
-            $route.reload();
-        } else if ($rootScope.refreshPath) {
-            $location.path($rootScope.refreshPath).replace();
-        }
+        $route.reload();
     };
 });
