@@ -99,7 +99,7 @@
 				<a ng-repeat="match in matches | orderBy:'last_modified':true | filter:{actionStatus:'f'}:true"
 					ng-href="#/match/{{ match.pk }}"
 					class="list-group-item">
-					<span class="badge badge-time-passed">{{ match.lastModifiedFromNow }}</span>
+					<span class="badge badge-time-passed">{{ match.finishedFromNow }}</span>
 					You finished <strong>{{ match.playerPositionOrd }}</strong>!
 				</a>
 			</div>
