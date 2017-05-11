@@ -44,5 +44,6 @@
         <icon src="www/img/apple-icon-180x180.png" width="180" height="180" />
     </platform>
     <hook src="scripts/copy_resource_files.js" type="before_build" />
-    <hook src="scripts/copy_manifest.js" type="after_build" />
+    <hook src="scripts/copy_files.js" type="after_build" />
+    <hook src="scripts/rename_files.js" type="after_build" />
 </widget>
