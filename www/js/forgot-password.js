@@ -19,18 +19,19 @@ dirisApp.controller('ForgotPasswordController', function ForgotPasswordControlle
     $rootScope.menuItems = [];
     $rootScope.refreshButton = false;
 
-    $scope.forgot = function forgot() {
+    $scope.reset = function reset() {
         if (!blockUI.state().blocking) {
             blockUI.start();
         }
 
-        dataService.forgotPassword($scope.username, $scope.email)
-            .then($log.debug)
+        dataService.resetPassword($scope.username, $scope.email)
             .then(function () {
                 toastr.success('You should receive an email with your new password', 'Check your emails');
+                $location.path('/login').replace();
             }).catch(function (response) {
                 $log.debug(response);
                 $scope.message = response.message || "There was an error...";
-            }).then(blockUI.stop);
-    }; // forgot
+                blockUI.stop();
+            })
+    }; // reset
 }); // ForgotPasswordController

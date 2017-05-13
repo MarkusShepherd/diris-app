@@ -85,8 +85,8 @@ dirisApp.factory('dataService', function dataService(
         return (token && !jwtHelper.isTokenExpired(token)) ? token : undefined;
     };
 
-    factory.forgotPassword = function forgotPassword(username, email) {
-        return $http.post(BACKEND_URL + '/players/forgot/',
+    factory.resetPassword = function resetPassword(username, email) {
+        return $http.post(BACKEND_URL + '/players/reset_password/',
                 {username: username, email: email},
                 {skipAuthorization: true});
     };
