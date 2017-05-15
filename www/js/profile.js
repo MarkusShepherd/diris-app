@@ -28,13 +28,9 @@ dirisApp.controller('ProfileController', function ProfileController(
         blockUI.start();
     }
 
-    if (!pPk && loggedInPlayer) {
-        pPk = loggedInPlayer.pk;
-    }
-
-    if (!action) {
-        action = pPk === loggedInPlayer.pk ? 'edit' : 'view';
-    }
+    pPk = pPk || loggedInPlayer.pk;
+    action = action || (pPk === loggedInPlayer.pk ? 'edit' : 'view');
+    action = action === 'edit' && pPk !== loggedInPlayer.pk ? 'view' : action;
 
     $scope.edit = action === 'edit';
     $scope.uPlayer = {

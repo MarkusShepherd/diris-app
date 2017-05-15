@@ -8,7 +8,7 @@
 	<h3>Statistics</h3>
 	<p>{{ player.user.username }} participates in <strong>{{ player.total_matches }} game{{ player.total_matches == 1 ? '' : 's' }}</strong>.</p>
 
-	<form ng-if="update" id="update" name="myform" novalidate="novalidate" ng-submit="update()" role="form" class="form">
+	<form ng-if="edit" id="update" name="myform" novalidate="novalidate" ng-submit="update()" role="form" class="form">
 		<div class="form-group">
 			<label class="sr-only" for="username">User name:</label>
 			<input type="text" id="username" name="username" placeholder="Name" ng-model="uPlayer.user.username" ng-required="true" class="form-control" />
