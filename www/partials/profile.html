@@ -1,4 +1,13 @@
 <section xmlns="http://www.w3.org/1999/xhtml">
+	<button ng-if="ownProfile && !edit" ng-click="setEdit(true)" class="btn btn-primary btn-right">
+		<span class="glyphicon glyphicon-edit"></span>
+		Edit
+	</button>
+	<button ng-if="ownProfile && edit" ng-click="setEdit(false)" class="btn btn-danger btn-right">
+		<span class="glyphicon glyphicon-remove"></span>
+		Cancel
+	</button>
+
 	<h2><span class="glyphicon glyphicon-user"></span> {{ player.user.username }}</h2>
 
 	<div ng-if="player.avatarURL" class="image-review-container">
