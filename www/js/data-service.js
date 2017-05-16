@@ -161,7 +161,7 @@ dirisApp.factory('dataService', function dataService(
             });
     };
 
-    factory.getMatches = function getMatches(forceRefresh, fallback) {
+    factory.getMatches = function getMatches(forceRefresh, fallback, page) {
         if (!forceRefresh) {
             if (!_.size(matches)) {
                 _.forEach($localStorage, function (match, key) {
@@ -176,12 +176,21 @@ dirisApp.factory('dataService', function dataService(
 
         factory.setNextUpdate('_renew');
 
-        return $http.get(BACKEND_URL + '/matches/')
+        page = _.parseInt(page) || 1;
+
+        return $http.get(BACKEND_URL + '/matches/?page=' + page)
             .then(function (response) {
-                $log.debug('Matches from server:', response.data.results);
-                matches = {};
+                // TODO delete old matches from localStorage
+                matches = page === 1 ? {} : matches;
+
                 _.forEach(response.data.results, setMatch);
-                return matches;
+
+                var result = _.clone(matches);
+                result._total = _.parseInt(response.data.count) || _.size(response.data.results);
+                result._nextPage = response.data.next ? page + 1 : null;
+                result._prevPage = response.data.previous ? page - 1 : null;
+
+                return result;
             }).catch(function (response) {
                 if (forceRefresh && fallback) {
                     // TODO add message
