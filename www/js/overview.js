@@ -42,8 +42,8 @@ dirisApp.controller('OverviewController', function OverviewController(
             $scope.status = status;
             $log.debug('Matches:', matches);
         }).catch(function (response) {
-            $log.debug('error');
-            $log.debug(response);
+            $log.warn('error');
+            $log.warn(response);
             toastr.error('There was an error fetching the data - please try again later...');
         });
 
@@ -52,8 +52,8 @@ dirisApp.controller('OverviewController', function OverviewController(
             $scope.players = players;
             $log.debug('Players:', $scope.players);
         }).catch(function (response) {
-            $log.debug('error');
-            $log.debug(response);
+            $log.warn('error');
+            $log.warn(response);
         });
 
     $q.all([matchPromise, playerPromise]).then(blockUI.stop);
