@@ -31,8 +31,13 @@ dirisApp.controller('NewMatchController', function NewMatchController(
                                 .map()
                                 .filter('pk')
                                 .reject({pk: player.pk})
-                                .reject({selected: true})
                                 .value();
+        $scope.selected = _($scope.playersArray)
+                                .filter({selected: true})
+                                .map(function (p) { return [p.pk, p]; })
+                                .fromPairs()
+                                .value();
+        $scope.numPlayers = _.size($scope.selected) + 1;
         $scope.playersRefreshButton = _.isUndefined(allPlayers._nextPage);
         $scope.playersNextPage = allPlayers._nextPage;
         $scope.playersPrevPage = allPlayers._prevPage;
@@ -92,7 +97,7 @@ dirisApp.controller('NewMatchController', function NewMatchController(
         }
 
         p.selected = true;
-        $scope.selected[p.pk.toString()] = p;
+        $scope.selected[p.pk] = p;
         $scope.numPlayers = _.size($scope.selected) + 1;
 
         if ($scope.createForm.roundsPerPlayer.$pristine &&
@@ -103,7 +108,7 @@ dirisApp.controller('NewMatchController', function NewMatchController(
 
     $scope.removePlayer = function removePlayer(p) {
         p.selected = false;
-        delete $scope.selected[p.pk.toString()];
+        delete $scope.selected[p.pk];
         $scope.numPlayers = _.size($scope.selected) + 1;
 
         if ($scope.createForm.roundsPerPlayer.$pristine &&
