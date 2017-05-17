@@ -21,14 +21,20 @@ dirisApp.controller('NewMatchController', function NewMatchController(
     function addPlayers(players) {
         _.forEach(players, function (p) {
             if (p && p.pk) {
-                p.selected = false;
+                p.selected = _.has(allPlayers, p.pk) ? !!allPlayers[p.pk].selected : false;
             }
         });
 
         _.assign(allPlayers, players);
 
-        $scope.playersArray = _(allPlayers).map().filter('pk').reject({pk: player.pk}).value();
-        $scope.playersNextPage = _.isUndefined(allPlayers._nextPage) ? 1 : allPlayers._nextPage;
+        $scope.playersArray = _(allPlayers)
+                                .map()
+                                .filter('pk')
+                                .reject({pk: player.pk})
+                                .reject({selected: true})
+                                .value();
+        $scope.playersRefreshButton = _.isUndefined(allPlayers._nextPage);
+        $scope.playersNextPage = allPlayers._nextPage;
         $scope.playersPrevPage = allPlayers._prevPage;
     }
 
@@ -55,6 +61,7 @@ dirisApp.controller('NewMatchController', function NewMatchController(
     $scope.minimumPlayer = MINIMUM_PLAYER;
     $scope.maximumPlayer = MAXIMUM_PLAYER;
     $scope.timeout = _.toInteger(STANDARD_TIMEOUT / 3600);
+    $scope.playersRefreshButton = true;
 
     dataService.getPlayers()
         .then(addPlayers)
