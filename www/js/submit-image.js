@@ -111,8 +111,12 @@ dirisApp.controller('SubmitImageController', function SubmitImageController(
             $scope.image = image;
             return [];
         }).then(function (images) {
-            $scope.randomImages = images;
-            $scope.useSlider = !_.isEmpty(images);
+            if (_.isEmpty(images)) {
+                return;
+            }
+
+            $scope.randomImages = _.concat(images, $scope.randomImages || []);
+            $scope.useSlider = !_.isEmpty($scope.randomImages);
         }).then(function () {
             sliderBlock.stop();
 
@@ -259,8 +263,8 @@ dirisApp.controller('SubmitImageController', function SubmitImageController(
     });
 
     $scope.showSearchPrompt = function showSearchPrompt() {
-        if (!blockUI.state().blocking) {
-            blockUI.start();
+        if (!sliderBlock.state().blocking) {
+            sliderBlock.start();
         }
 
         $q(function (resolve) {
@@ -277,7 +281,7 @@ dirisApp.controller('SubmitImageController', function SubmitImageController(
 
             // TODO query own backend instead
             return $http.get('https://pixabay.com/api/?key=5345455-690261c6c5c99f6c5032f2ef8&per_page=10&q=' +
-                             response.input1);
+                             encodeURIComponent(response.input1));
         }).then(function (response) {
             if (_.isEmpty(response.data.hits)) {
                 return;
@@ -304,7 +308,7 @@ dirisApp.controller('SubmitImageController', function SubmitImageController(
         }).catch(function (response) {
             $log.error(response);
             toastr.error(response);
-        }).then(blockUI.stop);
+        }).then(sliderBlock.stop);
     }; // showSearchPrompt
 
 }); // SubmitImageController
