@@ -12,12 +12,27 @@ dirisApp.controller('SubmitImageController', function SubmitImageController(
     $rootScope,
     $routeParams,
     $scope,
-    $timeout,
+    $interval,
     blockUI,
     toastr,
     dataService,
     MINIMUM_STORY_LENGTH
 ) {
+    var player = dataService.getLoggedInPlayer(),
+        mPk = $routeParams.mPk,
+        rNo = $routeParams.rNo,
+        sliderBlock = blockUI.instances.get('slider'),
+        slyInitiated = false;
+
+    if (!player) {
+        $location.path('/login');
+        return;
+    }
+
+    if (!blockUI.state().blocking) {
+        blockUI.start();
+    }
+
     function setImage(url) {
         $scope.selectedImage = true;
         $("#image")
@@ -41,23 +56,56 @@ dirisApp.controller('SubmitImageController', function SubmitImageController(
         });
     }
 
-    var player = dataService.getLoggedInPlayer(),
-        mPk = $routeParams.mPk,
-        rNo = $routeParams.rNo,
-        sliderBlock = blockUI.instances.get('useSlider');
+    function initSly() {
+        if (slyInitiated) {
+            $interval(function () {
+                $('#centered').sly('reload');
+            }, 1000, 10);
 
-    if (!player) {
-        $location.path('/login');
-        return;
-    }
+            return;
+        }
 
-    if (!blockUI.state().blocking) {
-        blockUI.start();
+        var $frame = $('#centered'),
+            $wrap  = $frame.parent();
+
+        $frame.sly({
+            horizontal: 1,
+            itemNav: 'centered',
+            smart: 1,
+            activateOn: 'click',
+            mouseDragging: 1,
+            touchDragging: 1,
+            releaseSwing: 1,
+            startAt: 0,
+            scrollBar: $wrap.find('.scrollbar'),
+            scrollBy: 1,
+            speed: 300,
+            elasticBounds: 1,
+            // easing: 'easeOutExpo',
+            dragHandle: 1,
+            dynamicHandle: 1,
+            clickBar: 1,
+            prev: $('#prevButton'),
+            next: $('#nextButton')
+        });
+
+        $frame.sly('reload');
+
+        $interval(function () {
+            $frame.sly('reload');
+        }, 1000, 10);
+
+        $($window).resize(function () {
+            $frame.sly('reload');
+        });
+
+        slyInitiated = true;
     }
 
     $scope.currentPlayer = player;
     $scope.mPk = mPk;
     $scope.rNo = rNo;
+    $scope.randomImagesSize = 0;
 
     $rootScope.menuItems = [{
         link: '#/overview',
@@ -115,54 +163,23 @@ dirisApp.controller('SubmitImageController', function SubmitImageController(
                 return;
             }
 
-            $scope.randomImages = _.concat(images, $scope.randomImages || []);
+            $scope.randomImages = _.concat($scope.randomImages || [], images);
+            $scope.randomImagesSize = _.size($scope.randomImages);
             $scope.useSlider = !_.isEmpty($scope.randomImages);
+
+
         }).then(function () {
-            sliderBlock.stop();
-
-            if (!$scope.useSlider) {
-                return;
+            if ($scope.useSlider) {
+                initSly();
             }
-
-            var $frame = $('#centered'),
-                $wrap  = $frame.parent();
-
-            $frame.sly({
-                horizontal: 1,
-                itemNav: 'centered',
-                smart: 1,
-                activateOn: 'click',
-                mouseDragging: 1,
-                touchDragging: 1,
-                releaseSwing: 1,
-                startAt: 0,
-                scrollBar: $wrap.find('.scrollbar'),
-                scrollBy: 1,
-                speed: 300,
-                elasticBounds: 1,
-                // easing: 'easeOutExpo',
-                dragHandle: 1,
-                dynamicHandle: 1,
-                clickBar: 1,
-                prev: $wrap.find('.prev'),
-                next: $wrap.find('.next')
-            });
-
-            $frame.sly('reload');
-
-            // TODO hacky - there must be a better way!
-            $timeout(function () {
-                $frame.sly('reload');
-            }, 1000);
-
-            $($window).resize(function () {
-                $frame.sly('reload');
-            });
         }).catch(function (response) {
             $log.debug('error');
             $log.debug(response);
             toastr.error("There was an error fetching the data - please try again later...");
-        }).then(blockUI.stop);
+
+            $scope.randomImagesSize = _.size($scope.randomImages);
+            $scope.useSlider = !_.isEmpty($scope.randomImages);
+        }).then(sliderBlock.stop);
 
     $scope.minStoryLength = MINIMUM_STORY_LENGTH;
 
@@ -292,19 +309,12 @@ dirisApp.controller('SubmitImageController', function SubmitImageController(
             });
 
             $scope.randomImages = _.concat(response.data.hits, $scope.randomImages || []);
+            $scope.randomImagesSize = _.size($scope.randomImages);
             $scope.useSlider = !_.isEmpty($scope.randomImages);
-
-            if (!$scope.useSlider) {
-                return;
+        }).then(function () {
+            if ($scope.useSlider) {
+                initSly();
             }
-
-            var $frame = $('#centered');
-            $frame.sly('reload');
-
-            // TODO hacky - there must be a better way!
-            $timeout(function () {
-                $frame.sly('reload');
-            }, 1000);
         }).catch(function (response) {
             $log.error(response);
             toastr.error(response);
