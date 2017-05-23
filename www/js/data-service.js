@@ -241,6 +241,7 @@ dirisApp.factory('dataService', function dataService(
     };
 
     function setPlayer(player) {
+        player.avatar_url = utils.normalizeUrl(player.avatar_url, $location.protocol());
         $localStorage['player_' + player.pk] = player;
         players[player.pk] = player;
 
@@ -353,12 +354,7 @@ dirisApp.factory('dataService', function dataService(
     };
 
     function setImage(image) {
-        var protocol;
-        if (_.startsWith(image.url, '//')) {
-            protocol = $location.protocol() === 'file' ? 'https' : $location.protocol();
-            image.url = protocol + ':' + image.url;
-        }
-
+        image.url = utils.normalizeUrl(image.url, $location.protocol());
         $localStorage['image_' + image.pk] = image;
         images[image.pk] = image;
     }
