@@ -31,6 +31,7 @@ dirisApp.controller('ReviewRoundController', function ReviewRoundController(
     $scope.currentPlayer = player;
     $scope.mPk = mPk;
     $scope.rNo = rNo;
+    $scope.action = utils.roundAction;
 
     $rootScope.menuItems = [{
         link: '#/overview',
