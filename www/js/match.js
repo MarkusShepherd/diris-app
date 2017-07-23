@@ -19,7 +19,7 @@ dirisApp.controller('MatchController', function MatchController(
         forceRefresh = _.now() >= dataService.getNextUpdate();
 
     if (!player) {
-        $location.path('/login');
+        $location.search('dest', $location.path()).path('/login');
         return;
     }
 
