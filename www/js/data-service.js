@@ -1,7 +1,7 @@
 'use strict';
 
 /*jslint browser: true, nomen: true, stupid: true, todo: true */
-/*global _, cordova, dirisApp, utils */
+/*global _, cordova, dirisApp, moment, utils */
 
 dirisApp.factory('dataService', function dataService(
     $localStorage,
@@ -18,6 +18,7 @@ dirisApp.factory('dataService', function dataService(
         matches = {},
         players = {},
         images = {},
+        chats = {},
         token = null,
         loggedInPlayer = null,
         gcmRegistrationID = null,
@@ -502,6 +503,48 @@ dirisApp.factory('dataService', function dataService(
 
                 return match;
             });
+    };
+
+    function setChatMessages(mPk, newMessages) {
+        chats[mPk] = _(_.get(chats, mPk, []))
+            .concat(newMessages)
+            .map(function (message) {
+                message.timestamp = moment(message.timestamp).millisecond(0);
+                return message;
+            })
+            .sortBy(['timestamp'])
+            .filter(function (value, index, coll) {
+                return index === 0 || !_.isEqual(value, coll[index - 1]);
+            }).value();
+    }
+
+    factory.getChat = function getChat(mPk, seq) {
+        var url = BACKEND_URL + '/matches/' + mPk + '/chat/',
+            seqNum = _.parseInt(seq);
+
+        if (!_.isNaN(seqNum)) {
+            url += '?seq=' + seqNum;
+        }
+
+        return $http.get(url).then(function (response) {
+            var messageGroup = response.data;
+
+            if (!messageGroup) {
+                messageGroup = {
+                    sequence: seqNum,
+                    messages: []
+                };
+            }
+
+            setChatMessages(mPk, messageGroup.messages);
+
+            // TODO make 10 a parameter
+            if (_.size(messageGroup.messages) < 10 && messageGroup.sequence > 0) {
+                return factory.getChat(mPk, messageGroup.sequence - 1);
+            }
+
+            return chats[mPk];
+        });
     };
 
     return factory;
