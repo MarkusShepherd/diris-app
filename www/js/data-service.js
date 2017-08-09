@@ -509,12 +509,16 @@ dirisApp.factory('dataService', function dataService(
         chats[mPk] = _(_.get(chats, mPk, []))
             .concat(newMessages)
             .map(function (message) {
-                message.timestamp = moment(message.timestamp).millisecond(0);
+                message.timestamp = moment(message.timestamp).startOf('second');
                 return message;
             })
             .sortBy(['timestamp'])
             .filter(function (value, index, coll) {
-                return index === 0 || !_.isEqual(value, coll[index - 1]);
+                var prev = coll[index - 1];
+                return (index === 0 ||
+                    value.player !== prev.player ||
+                    value.text !== prev.text ||
+                    value.timestamp.toString() !== prev.timestamp.toString());
             }).value();
     }
 
@@ -545,6 +549,21 @@ dirisApp.factory('dataService', function dataService(
 
             return chats[mPk];
         });
+    };
+
+    factory.sendChat = function sendChat(mPk, text) {
+        return $http.post(BACKEND_URL + '/matches/' + mPk + '/chat/', {text: text})
+            .then(function (response) {
+                var messageGroup = response.data;
+
+                if (!messageGroup) {
+                    throw new Error(response);
+                }
+
+                setChatMessages(mPk, messageGroup.messages);
+
+                return chats[mPk];
+            });
     };
 
     return factory;

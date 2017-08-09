@@ -48,4 +48,21 @@ dirisApp.controller('ChatController', function ChatController(
             $log.debug(response);
             toastr.error('There was an error fetching the data - please try again later...');
         }).then(blockUI.stop);
+
+    $scope.sendMessage = function sendMessage() {
+        if (!blockUI.state().blocking) {
+            blockUI.start();
+        }
+
+        dataService.sendChat(mPk, $scope.text)
+            .then(function (messages) {
+                $log.debug(messages);
+                $scope.text = null;
+                $scope.messages = messages;
+            }).catch(function (response) {
+                $log.debug('error');
+                $log.debug(response);
+                toastr.error('There was an error sending the message - please try again...');
+            }).then(blockUI.stop);
+    };
 }); // MatchController

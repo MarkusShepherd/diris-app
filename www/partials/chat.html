@@ -1,4 +1,21 @@
 <section xmlns="http://www.w3.org/1999/xhtml">
 	<h1>Chat</h1>
 	<p ng-repeat="message in messages">{{ message.timestamp }} {{ message.player }} {{ message.text }}</p>
+	<form id="send" name="send" novalidate="novalidate" ng-submit="sendMessage()" role="form" class="form">
+		<div class="form-group">
+			<label class="sr-only" for="text">Text:</label>
+			<input type="text"
+				id="text"
+				name="text"
+				placeholder="Type your message"
+				ng-model="text"
+				ng-required="true"
+				class="form-control" />
+		</div>
+
+		<button type="submit" ng-disabled="send.$invalid" class="btn btn-success btn-lg btn-block">
+			<span class="glyphicon glyphicon-send"></span>
+			Send
+		</button>
+	</form>
 </section>

@@ -16,8 +16,8 @@ var dirisApp = angular.module('dirisApp', [
     'toastr'
 ]);
 
-dirisApp.constant('BACKEND_URL', liveUrl)
-    .constant('DEVELOPER_MODE', false)
+dirisApp.constant('BACKEND_URL', stagingUrl)
+    .constant('DEVELOPER_MODE', true)
     .constant('MINIMUM_STORY_LENGTH', 3)
     .constant('MINIMUM_PLAYER', 4)
     .constant('MAXIMUM_PLAYER', 10)
