@@ -108,6 +108,7 @@ dirisApp.controller('ChatController', function ChatController(
             .then(function () {
                 return $timeout(function () {
                     $anchorScroll('submit');
+                    dataService.setChatViewed(mPk);
                 }, 100);
             });
     };
