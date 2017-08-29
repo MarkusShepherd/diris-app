@@ -90,6 +90,8 @@ dirisApp.controller('ChatController', function ChatController(
             return intervalPromise;
         });
 
+    $scope.hasOnlyEmojis = utils.hasOnlyEmojis;
+
     $scope.sendMessage = function sendMessage() {
         if (!blockUI.state().blocking) {
             blockUI.start();
